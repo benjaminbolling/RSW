@@ -645,7 +645,6 @@ class Dialog(QtGui.QWidget):
                     self.messageLabel01.setText("Number of combinations with no constraints' =  "+str(noConstraints))
                     self.messageLabel02.setText("Number of combinations with constraints 'free days over 7 days' and 'all shifts filled' =  "+str(len(self.shiftseries)))
                     saveQ, ok = QtGui.QInputDialog.getItem(self, "Save / Print results", "Save all combinations (in .txt-format) or Print combinations found in the terminal output?", ["Save", "Print", "Neither"], 2, False)
-                    print(saveQ)
                     if saveQ == "Save":
                         self.saveAllCombos()
                     elif saveQ == "Print":

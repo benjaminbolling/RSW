@@ -65,16 +65,13 @@ class Dialog(QtGui.QDialog):
         self.dailyrestinginput.setToolTip("Swedish law: 11 hours minimum")
         self.dailyrestinginput.valueChanged.connect(self.dailyrestinginputChanged)
         self.layout.addWidget(self.dailyrestinginput,row,4,1,3)
-
         row += 1
         toplabel4 = QtGui.QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel4.setAlignment(QtCore.Qt.AlignCenter)
         self.layout.addWidget(toplabel4, row, 0, 1, 7)
-
         row += 1
         tablelayout = QtGui.QVBoxLayout()
         self.layout.addLayout(tablelayout,row,0,len(self.series),7)
-
         self.table = QtGui.QTableWidget() # Create table for the series we work with
         tablelayout.addWidget(self.table)
         self.table.setColumnCount(7)
@@ -121,22 +118,17 @@ class Dialog(QtGui.QDialog):
         toplabel6 = QtGui.QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel6.setAlignment(QtCore.Qt.AlignCenter)
         self.layout.addWidget(toplabel6, row, 0, 1, 7)
-
         row += 1
         toplabel7 = QtGui.QLabel("Results:")
         toplabel7.setAlignment(QtCore.Qt.AlignCenter)
         self.layout.addWidget(toplabel7, row, 0, 1, 7)
-
         row += 1
         toplabel8 = QtGui.QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel8.setAlignment(QtCore.Qt.AlignCenter)
         self.layout.addWidget(toplabel8, row, 0, 1, 7)
-
-
         row += 1
         table2layout = QtGui.QVBoxLayout()
         self.layout.addLayout(table2layout,row,0,3,7)
-
         self.table2 = QtGui.QTableWidget() # Create table for the series we work with
         table2layout.addWidget(self.table2)
         self.table2.setColumnCount(7)
@@ -144,11 +136,14 @@ class Dialog(QtGui.QDialog):
         for i in range(0,7):
             self.table2.horizontalHeader().setSectionResizeMode(i, QtGui.QHeaderView.Stretch)
         self.table2.setRowCount(self.shifttype)
+        verticalHeaders = []
         for row in range(self.shifttype):
             for col in range(7):
                 wdg = QtGui.QLabel("0")
                 wdg.setAlignment(QtCore.Qt.AlignCenter)
                 self.table2.setCellWidget(row,col,wdg)
+            verticalHeaders.append(self.shifts[row])
+        self.table2.setVerticalHeaderLabels(verticalHeaders)
         self.table2.setMaximumSize(self.getQTableWidgetSize(self.table2))
         self.table2.setMinimumSize(self.getQTableWidgetSize(self.table2))
     def dailyrestinginputChanged(self):

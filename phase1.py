@@ -16,7 +16,7 @@
 # # # #   Initialization date: 2020-06-08                                                 # # # #
 # # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                     2020-06-29    # # # #
 # # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):         2020-07-01    # # # #
-# # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-01    # # # #
+# # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-02    # # # #
 # # # #                                                                                   # # # #
 # # # #                                                                                   # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

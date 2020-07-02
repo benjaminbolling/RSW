@@ -16,6 +16,7 @@
 # # # #   Initialization date: 2020-06-08                                                 # # # #
 # # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                     2020-06-29    # # # #
 # # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):         2020-07-01    # # # #
+# # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-01    # # # #
 # # # #                                                                                   # # # #
 # # # #                                                                                   # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -199,15 +200,24 @@ class Dialog(QtGui.QDialog):
                         shift3 += 1
             widget1 = self.table2.cellWidget(0, j)
             widget1.setText(str(shift1))
+            if shift1 < 1:
+                widget1.setStyleSheet("background-color:#800000;");
+            else:
+                widget1.setStyleSheet("background-color:#008000;");
             if self.shifttype > 1:
                 widget2 = self.table2.cellWidget(1, j)
                 widget2.setText(str(shift2))
+                if shift2 < 1:
+                    widget2.setStyleSheet("background-color:#800000;");
+                else:
+                    widget2.setStyleSheet("background-color:#008000;");
             if self.shifttype > 2:
                 widget3 = self.table2.cellWidget(2, j)
                 widget3.setText(str(shift3))
-
-
-
+                if shift3 < 1:
+                    widget3.setStyleSheet("background-color:#800000;");
+                else:
+                    widget3.setStyleSheet("background-color:#008000;");
     def readTableContents(self):
         self.shift1 = 0
         self.shift2 = 0

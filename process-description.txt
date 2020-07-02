@@ -1,11 +1,11 @@
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-		Description for the algorithm
+		  Description of the algorithm
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Author: Benjamin Bolling
+Owner: Benjamin Bolling
 2020-06-08 - 2020-07-02
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

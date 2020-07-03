@@ -60,5 +60,3 @@ In this phase, the combination is imported from phase 1 into a table and the 1:s
 
 
 
-
-

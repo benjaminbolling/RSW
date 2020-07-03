@@ -638,7 +638,7 @@ class Dialog(QtGui.QWidget):
                 override = QtGui.QMessageBox.warning(self, 'Warning', str(self.noofweeks)+" weeks might require extensive amount of comping power and/or time. Continue anyways?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
                 if override == QtGui.QMessageBox.Yes:
                     errorflag = 0
-            if self.noofweeks < weeksneeded:
+            elif self.noofweeks < weeksneeded:
                 errorflag = 1
                 override = QtGui.QMessageBox.warning(self, 'Warning', "Warning: More weeks might be needed. Minimum recommendeded number of weeeks for these settings is "+str(weeksneeded)+". Continue anyways?", QtGui.QMessageBox.Yes | QtGui.QMessageBox.No, QtGui.QMessageBox.No)
                 if override == QtGui.QMessageBox.Yes:

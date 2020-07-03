@@ -23,13 +23,14 @@
 
 import PyQt5.QtWidgets as QtGui
 from PyQt5 import QtCore
-import sys
+import sys, csv
 
 class Dialog(QtGui.QDialog):
     def __init__(self, input):
         super(Dialog, self).__init__()
         self.setWindowTitle("1o2o3 S-CSV-fcal phase 2")
         self.series, self.shifts, self.shifttype = self.fixInput(input)
+        #print(self.series)
         self.initValues()
         self.createLayout()
         self.updateTable2()
@@ -79,7 +80,7 @@ class Dialog(QtGui.QDialog):
         for i in range(0,7):
             self.table.horizontalHeader().setSectionResizeMode(i, QtGui.QHeaderView.Stretch)
         self.table.setRowCount(len(self.series))
-        for row, serie in enumerate(self.series):
+        for rr, serie in enumerate(self.series):
             for col, value in enumerate(serie):
                 if value == 0:
                     wdg = QtGui.QLabel("0")
@@ -89,11 +90,11 @@ class Dialog(QtGui.QDialog):
                     for t in self.shifts:
                         wdg.addItem(t)
                     wdg.currentIndexChanged.connect(self.readTableContents)
-                self.table.setCellWidget(row,col,wdg)
+                self.table.setCellWidget(rr,col,wdg)
         self.table.setMaximumSize(self.getQTableWidgetSize(self.table))
         self.table.setMinimumSize(self.getQTableWidgetSize(self.table))
 
-        row = row + 1 + len(self.series)*4
+        row = row + 1 + len(self.series)
         toplabel5 = QtGui.QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel5.setAlignment(QtCore.Qt.AlignCenter)
         self.layout.addWidget(toplabel5, row, 0, 1, 7)
@@ -137,15 +138,30 @@ class Dialog(QtGui.QDialog):
             self.table2.horizontalHeader().setSectionResizeMode(i, QtGui.QHeaderView.Stretch)
         self.table2.setRowCount(self.shifttype)
         verticalHeaders = []
-        for row in range(self.shifttype):
+        for rr in range(self.shifttype):
             for col in range(7):
                 wdg = QtGui.QLabel("0")
                 wdg.setAlignment(QtCore.Qt.AlignCenter)
-                self.table2.setCellWidget(row,col,wdg)
-            verticalHeaders.append(self.shifts[row])
+                self.table2.setCellWidget(rr,col,wdg)
+            verticalHeaders.append(self.shifts[rr])
         self.table2.setVerticalHeaderLabels(verticalHeaders)
         self.table2.setMaximumSize(self.getQTableWidgetSize(self.table2))
         self.table2.setMinimumSize(self.getQTableWidgetSize(self.table2))
+        row = row + 1 + self.shifttype * 10
+        self.loadButton = QtGui.QPushButton("Load")
+        self.loadButton.clicked.connect(self.loadFunction)
+        self.loadButton.setEnabled(False)
+        self.loadButton.setToolTip("Future feature")
+        self.layout.addWidget(self.loadButton,row,0,3,2)
+        self.saveButton = QtGui.QPushButton("Save")
+        self.saveButton.clicked.connect(self.saveFunction)
+        self.saveButton.setEnabled(False)
+        self.saveButton.setToolTip("Future feature")
+        self.layout.addWidget(self.saveButton,row,2,3,2)
+        self.exportButton = QtGui.QPushButton("Export")
+        self.exportButton.clicked.connect(self.exportFunction)
+        self.exportButton.setToolTip("Export in a CSV format")
+        self.layout.addWidget(self.exportButton,row,4,3,3)
     def dailyrestinginputChanged(self):
         self.dailyresting = self.dailyrestinginput.value()
     def getQTableWidgetSize(self, table):
@@ -230,6 +246,64 @@ class Dialog(QtGui.QDialog):
                         self.shift3 += 1
         self.getShiftSums()
         self.updateTable2()
+    def loadFunction(self):
+        print("Load")
+    def saveFunction(self):
+        print("Save")
+    def exportFunction(self):
+        filename, type = QtGui.QFileDialog.getSaveFileName(self, 'Save output as...')
+        format, ok = QtGui.QInputDialog.getItem(self, "Export filetype", "Select filetype to export file into", ["CSV", "txt"], 1, False)
+        if filename is not None and len(filename)>0 and ok is True:
+            matrix = self.createFullMatrix()
+            weeks = len(self.series)
+            if format == "txt":
+                file = open(filename+".txt", 'w')
+                weekdays = "Mon\tTue\tWed\tThu\tFri\tSat\tSun\t"
+                headlabel = "Worker:\t\t"
+                for week in range(weeks):
+                    headlabel = headlabel+weekdays
+                file.write(headlabel+"\n")
+                for ind, person in enumerate(matrix):
+                    file.write("Person P"+str(ind)+"\t"+"\t".join(person)+"\n")
+                file.close()
+            elif format == "CSV":
+                file = csv.writer(open(filename+".csv", 'w'))
+                weekdays = "Mon;Tue;Wed;Thu;Fri;Sat;Sun"
+                for week in range(weeks):
+                    if week == 0:
+                        headlabel = "Worker:;"+weekdays
+                    else:
+                        headlabel = headlabel + ";" + weekdays
+                file.writerow(headlabel.split(";"))
+                for ind, person in enumerate(matrix):
+                    person.insert(0,"Person "+str(ind))
+                    file.writerow(person)
+    def createFullMatrix(self):
+        matrix0 = []
+        for i in range(len(self.series)):
+            cmatrix = []
+            for j in range(7):
+                widget = self.table.cellWidget(i, j)
+                if isinstance(widget, QtGui.QComboBox):
+                    value = widget.currentText()
+                    cmatrix.append(str(value))
+                else:
+                    cmatrix.append("-")
+            matrix0.append(cmatrix)
+        matrix = []
+        for ind, rows in enumerate(matrix0):
+            if ind == 0:
+                expsub = matrix0.copy()
+            else:
+                switch = expsub[len(expsub)-1]
+                del expsub[len(expsub)-1]
+                expsub.insert(0,switch)
+            personseries = []
+            for week in expsub:
+                for day in week:
+                    personseries.append(day)
+            matrix.append(personseries)
+        return matrix
 
 if __name__ == '__main__':
     input = [sys.argv[i] for i in range(1,len(sys.argv))]

@@ -44,6 +44,7 @@ class Dialog(QtGui.QWidget):
         self.shiftLabel1 = "D"      # Define how this shift is to be labelled in the next phase
         self.shiftLabel2 = "E"      # Define how this shift is to be labelled in the next phase
         self.shiftLabel3 = "N"      # Define how this shift is to be labelled in the next phase
+        self.fastGen = False        # Finish algorithm after the first 100 combos
     def createLayout(self):
         self.layout = QtGui.QGridLayout(self)
         toplabel1 = QtGui.QLabel("1-, 2- or 3-Shift Combinations Generator Algorithm.")
@@ -155,7 +156,11 @@ class Dialog(QtGui.QWidget):
         self.layout.addWidget(self.loadCombos, row, 0, 1, 2)
         row += 1
         self.messageLabel01 = QtGui.QLabel(">> ")
-        self.layout.addWidget(self.messageLabel01, row, 0, 1, 7)
+        self.layout.addWidget(self.messageLabel01, row, 0, 1, 5)
+        self.fastGenerationTick = QtGui.QCheckBox("Fast generation")
+        self.fastGenerationTick.setToolTip("Will finish when (if) first 100 combinations are found.")
+        self.layout.addWidget(self.fastGenerationTick, row, 5, 1, 2)
+        self.fastGenerationTick.stateChanged.connect(lambda:self.fastGenChecked(self.fastGenerationTick))
         row += 1
         self.messageLabel02 = QtGui.QLabel("")
         self.layout.addWidget(self.messageLabel02, row, 0, 1, 7)
@@ -436,6 +441,11 @@ class Dialog(QtGui.QWidget):
         self.noofweeks = self.noofweeksinput.value()
     def shiftlengthsinputChanged(self):
         self.shiftlengths = self.shiftlengthsinput.value()
+    def fastGenChecked(self,input):
+        if input.isChecked() == True:
+            self.fastGen = True
+        else:
+            self.fastGen = False
     def workinghoursinputChanged(self):
         self.workinghours = self.workinghoursinput.value()
     def weeklyrestinginputChanged(self):
@@ -738,7 +748,8 @@ class Dialog(QtGui.QWidget):
                 noConstraints += 1
                 if appendflag == True:
                     shiftseries.append(" ".join(item1))
-
+                    if self.fastGen == True and len(shiftseries) > 99:
+                        lp = False
         return shiftseries, noConstraints
     def checkifallshiftsfilled(self,appendflag,item1): # Just a constraint that must be fulfilled
         day = 0

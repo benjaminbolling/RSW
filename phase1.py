@@ -16,7 +16,7 @@
 # # # #   Initialization date: 2020-06-08                                                 # # # #
 # # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                     2020-06-29    # # # #
 # # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):         2020-07-01    # # # #
-# # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-02    # # # #
+# # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-03    # # # #
 # # # #                                                                                   # # # #
 # # # #                                                                                   # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -34,17 +34,19 @@ class Dialog(QtGui.QWidget):
         self.afterworkvisibleinvisible(False)
     def valuesInit(self):
         # Inputs values
-        self.shifttype = 1          # 1-shift or 2-shift or 3-shift, 1, 2, 3, resp.
-        self.workingdays = 7        # Amount of days per week
-        self.noofweeks = 2          # Amount of weeks to cycle over
-        self.shiftlengths = 8.33    # Length of shifts in hours
-        self.workinghours = 36      # Amount of working hours per person each week
-        self.weeklyresting = 36     # Length of weekly minimum single continuous resting time in hours
-        self.overwrite = 0          # In order to avoid re-running the algorithm unnecessarily
-        self.shiftLabel1 = "D"      # Define how this shift is to be labelled in the next phase
-        self.shiftLabel2 = "E"      # Define how this shift is to be labelled in the next phase
-        self.shiftLabel3 = "N"      # Define how this shift is to be labelled in the next phase
-        self.fastGen = False        # Finish algorithm after the first 100 combos
+        self.shifttype = 1              # 1-shift or 2-shift or 3-shift, 1, 2, 3, resp.
+        self.workingdays = 7            # Amount of days per week
+        self.noofweeks = 2              # Amount of weeks to cycle over
+        self.shiftlengths = 8.33        # Length of shifts in hours
+        self.workinghours = 36          # Amount of working hours per person each week
+        self.weeklyresting = 36         # Length of weekly minimum single continuous resting time in hours
+        self.overwrite = 0              # In order to avoid re-running the algorithm unnecessarily
+        self.shiftLabel1 = "D"          # Define how this shift is to be labelled in the next phase
+        self.shiftLabel2 = "E"          # Define how this shift is to be labelled in the next phase
+        self.shiftLabel3 = "N"          # Define how this shift is to be labelled in the next phase
+        self.fastGen = False            # Finish algorithm after the first 100 combos
+        self.clusterFreeDays = False    # Free days have to be clustered
+        self.freeDaysClusterValue = 2   # Free days clustering value
     def createLayout(self):
         self.layout = QtGui.QGridLayout(self)
         toplabel1 = QtGui.QLabel("1-, 2- or 3-Shift Combinations Generator Algorithm.")
@@ -143,6 +145,17 @@ class Dialog(QtGui.QWidget):
         self.weeklyrestinginput.setToolTip("Swedish law: 36 hours minimum")
         self.weeklyrestinginput.valueChanged.connect(self.weeklyrestinginputChanged)
         self.layout.addWidget(self.weeklyrestinginput, row, 4, 1, 3)
+        row += 1
+        self.clusterFreeDaysTick = QtGui.QCheckBox("Cluster free days?")
+        self.clusterFreeDaysTick.setToolTip("Ensure no single free days but clustered days")
+        self.layout.addWidget(self.clusterFreeDaysTick, row, 1, 1, 3)
+        self.clusterFreeDaysTick.stateChanged.connect(lambda:self.freeClustering(self.clusterFreeDaysTick))
+        self.freeDaysClusterSpin = QtGui.QSpinBox()
+        self.freeDaysClusterSpin.setValue(self.freeDaysClusterValue)
+        self.freeDaysClusterSpin.setMinimum(2)
+        self.freeDaysClusterSpin.setMaximum(4)
+        self.freeDaysClusterSpin.valueChanged.connect(self.freeDaysClusterSpinChanged)
+        self.layout.addWidget(self.freeDaysClusterSpin, row, 4, 1, 3)
         row += 1
         self.generateBtn = QtGui.QPushButton("Generate Combinations")
         self.generateBtn.clicked.connect(self.generateBtnClicked)
@@ -441,11 +454,18 @@ class Dialog(QtGui.QWidget):
         self.noofweeks = self.noofweeksinput.value()
     def shiftlengthsinputChanged(self):
         self.shiftlengths = self.shiftlengthsinput.value()
+    def freeClustering(self,input):
+        if input.isChecked() == True:
+            self.clusterFreeDays = True
+        else:
+            self.clusterFreeDays = False
     def fastGenChecked(self,input):
         if input.isChecked() == True:
             self.fastGen = True
         else:
             self.fastGen = False
+    def freeDaysClusterSpinChanged(self):
+        self.freeDaysClusterValue = self.freeDaysClusterSpin.value()
     def workinghoursinputChanged(self):
         self.workinghours = self.workinghoursinput.value()
     def weeklyrestinginputChanged(self):
@@ -716,6 +736,8 @@ class Dialog(QtGui.QWidget):
         appendflag = True # Reset for each combination
         appendflag = self.freedaysweeklycheck(appendflag,item1)
         appendflag = self.checkifallshiftsfilled(appendflag,item1)
+        if self.clusterFreeDays == True:
+            appendflag = self.freeDaysClusterCheck(appendflag,item1)
         if appendflag == True:
             shiftseries.append(" ".join(item1))
         lp = True
@@ -745,6 +767,8 @@ class Dialog(QtGui.QWidget):
                                 itemSerie2.append("0")
                         item1 = itemSerie2
                 appendflag = self.freedaysweeklycheck(appendflag,item1)
+                if self.clusterFreeDays == True:
+                    appendflag = self.freeDaysClusterCheck(appendflag,item1)
                 noConstraints += 1
                 if appendflag == True:
                     shiftseries.append(" ".join(item1))
@@ -786,6 +810,26 @@ class Dialog(QtGui.QWidget):
                 noOnes = 0
             if noOnes > 7-self.freedaysover7days:
                 appendflag = False
+        return appendflag
+    def freeDaysClusterCheck(self,appendflag,item1): # An additional constraint that might need to be fulfilled
+        freeDays = 0
+        item2 = [] # have to check a week back so when last week goes over to next week, rule is also obeyed.
+        for m in range(len(item1)-7,len(item1)):
+            item2.append(item1[m])
+        for m in range(len(item1)):
+            item2.append(item1[m])
+        minzero = 0
+        for item in item2:
+            if item == "0":
+                if minzero == 0:
+                    minzero = 1
+                else:
+                    minzero += 1
+            elif item == "1":
+                if minzero == 1:
+                    appendflag = False
+                else:
+                    minzero = 0
         return appendflag
     def updateafterworkInt(self):
         try:

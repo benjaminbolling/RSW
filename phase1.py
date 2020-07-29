@@ -646,6 +646,11 @@ class DialogPhase1(QWidget):
         self.afterworkSlide.setVisible(input)
         self.afterworkInt.setVisible(input)
     def generateBtnClicked(self):
+        if self.generateBtn.text() == "Generate Combinations":
+            self.beginGenerating()
+        elif self.generateBtn.text() == "Stop":
+            self.lp = False
+    def beginGenerating(self):
         if self.overwrite == 1:
             override = QMessageBox.warning(self, 'Warning', "Warning: Unsaved data will be overwritten. Proceed?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if override == QMessageBox.Yes:
@@ -676,8 +681,8 @@ class DialogPhase1(QWidget):
                 if self.shiftseries is None or len(self.shiftseries) == 0:
                     self.messageLabel01.setText("No combinations found.")
                 else:
-                    self.messageLabel01.setText("Number of combinations with no constraints' =  "+str(noConstraints))
-                    self.messageLabel02.setText("Number of combinations with constraints 'free days over 7 days' and 'all shifts filled' =  "+str(len(self.shiftseries)))
+                    self.messageLabel01.setText("Number of combinations with no constraints found:  "+str(noConstraints))
+                    self.messageLabel02.setText("Number of combinations with constraints found: "+str(len(self.shiftseries)))
                     saveQ, ok = QInputDialog.getItem(self, "Save / Print results", "Save all combinations (in .txt-format) or Print combinations found in the terminal output?", ["Save", "Print", "Neither"], 2, False)
                     if saveQ == "Save":
                         self.saveAllCombos()
@@ -728,6 +733,13 @@ class DialogPhase1(QWidget):
         shiftseries = []
         pool = tuple(iterable)
         n = len(pool)
+        combosexpected = int(math.factorial(n)/(math.factorial(r)*math.factorial(n-r)))
+        self.messageLabel01.setText("Complete: 0%")
+        self.messageLabel02.setText("Solutions found: 0")
+        self.messageLabel03.setText(" ")
+        self.generateBtn.setText("Stop")
+        QApplication.processEvents()
+        percentagecomplete = 0
         if r > n:
             return 0, 0
         indices = list(range(r))
@@ -741,15 +753,15 @@ class DialogPhase1(QWidget):
             appendflag = self.freeDaysClusterCheck(appendflag,item1)
         if appendflag == True:
             shiftseries.append(" ".join(item1))
-        lp = True
+        self.lp = True
         tempfile = open("temp.combo", 'w')
-        while lp == True:
+        while self.lp == True:
             for i in reversed(range(r)):
                 if indices[i] != i + n - r:
                     break
             else:
-                lp = False
-            if lp == True:
+                self.lp = False
+            if self.lp == True:
                 indices[i] += 1
                 for j in range(i+1, r):
                     indices[j] = indices[j-1] + 1
@@ -772,14 +784,18 @@ class DialogPhase1(QWidget):
                 if self.clusterFreeDays == True:
                     appendflag = self.freeDaysClusterCheck(appendflag,item1)
                 noConstraints += 1
+                if self.fastGen == False and int(100*noConstraints/combosexpected) > percentagecomplete:
+                    percentagecomplete = int(100*noConstraints/combosexpected)
+                    self.messageLabel01.setText("Complete: "+str(percentagecomplete)+"%")
+                    self.messageLabel02.setText("Number of combinations with constraints found: "+str(len(shiftseries)))
+                    QApplication.processEvents()
                 if appendflag == True:
                     shiftseries.append(" ".join(item1))
                     tempfile.write(" ".join(item1)+"\n")
                     if self.fastGen == True and len(shiftseries) > 99:
-                        lp = False
+                        self.lp = False
         tempfile.close()
-        print("noConstraints")
-        print(noConstraints)
+        self.generateBtn.setText("Generate Combinations")
         return shiftseries, noConstraints
     def checkifallshiftsfilled(self,appendflag,item1): # Just a constraint that must be fulfilled
         day = 0

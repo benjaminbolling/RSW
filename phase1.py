@@ -24,7 +24,7 @@
 from PyQt5.QtWidgets import QApplication,QCheckBox,QDialog,QDoubleSpinBox,QFileDialog,QGridLayout,QInputDialog,QMessageBox,QLabel,QLineEdit,QPushButton,QRadioButton,QSlider,QSpinBox,QWidget
 from PyQt5.QtCore import Qt
 from time import time
-import sys
+import sys, math
 import phase2
 
 class DialogPhase1(QWidget):
@@ -658,7 +658,7 @@ class DialogPhase1(QWidget):
             weeksneeded = int(self.workingdays*self.shifttype*self.shiftlengths/self.workinghours) + (self.workingdays*self.shifttype*self.shiftlengths/self.workinghours > 0)
             if self.noofweeks > 4:
                 errorflag = 1
-                override = QMessageBox.warning(self, 'Warning', str(self.noofweeks)+" weeks might require extensive amount of comping power and/or time. Continue anyways?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                override = QMessageBox.warning(self, 'Warning', str(self.noofweeks)+" weeks might require extensive amount of comping power and/or time, as the amount of combinations to go through is "+str(int(math.factorial(self.noofweeks*self.workingdays)/(math.factorial(shiftsperpersonpercycle)*math.factorial(self.noofweeks*self.workingdays-shiftsperpersonpercycle))))+". Continue anyways?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                 if override == QMessageBox.Yes:
                     errorflag = 0
             elif self.noofweeks < weeksneeded:
@@ -672,6 +672,7 @@ class DialogPhase1(QWidget):
                 t0 = time()
                 self.shiftseries, noConstraints = self.createAllShiftPossibilities(range(self.noofweeks*self.workingdays), shiftsperpersonpercycle)
                 t1 = time()
+                print(t1-t0)
                 if self.shiftseries is None or len(self.shiftseries) == 0:
                     self.messageLabel01.setText("No combinations found.")
                 else:
@@ -700,9 +701,6 @@ class DialogPhase1(QWidget):
             for combo in self.shiftseries:
                 file.write(combo+"\n")
             file.close()
-            self.messageLabel01.setText("Combinations saved as file: "+filename+".combo")
-            self.messageLabel02.setText(" ")
-            self.messageLabel03.setText(" ")
     def loadAllcombos(self):
         filename, type = QFileDialog.getOpenFileName(self, 'Open File', '', 'Combo-files (*.combo)')
         if filename is not None and len(filename)>0:
@@ -744,6 +742,7 @@ class DialogPhase1(QWidget):
         if appendflag == True:
             shiftseries.append(" ".join(item1))
         lp = True
+        tempfile = open("temp.combo", 'w')
         while lp == True:
             for i in reversed(range(r)):
                 if indices[i] != i + n - r:
@@ -775,8 +774,12 @@ class DialogPhase1(QWidget):
                 noConstraints += 1
                 if appendflag == True:
                     shiftseries.append(" ".join(item1))
+                    tempfile.write(" ".join(item1)+"\n")
                     if self.fastGen == True and len(shiftseries) > 99:
                         lp = False
+        tempfile.close()
+        print("noConstraints")
+        print(noConstraints)
         return shiftseries, noConstraints
     def checkifallshiftsfilled(self,appendflag,item1): # Just a constraint that must be fulfilled
         day = 0
@@ -868,6 +871,7 @@ class DialogPhase1(QWidget):
         dialog = phase2.DialogPhase2(self.shifttype,shifts,final)
         self.phase2dialogs.append(dialog)
         dialog.show()
+        print(len(self.phase2dialogs))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

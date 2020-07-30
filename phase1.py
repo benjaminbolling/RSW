@@ -884,7 +884,7 @@ class DialogPhase1(QWidget):
         shifts = []
         for n in range(self.shifttype):
             shifts.append(shifts0[n])
-        dialog = phase2.DialogPhase2(self.shifttype,shifts,final)
+        dialog = phase2.DialogPhase2(self.shifttype,shifts,final,self.shiftlengths)
         self.phase2dialogs.append(dialog)
         dialog.show()
         print(len(self.phase2dialogs))

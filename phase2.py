@@ -27,17 +27,19 @@ from csv import writer
 import sys
 
 class DialogPhase2(QDialog):
-    def __init__(self, shifttype, shifts, series, parent=None):
+    def __init__(self, shifttype, shifts, series, shiftlengths, parent=None):
         super(DialogPhase2, self).__init__(parent)
         self.setWindowTitle("1o2o3 S-CSV-fcal phase 2")
-        if shifttype == 0 and shifts == 0 and series == 0:
-            self.loadFunction()
+        if shifttype == 0 and shifts == 0 and series == 0 and shiftlengths == 0:
+            self.loadFunction() # For future ...
         else:
             self.shifttype = shifttype
             self.shifts = shifts
             self.series = series
+            self.shiftlengths = shiftlengths
             self.initValues()
             self.createLayout()
+            self.dailyrestinginputChanged()
             self.updateTable2()
     def initValues(self):
         self.dailyresting = 11      # Length of daily minimum resting time between shifts in hours
@@ -98,7 +100,6 @@ class DialogPhase2(QDialog):
                 self.table.setCellWidget(rr,col,wdg)
         self.table.setMaximumSize(self.getQTableWidgetSize(self.table))
         self.table.setMinimumSize(self.getQTableWidgetSize(self.table))
-
         row = row + 1 + len(self.series)
         toplabel5 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel5.setAlignment(Qt.AlignCenter)
@@ -169,6 +170,9 @@ class DialogPhase2(QDialog):
         self.layout.addWidget(self.exportButton,row,4,3,3)
     def dailyrestinginputChanged(self):
         self.dailyresting = self.dailyrestinginput.value()
+        # shiftdiff = int(16 - self.shiftlengths) + (16 - self.shiftlengths > 0)
+        # self.dailyshiftsdiff = int(self.dailyresting/shiftdiff) + (self.dailyresting/shiftdiff > 0)
+        self.readTableContents()
     def getQTableWidgetSize(self, table):
         w = table.verticalHeader().width() + 2
         for i in range(table.columnCount()):
@@ -222,6 +226,11 @@ class DialogPhase2(QDialog):
         self.shift1 = 0
         self.shift2 = 0
         self.shift3 = 0
+        widget = self.table.cellWidget(len(self.series)-1, 7)
+        if isinstance(widget, QComboBox):
+            prevval = widget.currentIndex()
+        else:
+            prevval = -1
         for i in range(len(self.series)):
             for j in range(7):
                 widget = self.table.cellWidget(i, j)
@@ -233,6 +242,16 @@ class DialogPhase2(QDialog):
                         self.shift2 += 1
                     elif value == 2:
                         self.shift3 += 1
+                    if value >= prevval or self.dailyresting < (16 - (prevval-value)*self.shiftlengths):
+                        print("OK")
+                        widget.setStyleSheet("background-color:#008000;");
+                    else:
+                        print("NOK")
+                        widget.setStyleSheet("background-color:#800000;");
+                    prevval = value
+                else:
+                    prevval = -1
+
         self.getShiftSums()
         self.updateTable2()
     def loadFunction(self):

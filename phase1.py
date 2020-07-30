@@ -24,7 +24,8 @@
 from PyQt5.QtWidgets import QApplication,QCheckBox,QDialog,QDoubleSpinBox,QFileDialog,QGridLayout,QInputDialog,QMessageBox,QLabel,QLineEdit,QPushButton,QRadioButton,QSlider,QSpinBox,QWidget
 from PyQt5.QtCore import Qt
 from time import time
-import sys, math
+import sys
+from math import factorial
 import phase2
 
 class DialogPhase1(QWidget):
@@ -663,7 +664,7 @@ class DialogPhase1(QWidget):
             weeksneeded = int(self.workingdays*self.shifttype*self.shiftlengths/self.workinghours) + (self.workingdays*self.shifttype*self.shiftlengths/self.workinghours > 0)
             if self.noofweeks > 4:
                 errorflag = 1
-                override = QMessageBox.warning(self, 'Warning', str(self.noofweeks)+" weeks might require extensive amount of comping power and/or time, as the amount of combinations to go through is "+str(int(math.factorial(self.noofweeks*self.workingdays)/(math.factorial(shiftsperpersonpercycle)*math.factorial(self.noofweeks*self.workingdays-shiftsperpersonpercycle))))+". Continue anyways?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                override = QMessageBox.warning(self, 'Warning', str(self.noofweeks)+" weeks might require extensive amount of comping power and/or time, as the amount of combinations to go through is "+str(int(factorial(self.noofweeks*self.workingdays)/(factorial(shiftsperpersonpercycle)*factorial(self.noofweeks*self.workingdays-shiftsperpersonpercycle))))+". Continue anyways?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                 if override == QMessageBox.Yes:
                     errorflag = 0
             elif self.noofweeks < weeksneeded:
@@ -733,7 +734,7 @@ class DialogPhase1(QWidget):
         shiftseries = []
         pool = tuple(iterable)
         n = len(pool)
-        combosexpected = int(math.factorial(n)/(math.factorial(r)*math.factorial(n-r)))
+        combosexpected = int(factorial(n)/(factorial(r)*factorial(n-r)))
         self.messageLabel01.setText("Complete: 0%")
         self.messageLabel02.setText("Solutions found: 0")
         self.messageLabel03.setText(" ")

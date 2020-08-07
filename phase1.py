@@ -54,14 +54,20 @@ class DialogPhase1(QWidget):
     def createLayout(self):
         self.layout = QGridLayout(self)
         toplabel1 = QLabel("1-, 2- or 3-Shift Combinations Generator Algorithm.")
+        toplabelx1 = QLabel("A Computational Approach to Generate Multi-Shift Rotational Workforce Schedules")
+        toplabelx2 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel2 = QLabel("- - - -  Define the parameters below  - - - -")
         toplabel3 = QLabel("")
         toplabel1.setAlignment(Qt.AlignCenter)
         toplabel2.setAlignment(Qt.AlignCenter)
         toplabel3.setAlignment(Qt.AlignCenter)
+        toplabelx1.setAlignment(Qt.AlignCenter)
+        toplabelx2.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(toplabel1, 0,0,1,7)
-        self.layout.addWidget(toplabel2, 1,0,1,7)
-        self.layout.addWidget(toplabel3, 2,0,1,7)
+        self.layout.addWidget(toplabelx1, 1,0,1,7)
+        self.layout.addWidget(toplabelx2, 3,0,1,7)
+        self.layout.addWidget(toplabel2, 5,0,1,7)
+        self.layout.addWidget(toplabel3, 6,0,1,7)
 
         # Labels / descriptions
         twothreeshiftslbl = QLabel("Shift type: ")
@@ -74,7 +80,7 @@ class DialogPhase1(QWidget):
         weeklyrestingtimelbl = QLabel("Weekly minimum single continuous resting time [h]: ")
 
         # Shift type radiobuttons (2 or 3 shift)
-        row = 3
+        row = 7
         self.layout.addWidget(twothreeshiftslbl,row,0,1,4)
         self.shifttyperadiobutton = QRadioButton("1-shift")
         self.shifttyperadiobutton.setChecked(True)
@@ -437,6 +443,12 @@ class DialogPhase1(QWidget):
         self.nextPhase.setVisible(False)
         self.layout.addWidget(self.nextPhase, row, 0, 1, 7)
         self.setLayout(self.layout)
+        row += 1
+        bottomlabel1 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+        bottomlabel2 = QLabel("Coder: Benjamin Bolling (benjaminbolling@icloud.com)")
+        self.layout.addWidget(bottomlabel1, row, 0, 1, 7)
+        row += 1
+        self.layout.addWidget(bottomlabel2, row, 0, 1, 7)
     def shifttyperadiobuttonClicked(self):
         self.shifttyperadiobutton = self.sender()
         if self.shifttyperadiobutton.isChecked():
@@ -678,19 +690,22 @@ class DialogPhase1(QWidget):
                 t0 = time()
                 self.shiftseries, noConstraints = self.createAllShiftPossibilities(range(self.noofweeks*self.workingdays), shiftsperpersonpercycle)
                 t1 = time()
-                print(t1-t0)
+                # print(t1-t0)
                 if self.shiftseries is None or len(self.shiftseries) == 0:
                     self.messageLabel01.setText("No combinations found.")
                 else:
                     self.messageLabel01.setText("Number of combinations with no constraints found:  "+str(noConstraints))
                     self.messageLabel02.setText("Number of combinations with constraints found: "+str(len(self.shiftseries)))
-                    saveQ, ok = QInputDialog.getItem(self, "Save / Print results", "Save all combinations (in .txt-format) or Print combinations found in the terminal output?", ["Save", "Print", "Neither"], 2, False)
-                    if saveQ == "Save":
+                    # saveQ, ok = QInputDialog.getItem(self, "Save / Print results", "Save all combinations (in .txt-format) or Print combinations found in the terminal output?", ["Save", "Print", "Neither"], 2, False)
+                    # if saveQ == "Save":
+                    #     self.saveAllCombos()
+                    # elif saveQ == "Print":
+                    #     print("Combinations found: ")
+                    #     for combo in self.shiftseries:
+                    #         print(combo)
+                    saveQ = QMessageBox.question(self, 'Save results', "Save all combinations in .txt or .csv format?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    if saveQ == QMessageBox.Yes:
                         self.saveAllCombos()
-                    elif saveQ == "Print":
-                        print("Combinations found: ")
-                        for combo in self.shiftseries:
-                            print(combo)
                 self.messageLabel03.setText("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
                 self.afterworkIntValue = 0
                 self.afterworkvisibleinvisible(True)
@@ -888,7 +903,7 @@ class DialogPhase1(QWidget):
         dialog = phase2.DialogPhase2(self.shifttype,shifts,final,self.shiftlengths)
         self.phase2dialogs.append(dialog)
         dialog.show()
-        print(len(self.phase2dialogs))
+        # print(len(self.phase2dialogs))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

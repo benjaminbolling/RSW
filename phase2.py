@@ -168,6 +168,13 @@ class DialogPhase2(QDialog):
         self.exportButton.clicked.connect(self.exportFunction)
         self.exportButton.setToolTip("Export in a CSV format")
         self.layout.addWidget(self.exportButton,row,4,3,3)
+
+        row = row + 1 + self.shifttype * 10
+        bottomlabel1 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+        bottomlabel2 = QLabel("Coder: Benjamin Bolling (benjaminbolling@icloud.com)")
+        self.layout.addWidget(bottomlabel1, row, 0, 1, 7)
+        row += 1
+        self.layout.addWidget(bottomlabel2, row, 0, 1, 7)
     def dailyrestinginputChanged(self):
         self.dailyresting = self.dailyrestinginput.value()
         # shiftdiff = int(16 - self.shiftlengths) + (16 - self.shiftlengths > 0)
@@ -243,10 +250,8 @@ class DialogPhase2(QDialog):
                     elif value == 2:
                         self.shift3 += 1
                     if value >= prevval or self.dailyresting < (16 - (prevval-value)*self.shiftlengths):
-                        print("OK")
                         widget.setStyleSheet("background-color:#008000;");
                     else:
-                        print("NOK")
                         widget.setStyleSheet("background-color:#800000;");
                     prevval = value
                 else:

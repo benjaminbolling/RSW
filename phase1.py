@@ -51,6 +51,7 @@ class DialogPhase1(QWidget):
         self.fastGen = False            # Finish algorithm after the first 100 combos
         self.clusterFreeDays = False    # Free days have to be clustered
         self.freeDaysClusterValue = 2   # Free days clustering value
+        self.noOfPeople = 1           # Minimum number of people per shift
     def createLayout(self):
         self.layout = QGridLayout(self)
         toplabel1 = QLabel("1-, 2- or 3-Shift Combinations Generator Algorithm.")
@@ -72,7 +73,7 @@ class DialogPhase1(QWidget):
         # Labels / descriptions
         twothreeshiftslbl = QLabel("Shift type: ")
         daysperweeklbl = QLabel("Working days per week: ")
-        noOfPeoplelbl = QLabel("Number of people: ")
+        noOfPeoplelbl = QLabel("Shift occupancy: ")
         noOfWeekslbl = QLabel("Number of weeks to cycle over: ")
         noofpeoplepershiftlbl = QLabel("Number of people per shift: ")
         lengthofshiftlbl = QLabel("Shift Lengths [h]: ")
@@ -133,6 +134,13 @@ class DialogPhase1(QWidget):
         self.noofweeksinput.setRange(1,10)
         self.noofweeksinput.valueChanged.connect(self.noofweeksinputChanged)
         self.layout.addWidget(self.noofweeksinput, row, 4, 1, 3)
+        row += 1
+        self.layout.addWidget(noOfPeoplelbl,row,0,1,4)
+        self.noOfPeopleinput = QSpinBox()
+        self.noOfPeopleinput.setValue(self.noOfPeople)
+        self.noOfPeopleinput.setRange(1,10)
+        self.noOfPeopleinput.valueChanged.connect(self.noOfPeopleinputChanged)
+        self.layout.addWidget(self.noOfPeopleinput, row, 4, 1, 3)
         row += 1
         self.layout.addWidget(lengthofshiftlbl,row,0,1,4)
         self.shiftlengthsinput = QDoubleSpinBox()
@@ -486,6 +494,9 @@ class DialogPhase1(QWidget):
         self.workinghours = self.workinghoursinput.value()
     def weeklyrestinginputChanged(self):
         self.weeklyresting = self.weeklyrestinginput.value()
+    def noOfPeopleinputChanged(self):
+        self.noOfPeople = self.noOfPeopleinput.value()
+        print(self.noOfPeople)
     def afterworkIntChangedS(self):
         self.afterworkIntValue = self.afterworkSlide.value()
         self.afterworkInt.setValue(self.afterworkIntValue)
@@ -673,7 +684,7 @@ class DialogPhase1(QWidget):
             shiftsperpersonpercycle = int(self.workinghours*self.noofweeks/self.shiftlengths)+(self.workinghours*self.noofweeks/self.shiftlengths > 0) # rounding integer up
             freetimeperpersonpercycle = self.noofweeks*self.workingdays - shiftsperpersonpercycle
             self.freedaysover7days = int(self.weeklyresting/24)+(self.weeklyresting/24 > 0)
-            weeksneeded = int(self.workingdays*self.shifttype*self.shiftlengths/self.workinghours) + (self.workingdays*self.shifttype*self.shiftlengths/self.workinghours > 0)
+            weeksneeded = int(self.noOfPeople*self.workingdays*self.shifttype*self.shiftlengths/self.workinghours) + (self.noOfPeople*self.workingdays*self.shifttype*self.shiftlengths/self.workinghours > 0)
             if self.noofweeks > 4:
                 errorflag = 1
                 override = QMessageBox.warning(self, 'Warning', str(self.noofweeks)+" weeks might require extensive amount of comping power and/or time, as the amount of combinations to go through is "+str(int(factorial(self.noofweeks*self.workingdays)/(factorial(shiftsperpersonpercycle)*factorial(self.noofweeks*self.workingdays-shiftsperpersonpercycle))))+". Continue anyways?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -681,7 +692,7 @@ class DialogPhase1(QWidget):
                     errorflag = 0
             elif self.noofweeks < weeksneeded:
                 errorflag = 1
-                override = QMessageBox.warning(self, 'Warning', "Warning: More weeks might be needed. Minimum recommendeded number of weeeks for these settings is "+str(weeksneeded)+". Continue anyways?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                override = QMessageBox.warning(self, 'Warning', "Warning: More weeks might be needed. Recommendeded number of weeks for these settings is "+str(weeksneeded)+", but there might be solutions for "+str(weeksneeded)+" weeks. Continue anyways?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                 if override == QMessageBox.Yes:
                     errorflag = 0
             else:
@@ -831,7 +842,7 @@ class DialogPhase1(QWidget):
             for b in range(len(a)):
                 cyclecheck[b] = cyclecheck[b] + int(a[b])
         for m in cyclecheck:
-            if m < self.shifttype:
+            if m < self.shifttype*self.noOfPeople:
                 appendflag = False
         return appendflag
     def freedaysweeklycheck(self,appendflag,item1): # Just another constraint that must be fulfilled

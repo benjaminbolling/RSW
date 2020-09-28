@@ -17,6 +17,7 @@
 # # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                     2020-06-29    # # # #
 # # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):         2020-07-01    # # # #
 # # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-03    # # # #
+# # # #   Milestone 4 (phase 2 finished, solution finder implemented):      2020-07-03    # # # #
 # # # #                                                                                   # # # #
 # # # #                                                                                   # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -496,7 +497,6 @@ class DialogPhase1(QWidget):
         self.weeklyresting = self.weeklyrestinginput.value()
     def noOfPeopleinputChanged(self):
         self.noOfPeople = self.noOfPeopleinput.value()
-        print(self.noOfPeople)
     def afterworkIntChangedS(self):
         self.afterworkIntValue = self.afterworkSlide.value()
         self.afterworkInt.setValue(self.afterworkIntValue)
@@ -701,19 +701,11 @@ class DialogPhase1(QWidget):
                 t0 = time()
                 self.shiftseries, noConstraints = self.createAllShiftPossibilities(range(self.noofweeks*self.workingdays), shiftsperpersonpercycle)
                 t1 = time()
-                # print(t1-t0)
                 if self.shiftseries is None or len(self.shiftseries) == 0:
                     self.messageLabel01.setText("No combinations found.")
                 else:
                     self.messageLabel01.setText("Number of combinations with no constraints found:  "+str(noConstraints))
                     self.messageLabel02.setText("Number of combinations with constraints found: "+str(len(self.shiftseries)))
-                    # saveQ, ok = QInputDialog.getItem(self, "Save / Print results", "Save all combinations (in .txt-format) or Print combinations found in the terminal output?", ["Save", "Print", "Neither"], 2, False)
-                    # if saveQ == "Save":
-                    #     self.saveAllCombos()
-                    # elif saveQ == "Print":
-                    #     print("Combinations found: ")
-                    #     for combo in self.shiftseries:
-                    #         print(combo)
                     saveQ = QMessageBox.question(self, 'Save results', "Save all combinations in .txt or .csv format?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                     if saveQ == QMessageBox.Yes:
                         self.saveAllCombos()
@@ -914,7 +906,6 @@ class DialogPhase1(QWidget):
         dialog = phase2.DialogPhase2(self.shifttype,shifts,final,self.shiftlengths)
         self.phase2dialogs.append(dialog)
         dialog.show()
-        # print(len(self.phase2dialogs))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

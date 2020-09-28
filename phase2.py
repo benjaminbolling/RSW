@@ -17,14 +17,16 @@
 # # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                     2020-06-29    # # # #
 # # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):         2020-07-01    # # # #
 # # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-03    # # # #
+# # # #   Milestone 4 (phase 2 finished, solution finder implemented):      2020-07-03    # # # #
 # # # #                                                                                   # # # #
 # # # #                                                                                   # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-from PyQt5.QtWidgets import QApplication,QComboBox,QDialog,QFileDialog,QGridLayout,QHeaderView,QInputDialog,QLabel,QPushButton,QSpinBox,QTableWidget,QVBoxLayout
+from PyQt5.QtWidgets import QApplication,QComboBox,QDialog,QFileDialog,QGridLayout,QHeaderView,QInputDialog,QLabel,QPushButton,QSlider,QSpinBox,QTableWidget,QVBoxLayout
 from PyQt5.QtCore import QSize, Qt
 from csv import writer
 import sys
+from json import dump, load
 
 class DialogPhase2(QDialog):
     def __init__(self, shifttype, shifts, series, shiftlengths, parent=None):
@@ -77,6 +79,30 @@ class DialogPhase2(QDialog):
         toplabel4 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel4.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(toplabel4, row, 0, 1, 7)
+        if self.shifttype > 1:
+            row += 1
+            self.findSolutionsBtn = QPushButton("Find solutions")
+            self.findSolutionsBtn.clicked.connect(self.findSolution)
+            self.layout.addWidget(self.findSolutionsBtn, row, 2, 1, 3)
+            row += 1
+            self.solutionsLbl = QLabel("Solution index: ")
+            self.solutionsLbl.setVisible(False)
+            self.layout.addWidget(self.solutionsLbl, row, 0, 1, 2)
+            self.solutionsBrowsing = QSpinBox()
+            self.solutionsBrowsing.valueChanged.connect(self.solutionIntChangedI)
+            self.solutionsBrowsing.setVisible(False)
+            self.solutionsBrowsing.setKeyboardTracking(False)
+            self.layout.addWidget(self.solutionsBrowsing, row, 2, 1, 2)
+            self.solutionsSlider = QSlider()
+            self.solutionsSlider.setOrientation(Qt.Horizontal)
+            self.solutionsSlider.setVisible(False)
+            self.solutionsSlider.valueChanged.connect(self.solutionIntChangedS)
+            self.solutionsSlider.sliderReleased.connect(self.solutionMatrix2Table1)
+            self.layout.addWidget(self.solutionsSlider, row, 4, 1, 3)
+            row += 1
+            toplabel4b = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+            toplabel4b.setAlignment(Qt.AlignCenter)
+            self.layout.addWidget(toplabel4b, row, 0, 1, 7)
         row += 1
         tablelayout = QVBoxLayout()
         self.layout.addLayout(tablelayout,row,0,len(self.series),7)
@@ -156,13 +182,9 @@ class DialogPhase2(QDialog):
         row = row + 1 + self.shifttype * 10
         self.loadButton = QPushButton("Load")
         self.loadButton.clicked.connect(self.loadFunction)
-        self.loadButton.setEnabled(False)
-        self.loadButton.setToolTip("Future feature")
         self.layout.addWidget(self.loadButton,row,0,3,2)
         self.saveButton = QPushButton("Save")
         self.saveButton.clicked.connect(self.saveFunction)
-        self.saveButton.setEnabled(False)
-        self.saveButton.setToolTip("Future feature")
         self.layout.addWidget(self.saveButton,row,2,3,2)
         self.exportButton = QPushButton("Export")
         self.exportButton.clicked.connect(self.exportFunction)
@@ -177,8 +199,6 @@ class DialogPhase2(QDialog):
         self.layout.addWidget(bottomlabel2, row, 0, 1, 7)
     def dailyrestinginputChanged(self):
         self.dailyresting = self.dailyrestinginput.value()
-        # shiftdiff = int(16 - self.shiftlengths) + (16 - self.shiftlengths > 0)
-        # self.dailyshiftsdiff = int(self.dailyresting/shiftdiff) + (self.dailyresting/shiftdiff > 0)
         self.readTableContents()
     def getQTableWidgetSize(self, table):
         w = table.verticalHeader().width() + 2
@@ -213,22 +233,34 @@ class DialogPhase2(QDialog):
             widget1.setText(str(shift1))
             if shift1 < 1:
                 widget1.setStyleSheet("background-color:#800000;");
+                widget1.hide()
+                widget1.show()
             else:
                 widget1.setStyleSheet("background-color:#008000;");
+                widget1.hide()
+                widget1.show()
             if self.shifttype > 1:
                 widget2 = self.table2.cellWidget(1, j)
                 widget2.setText(str(shift2))
                 if shift2 < 1:
                     widget2.setStyleSheet("background-color:#800000;");
+                    widget2.hide()
+                    widget2.show()
                 else:
                     widget2.setStyleSheet("background-color:#008000;");
+                    widget2.hide()
+                    widget2.show()
             if self.shifttype > 2:
                 widget3 = self.table2.cellWidget(2, j)
                 widget3.setText(str(shift3))
                 if shift3 < 1:
                     widget3.setStyleSheet("background-color:#800000;");
+                    widget3.hide()
+                    widget3.show()
                 else:
                     widget3.setStyleSheet("background-color:#008000;");
+                    widget3.hide()
+                    widget3.show()
     def readTableContents(self):
         self.shift1 = 0
         self.shift2 = 0
@@ -256,13 +288,34 @@ class DialogPhase2(QDialog):
                     prevval = value
                 else:
                     prevval = -1
-
         self.getShiftSums()
         self.updateTable2()
+        self.matrix = self.createFullMatrix()
     def loadFunction(self):
-        print("Load")
+        filename, type = QFileDialog.getOpenFileName(self, 'Load File', "", "Text Files (*.txt)", options=QFileDialog.DontUseNativeDialog)
+        if len(filename) > 0:
+            self.solutionsBrowsing.setValue(0)
+            self.solutionsSlider.setValue(0)
+            self.findSolutionsBtn.setVisible(True)
+            self.solutionsBrowsing.setVisible(False)
+            self.solutionsSlider.setVisible(False)
+            self.solutionsLbl.setVisible(False)
+            with open(filename, 'r') as in_file:
+                self.shifttype, self.shifts, self.series, self.shiftlengths, self.dailyresting, solutionMatrix = load(in_file)
+            self.solutionMatrices = [solutionMatrix]
+            self.solutionMatrix2Table1()
     def saveFunction(self):
-        print("Save")
+        filename, type = QFileDialog.getSaveFileName(self, 'Save File', "Untitled.txt", "Text Files (*.txt)", options=QFileDialog.DontUseNativeDialog)
+        if len(filename) > 0:
+            if len(filename.split(".")) > 1:
+                if filename.split(".")[-1] != "txt":
+                    filename = filename+".txt"
+            elif len(filename.split(".")) < 2:
+                filename = filename+".txt"
+            solutionMatrix = self.table1ToSolutionMatrix()
+            toSave = [self.shifttype, self.shifts, self.series, self.shiftlengths, self.dailyresting, solutionMatrix]
+            with open(filename, 'w') as out_file:
+                dump(toSave, out_file)
     def exportFunction(self):
         filename, type = QFileDialog.getSaveFileName(self, 'Save output as...')
         format, ok = QInputDialog.getItem(self, "Export filetype", "Select filetype to export file into", ["CSV", "txt"], 1, False)
@@ -317,9 +370,119 @@ class DialogPhase2(QDialog):
                     personseries.append(day)
             matrix.append(personseries)
         return matrix
+    def findSolution(self):
+        # Now convert all series' values to zeroes and ones
+        self.zeroOneS = []
 
-if __name__ == '__main__':
-    app = QApplication([sys.argv[0]])
-    window = DialogPhase2(0,0,0)
-    window.show()
-    sys.exit(app.exec_())
+        for m in range(len(self.matrix[0])):
+            if self.matrix[0][m] == "-":
+                self.zeroOneS.append(0)
+            else:
+                self.zeroOneS.append(1)
+
+        shifts = ""
+        for m in range(self.shifttype):
+            shifts = shifts+str(m+1)
+
+        # Now we have to try to construct solution matrices
+        self.solutionMatrices = list(self.createSolutionMatrices("12",repeat=len(self.zeroOneS)))
+        if len(self.solutionMatrices) > 0:
+            self.findSolutionsBtn.setEnabled(False)
+            self.findSolutionsBtn.setToolTip("Already generated, solutions found: "+str(len(self.solutionMatrices)))
+            self.solutionsBrowsing.setVisible(True)
+            self.solutionsBrowsing.setValue(0)
+            self.solutionsBrowsing.setRange(0,len(self.solutionMatrices)-1)
+            self.solutionsSlider.setVisible(True)
+            self.solutionsSlider.setValue(0)
+            self.solutionsSlider.setRange(0,len(self.solutionMatrices)-1)
+            self.solutionsLbl.setVisible(True)
+            self.solutionMatrix2Table1()
+        else:
+            self.findSolutionsBtn.setVisible(True)
+            self.solutionsBrowsing.setVisible(False)
+            self.solutionsSlider.setVisible(False)
+            self.solutionsLbl.setVisible(False)
+    def solutionIntChangedS(self):
+        self.solutionsBrowsing.setValue(self.solutionsSlider.value())
+    def solutionIntChangedI(self):
+        self.solutionsSlider.setValue(self.solutionsBrowsing.value())
+        self.solutionMatrix2Table1()
+    def table1ToSolutionMatrix(self):
+        day = -1
+        solutionMatrix = []
+        for i in range(len(self.series)):
+            for j in range(7):
+                day += 1
+                widget = self.table.cellWidget(i, j)
+                if isinstance(widget, QComboBox):
+                    solutionMatrix.append(widget.currentIndex()+1)
+                elif isinstance(widget, QLabel):
+                    solutionMatrix.append(0)
+        return solutionMatrix
+    def solutionMatrix2Table1(self):
+        day = -1
+        for i in range(len(self.series)):
+            for j in range(7):
+                day += 1
+                widget = self.table.cellWidget(i, j)
+                if isinstance(widget, QComboBox):
+                    widget.setCurrentIndex(int(self.solutionMatrices[self.solutionsBrowsing.value()][day])-1)
+                    widget.hide()
+                    widget.show()
+    def insertFreeDaysInSolutionMatrix(self,input):
+        ind = -1
+        matrixOut = []
+        for m in range(len(self.zeroOneS)):
+            if self.zeroOneS[m] == 1:
+                ind += 1
+                matrixOut.append(input[ind])
+            else:
+                matrixOut.append(0)
+        return matrixOut
+    def createSolutionMatrices(self,*args, **kwds):
+        pools = list(map(tuple, args)) * kwds.get('repeat', 1)
+        result = [[]]
+        for pool in pools:
+            result = [x+[y] for x in result for y in pool]
+        for prod in list(result):
+            matrixOut = self.insertFreeDaysInSolutionMatrix(prod)
+            shiftsOk = self.checkifshiftsOK(matrixOut)
+            if shiftsOk == True:
+                yield matrixOut
+    def checkifshiftsOK(self,solutionMatrix):
+        shiftsOk = True
+        prevval = 0
+        # Check so time between each shift is obliged
+        for shift in solutionMatrix:
+            if int(shift) >= prevval or self.dailyresting < (16 - (prevval-int(shift))*self.shiftlengths):
+                prevval = int(shift)
+            elif int(shift) == 0:
+                prevval = int(shift)
+            else:
+                prevval = int(shift)
+                shiftsOk = False
+        # Check if all shifts are filled
+        if shiftsOk == True:
+            day = -1
+            dayShifts = []
+            for m in range(7):
+                dayShifts.append([])
+            for n in range(int(len(solutionMatrix))):
+                day += 1
+                dayShifts[day].append(int(solutionMatrix[n]))
+                if day == 6:
+                    day = -1
+            for k in range(len(dayShifts)):
+                if sum(dayShifts[k]) > 0:
+                    for l in range(1,self.shifttype+1):
+                        if l not in dayShifts[k]:
+                            shiftsOk = False
+        return shiftsOk
+
+# if __name__ == '__main__':
+#     app = QApplication([sys.argv[0]])
+#     #window = DialogPhase2(3,['D', 'E', 'N'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]],8.33)
+#     window = DialogPhase2(2,['D', 'E'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1]],8.33)
+#
+#     window.show()
+#     sys.exit(app.exec_())

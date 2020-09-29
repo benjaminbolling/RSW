@@ -23,9 +23,9 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 from PyQt5.QtWidgets import QApplication,QComboBox,QDialog,QFileDialog,QGridLayout,QHeaderView,QInputDialog,QLabel,QPushButton,QSlider,QSpinBox,QTableWidget,QVBoxLayout
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import QSize, Qt, QCoreApplication
 from csv import writer
-import sys
+import sys, numpy
 from json import dump, load
 
 class DialogPhase2(QDialog):
@@ -373,19 +373,20 @@ class DialogPhase2(QDialog):
     def findSolution(self):
         # Now convert all series' values to zeroes and ones
         self.zeroOneS = []
-
         for m in range(len(self.matrix[0])):
             if self.matrix[0][m] == "-":
                 self.zeroOneS.append(0)
             else:
                 self.zeroOneS.append(1)
-
-        shifts = ""
-        for m in range(self.shifttype):
-            shifts = shifts+str(m+1)
-
+        self.findSolutionsBtn.setText("Finding solutions. Combinations to go through: "+str(int(float(self.shifttype)**float(sum(self.zeroOneS)))))
+        QApplication.processEvents()
+        QCoreApplication.processEvents()
+        shifts = []
+        for m in range(len(self.shifts)):
+            shifts.append(m+1)
         # Now we have to try to construct solution matrices
-        self.solutionMatrices = list(self.createSolutionMatrices("12",repeat=len(self.zeroOneS)))
+        self.solutionMatrices = list(self.createSolutionMatrices(sum(self.zeroOneS),shifts))
+        self.findSolutionsBtn.setText("Solutions found: "+str(int(len(self.solutionMatrices))))
         if len(self.solutionMatrices) > 0:
             self.findSolutionsBtn.setEnabled(False)
             self.findSolutionsBtn.setToolTip("Already generated, solutions found: "+str(len(self.solutionMatrices)))
@@ -398,7 +399,7 @@ class DialogPhase2(QDialog):
             self.solutionsLbl.setVisible(True)
             self.solutionMatrix2Table1()
         else:
-            self.findSolutionsBtn.setVisible(True)
+            self.findSolutionsBtn.setEnabled(True)
             self.solutionsBrowsing.setVisible(False)
             self.solutionsSlider.setVisible(False)
             self.solutionsLbl.setVisible(False)
@@ -439,16 +440,24 @@ class DialogPhase2(QDialog):
             else:
                 matrixOut.append(0)
         return matrixOut
-    def createSolutionMatrices(self,*args, **kwds):
-        pools = list(map(tuple, args)) * kwds.get('repeat', 1)
-        result = [[]]
-        for pool in pools:
-            result = [x+[y] for x in result for y in pool]
-        for prod in list(result):
-            matrixOut = self.insertFreeDaysInSolutionMatrix(prod)
+    def createSolutionMatrices(self,days,shifts):
+        results = self.cartesianProduct(days,shifts).tolist()
+        for indR, result in enumerate(results):
+            for indV, value in enumerate(result):
+                results[indR][indV] = int(value)
+        for result in results:
+            matrixOut = self.insertFreeDaysInSolutionMatrix(result)
             shiftsOk = self.checkifshiftsOK(matrixOut)
             if shiftsOk == True:
                 yield matrixOut
+    def cartesianProduct(self,days,shifts):
+        arrays = []
+        for n in range(days):
+            arrays.append(shifts)
+        arr = numpy.empty([len(a) for a in arrays] + [days])
+        for i, a in enumerate(numpy.ix_(*arrays)):
+            arr[...,i] = a
+        return arr.reshape(-1, days)
     def checkifshiftsOK(self,solutionMatrix):
         shiftsOk = True
         prevval = 0

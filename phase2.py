@@ -390,54 +390,64 @@ class DialogPhase2(QDialog):
             shifts.append(m+1)
         # Now we have to try to construct solution matrices
         noofcombinations = int(float(self.shifttype)**float(sum(self.zeroOneS)))
-        msgbox = QMessageBox()
-        msgbox.setWindowTitle("Select how to proceed")
-        memoryNeeded = noofcombinations*10
-        if memoryNeeded < 10**3:
-            memoryNeeded = str(memoryNeeded) + " bytes"
-        elif memoryNeeded < 10**6:
-            memoryNeeded = str(memoryNeeded/(10**3)) + " kb"
-        elif memoryNeeded < 10**9:
-            memoryNeeded = str(memoryNeeded/(10**6)) + " Mb"
-        elif memoryNeeded < 10**12:
-            memoryNeeded = str(memoryNeeded/(10**9)) + " Gb"
+        print(noofcombinations)
+        if noofcombinations > 10**6:
+            msgbox = QMessageBox()
+            msgbox.setWindowTitle("Select how to proceed")
+            memoryNeeded = noofcombinations*sum(self.zeroOneS)
+            if memoryNeeded < 10**9:
+                memoryNeeded = str(memoryNeeded/(10**6)) + " Mb"
+            elif memoryNeeded < 10**12:
+                memoryNeeded = str(memoryNeeded/(10**9)) + " Gb"
+            else:
+                memoryNeeded = str(memoryCalc/(10**12)) + " Tb"
+            msgbox.setText("Combinations to go through: "+str(noofcombinations)+".\nThis means up to "+memoryNeeded+" may be required in memory mode.\n\n     : Select which method to proceed with : \n\nInternal Memory mode may require substantial amount of memories.\n\nProcessing Mode requires less far less internal memory but more processing power (and is usually slower).")
+            memBtn = msgbox.addButton("Memory Mode",QMessageBox.ResetRole)
+            procBtn = msgbox.addButton("Processor Mode",QMessageBox.ApplyRole)
+            cancelBtn = msgbox.addButton("Cancel",QMessageBox.NoRole)
+            msgbox.exec_()
+            if msgbox.clickedButton() == memBtn:
+                proceed = 1
+                mode = "proc"
+            elif msgbox.clickedButton() == procBtn:
+                proceed = 1
+                mode = "mem"
+            else:
+                proceed = 0
+                mode = ""
         else:
-            memoryNeeded = str(memoryCalc/(10**12)) + " Tb"
-        msgbox.setText("Combinations to go through: "+str(noofcombinations)+".\nThis means up to "+memoryNeeded+" may be required in memory mode.\n\n     : Select which method to proceed with : \n\nInternal Memory mode may require substantial amount of memories.\n\nProcessing Mode requires less far less internal memory but more processing power (and is usually slower).")
-        memBtn = msgbox.addButton("Memory Mode",QMessageBox.ResetRole)
-        procBtn = msgbox.addButton("Processor Mode",QMessageBox.ApplyRole)
-        cancelBtn = msgbox.addButton("Cancel",QMessageBox.NoRole)
-        msgbox.exec_()
-        if msgbox.clickedButton() != cancelBtn:
+            proceed = 1
+            mode = "mem"
+        if proceed == 1:
             t0 = time()
-            if msgbox.clickedButton() == procBtn:
+            if mode == "proc":
                 arrays = [[shifts[0]] * sum(self.zeroOneS)]
                 self.solutionMatrices = self.recursiveCartesianProduct(sum(self.zeroOneS),shifts,arrays,arrays[0],1,1)
                 if self.checkifshiftsOK(self.solutionMatrices[0]) == False:
                     del self.solutionMatrices[0]
-                print(self.solutionMatrices)
-            elif msgbox.clickedButton() == memBtn:
+            elif mode == "mem":
                 self.solutionMatrices = list(self.createSolutionMatrices(sum(self.zeroOneS),shifts))
             t1  = time()
-            print("Solutions found: "+str(int(len(self.solutionMatrices))))
-            print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
-            self.findSolutionsBtn.setText("Solutions found: "+str(int(len(self.solutionMatrices))))
-            if len(self.solutionMatrices) > 0:
-                self.findSolutionsBtn.setEnabled(False)
-                self.findSolutionsBtn.setToolTip("Already generated, solutions found: "+str(len(self.solutionMatrices)))
-                self.solutionsBrowsing.setVisible(True)
-                self.solutionsBrowsing.setValue(0)
-                self.solutionsBrowsing.setRange(0,len(self.solutionMatrices)-1)
-                self.solutionsSlider.setVisible(True)
-                self.solutionsSlider.setValue(0)
-                self.solutionsSlider.setRange(0,len(self.solutionMatrices)-1)
-                self.solutionsLbl.setVisible(True)
-                self.solutionMatrix2Table1()
-            else:
-                self.findSolutionsBtn.setEnabled(True)
-                self.solutionsBrowsing.setVisible(False)
-                self.solutionsSlider.setVisible(False)
-                self.solutionsLbl.setVisible(False)
+            if mode == "proc" or mode == "mem":
+                print("Solutions found: "+str(int(len(self.solutionMatrices))))
+                print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
+                self.findSolutionsBtn.setText("Solutions found: "+str(int(len(self.solutionMatrices))))
+                if len(self.solutionMatrices) > 0:
+                    self.findSolutionsBtn.setEnabled(False)
+                    self.findSolutionsBtn.setToolTip("Already generated, solutions found: "+str(len(self.solutionMatrices)))
+                    self.solutionsBrowsing.setVisible(True)
+                    self.solutionsBrowsing.setValue(0)
+                    self.solutionsBrowsing.setRange(0,len(self.solutionMatrices)-1)
+                    self.solutionsSlider.setVisible(True)
+                    self.solutionsSlider.setValue(0)
+                    self.solutionsSlider.setRange(0,len(self.solutionMatrices)-1)
+                    self.solutionsLbl.setVisible(True)
+                    self.solutionMatrix2Table1()
+                else:
+                    self.findSolutionsBtn.setEnabled(True)
+                    self.solutionsBrowsing.setVisible(False)
+                    self.solutionsSlider.setVisible(False)
+                    self.solutionsLbl.setVisible(False)
     def solutionIntChangedS(self):
         self.solutionsBrowsing.setValue(self.solutionsSlider.value())
     def solutionIntChangedI(self):
@@ -491,7 +501,6 @@ class DialogPhase2(QDialog):
         self.solutionMatrices = self.recursiveCartesianProduct(sum(self.zeroOneS),shifts,arrays,arrays[0],1,0)
         if self.checkifshiftsOK(self.solutionMatrices[0]) == False:
             del self.solutionMatrices[0]
-        print(self.solutionMatrices)
         t1  = time()
         print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
         if len(self.solutionMatrices) > 0:
@@ -532,7 +541,6 @@ class DialogPhase2(QDialog):
             arrays.append(shifts)
         arr = numpy.empty([len(a) for a in arrays] + [days])
         for i, a in enumerate(numpy.ix_(*arrays)):
-            print(a.reshape(-1))
             arr[...,i] = a
         return arr.reshape(-1, days)
     def checkifshiftsOK(self,solutionMatrix):
@@ -567,10 +575,10 @@ class DialogPhase2(QDialog):
 
 if __name__ == '__main__':
     app = QApplication([sys.argv[0]])
-    window = DialogPhase2(3,['D', 'E', 'N'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]],8.33)
+    #window = DialogPhase2(3,['D', 'E', 'N'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]],8.33)
     #window = DialogPhase2(2,['D', 'E'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
     # window = DialogPhase2(3,['D', 'E', 'N'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
-    # window = DialogPhase2(2,['D', 'E'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
+    window = DialogPhase2(3,['D', 'E', 'N'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
 
     window.show()
     sys.exit(app.exec_())

@@ -22,11 +22,12 @@
 # # # #                                                                                   # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-from PyQt5.QtWidgets import QApplication,QComboBox,QDialog,QFileDialog,QGridLayout,QHeaderView,QInputDialog,QLabel,QPushButton,QSlider,QSpinBox,QTableWidget,QVBoxLayout
+from PyQt5.QtWidgets import QApplication,QComboBox,QDialog,QFileDialog,QGridLayout,QHeaderView,QInputDialog,QLabel,QMessageBox,QPushButton,QSlider,QSpinBox,QTableWidget,QVBoxLayout
 from PyQt5.QtCore import QSize, Qt, QCoreApplication
 from csv import writer
 import sys, numpy
 from json import dump, load
+from time import time
 
 class DialogPhase2(QDialog):
     def __init__(self, shifttype, shifts, series, shiftlengths, parent=None):
@@ -83,7 +84,10 @@ class DialogPhase2(QDialog):
             row += 1
             self.findSolutionsBtn = QPushButton("Find solutions")
             self.findSolutionsBtn.clicked.connect(self.findSolution)
-            self.layout.addWidget(self.findSolutionsBtn, row, 2, 1, 3)
+            self.layout.addWidget(self.findSolutionsBtn, row, 1, 1, 2)
+            self.find1SolutionBtn = QPushButton("Find First Solution")
+            self.find1SolutionBtn.clicked.connect(self.find1Solution)
+            self.layout.addWidget(self.find1SolutionBtn, row, 4, 1, 2)
             row += 1
             self.solutionsLbl = QLabel("Solution index: ")
             self.solutionsLbl.setVisible(False)
@@ -385,24 +389,55 @@ class DialogPhase2(QDialog):
         for m in range(len(self.shifts)):
             shifts.append(m+1)
         # Now we have to try to construct solution matrices
-        self.solutionMatrices = list(self.createSolutionMatrices(sum(self.zeroOneS),shifts))
-        self.findSolutionsBtn.setText("Solutions found: "+str(int(len(self.solutionMatrices))))
-        if len(self.solutionMatrices) > 0:
-            self.findSolutionsBtn.setEnabled(False)
-            self.findSolutionsBtn.setToolTip("Already generated, solutions found: "+str(len(self.solutionMatrices)))
-            self.solutionsBrowsing.setVisible(True)
-            self.solutionsBrowsing.setValue(0)
-            self.solutionsBrowsing.setRange(0,len(self.solutionMatrices)-1)
-            self.solutionsSlider.setVisible(True)
-            self.solutionsSlider.setValue(0)
-            self.solutionsSlider.setRange(0,len(self.solutionMatrices)-1)
-            self.solutionsLbl.setVisible(True)
-            self.solutionMatrix2Table1()
+        noofcombinations = int(float(self.shifttype)**float(sum(self.zeroOneS)))
+        msgbox = QMessageBox()
+        msgbox.setWindowTitle("Select how to proceed")
+        memoryNeeded = noofcombinations*10
+        if memoryNeeded < 10**3:
+            memoryNeeded = str(memoryNeeded) + " bytes"
+        elif memoryNeeded < 10**6:
+            memoryNeeded = str(memoryNeeded/(10**3)) + " kb"
+        elif memoryNeeded < 10**9:
+            memoryNeeded = str(memoryNeeded/(10**6)) + " Mb"
+        elif memoryNeeded < 10**12:
+            memoryNeeded = str(memoryNeeded/(10**9)) + " Gb"
         else:
-            self.findSolutionsBtn.setEnabled(True)
-            self.solutionsBrowsing.setVisible(False)
-            self.solutionsSlider.setVisible(False)
-            self.solutionsLbl.setVisible(False)
+            memoryNeeded = str(memoryCalc/(10**12)) + " Tb"
+        msgbox.setText("Combinations to go through: "+str(noofcombinations)+".\nThis means up to "+memoryNeeded+" may be required in memory mode.\n\n     : Select which method to proceed with : \n\nInternal Memory mode may require substantial amount of memories.\n\nProcessing Mode requires less far less internal memory but more processing power (and is usually slower).")
+        memBtn = msgbox.addButton("Memory Mode",QMessageBox.ResetRole)
+        procBtn = msgbox.addButton("Processor Mode",QMessageBox.ApplyRole)
+        cancelBtn = msgbox.addButton("Cancel",QMessageBox.NoRole)
+        msgbox.exec_()
+        if msgbox.clickedButton() != cancelBtn:
+            t0 = time()
+            if msgbox.clickedButton() == procBtn:
+                arrays = [[shifts[0]] * sum(self.zeroOneS)]
+                self.solutionMatrices = self.recursiveCartesianProduct(sum(self.zeroOneS),shifts,arrays,arrays[0],1,1)
+                if self.checkifshiftsOK(self.solutionMatrices[0]) == False:
+                    del self.solutionMatrices[0]
+                print(self.solutionMatrices)
+            elif msgbox.clickedButton() == memBtn:
+                self.solutionMatrices = list(self.createSolutionMatrices(sum(self.zeroOneS),shifts))
+            t1  = time()
+            print("Solutions found: "+str(int(len(self.solutionMatrices))))
+            print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
+            self.findSolutionsBtn.setText("Solutions found: "+str(int(len(self.solutionMatrices))))
+            if len(self.solutionMatrices) > 0:
+                self.findSolutionsBtn.setEnabled(False)
+                self.findSolutionsBtn.setToolTip("Already generated, solutions found: "+str(len(self.solutionMatrices)))
+                self.solutionsBrowsing.setVisible(True)
+                self.solutionsBrowsing.setValue(0)
+                self.solutionsBrowsing.setRange(0,len(self.solutionMatrices)-1)
+                self.solutionsSlider.setVisible(True)
+                self.solutionsSlider.setValue(0)
+                self.solutionsSlider.setRange(0,len(self.solutionMatrices)-1)
+                self.solutionsLbl.setVisible(True)
+                self.solutionMatrix2Table1()
+            else:
+                self.findSolutionsBtn.setEnabled(True)
+                self.solutionsBrowsing.setVisible(False)
+                self.solutionsSlider.setVisible(False)
+                self.solutionsLbl.setVisible(False)
     def solutionIntChangedS(self):
         self.solutionsBrowsing.setValue(self.solutionsSlider.value())
     def solutionIntChangedI(self):
@@ -440,6 +475,47 @@ class DialogPhase2(QDialog):
             else:
                 matrixOut.append(0)
         return matrixOut
+    def find1Solution(self):
+        # Now convert all series' values to zeroes and ones
+        self.zeroOneS = []
+        for m in range(len(self.matrix[0])):
+            if self.matrix[0][m] == "-":
+                self.zeroOneS.append(0)
+            else:
+                self.zeroOneS.append(1)
+        shifts = []
+        for m in range(len(self.shifts)):
+            shifts.append(m+1)
+        t0 = time()
+        arrays = [[shifts[0]] * sum(self.zeroOneS)]
+        self.solutionMatrices = self.recursiveCartesianProduct(sum(self.zeroOneS),shifts,arrays,arrays[0],1,0)
+        if self.checkifshiftsOK(self.solutionMatrices[0]) == False:
+            del self.solutionMatrices[0]
+        print(self.solutionMatrices)
+        t1  = time()
+        print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
+        if len(self.solutionMatrices) > 0:
+            self.find1SolutionBtn.setEnabled(False)
+            self.solutionMatrix2Table1()
+        self.solutionsBrowsing.setVisible(False)
+        self.solutionsSlider.setVisible(False)
+        self.solutionsLbl.setVisible(False)
+    def recursiveCartesianProduct(self,days,shifts,arrays,array,level,manySolutions):
+        if len(arrays) > 1 and manySolutions == 0:
+            return arrays
+        else:
+            for m in range(1,len(shifts)):
+                for n in range(level-1,days):
+                    if array[n] != shifts[m]:
+                        array2 = array.copy()
+                        array2[n] = shifts[m]
+                        matrixOut = self.insertFreeDaysInSolutionMatrix(array2)
+                        if matrixOut not in arrays:
+                            if self.checkifshiftsOK(matrixOut) == True:
+                                arrays.append(matrixOut)
+                            if level < days:
+                                arrays = self.recursiveCartesianProduct(days,shifts,arrays,array2,level+1,manySolutions)
+            return arrays
     def createSolutionMatrices(self,days,shifts):
         results = self.cartesianProduct(days,shifts).tolist()
         for indR, result in enumerate(results):
@@ -456,6 +532,7 @@ class DialogPhase2(QDialog):
             arrays.append(shifts)
         arr = numpy.empty([len(a) for a in arrays] + [days])
         for i, a in enumerate(numpy.ix_(*arrays)):
+            print(a.reshape(-1))
             arr[...,i] = a
         return arr.reshape(-1, days)
     def checkifshiftsOK(self,solutionMatrix):
@@ -488,10 +565,12 @@ class DialogPhase2(QDialog):
                             shiftsOk = False
         return shiftsOk
 
-# if __name__ == '__main__':
-#     app = QApplication([sys.argv[0]])
-#     #window = DialogPhase2(3,['D', 'E', 'N'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]],8.33)
-#     window = DialogPhase2(2,['D', 'E'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1]],8.33)
-#
-#     window.show()
-#     sys.exit(app.exec_())
+if __name__ == '__main__':
+    app = QApplication([sys.argv[0]])
+    window = DialogPhase2(3,['D', 'E', 'N'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]],8.33)
+    #window = DialogPhase2(2,['D', 'E'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
+    # window = DialogPhase2(3,['D', 'E', 'N'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
+    # window = DialogPhase2(2,['D', 'E'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
+
+    window.show()
+    sys.exit(app.exec_())

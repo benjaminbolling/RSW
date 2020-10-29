@@ -292,6 +292,14 @@ class DialogPhase2(QDialog):
                     prevval = value
                 else:
                     prevval = -1
+        # Ensure first object is checked after last object as this is rotational so day 0 comes after day -1
+        widget = self.table.cellWidget(0, 0)
+        if isinstance(widget, QComboBox):
+            value = widget.currentIndex()
+            if value >= prevval or self.dailyresting < (16 - (prevval-value)*self.shiftlengths):
+                widget.setStyleSheet("background-color:#008000;");
+            else:
+                widget.setStyleSheet("background-color:#800000;");
         self.getShiftSums()
         self.updateTable2()
         self.matrix = self.createFullMatrix()
@@ -391,13 +399,11 @@ class DialogPhase2(QDialog):
         # Now we have to try to construct solution matrices
         noofcombinations = int(float(self.shifttype)**float(sum(self.zeroOneS)))
         print(noofcombinations)
-        if noofcombinations > 10**6:
+        if noofcombinations > 10**9:
             msgbox = QMessageBox()
             msgbox.setWindowTitle("Select how to proceed")
             memoryNeeded = noofcombinations*sum(self.zeroOneS)
-            if memoryNeeded < 10**9:
-                memoryNeeded = str(memoryNeeded/(10**6)) + " Mb"
-            elif memoryNeeded < 10**12:
+            if memoryNeeded < 10**12:
                 memoryNeeded = str(memoryNeeded/(10**9)) + " Gb"
             else:
                 memoryNeeded = str(memoryCalc/(10**12)) + " Tb"
@@ -555,6 +561,8 @@ class DialogPhase2(QDialog):
             else:
                 prevval = int(shift)
                 shiftsOk = False
+        if solutionMatrix[0] < int(shift):
+            shiftsOk = False
         # Check if all shifts are filled
         if shiftsOk == True:
             day = -1

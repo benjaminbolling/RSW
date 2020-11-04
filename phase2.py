@@ -561,6 +561,7 @@ class DialogPhase2(QDialog):
             else:
                 prevval = int(shift)
                 shiftsOk = False
+        # Check so time between each last and first shift is obliged since shift 0 follows shift -1
         if solutionMatrix[0] < int(shift):
             shiftsOk = False
         # Check if all shifts are filled
@@ -583,8 +584,8 @@ class DialogPhase2(QDialog):
 
 if __name__ == '__main__':
     app = QApplication([sys.argv[0]])
-    #window = DialogPhase2(3,['D', 'E', 'N'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]],8.33)
-    #window = DialogPhase2(2,['D', 'E'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
+    # window = DialogPhase2(3,['D', 'E', 'N'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]],8.33)
+    # window = DialogPhase2(2,['D', 'E'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
     # window = DialogPhase2(3,['D', 'E', 'N'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
     window = DialogPhase2(3,['D', 'E', 'N'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
 

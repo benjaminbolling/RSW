@@ -1,0 +1,12 @@
+Worker:,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun,Mon,Tue,Wed,Thu,Fri,Sat,Sun
+Person 0,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-
+Person 1,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-
+Person 2,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-
+Person 3,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-
+Person 4,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-
+Person 5,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-
+Person 6,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E
+Person 7,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-
+Person 8,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-,D,x,x,x,x,-,-
+Person 9,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D,x,x,D,E,-,-,-
+Person 10,x,x,D,E,-,-,-,D,x,x,x,x,-,-,x,x,x,x,E,-,-,x,x,x,x,x,-,E,E,E,-,-,x,E,-,-,x,x,x,x,D,-,x,D,x,x,x,-,-,x,x,D,x,x,-,-,x,x,x,D,x,-,-,x,x,x,x,D,-,-,x,x,x,x,x,-,D

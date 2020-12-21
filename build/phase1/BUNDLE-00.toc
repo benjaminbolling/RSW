@@ -1,0 +1,4 @@
+([('phase1',
+   '/Users/benjaminbolling/Library/Mobile '
+   'Documents/com~apple~CloudDocs/Documents/Dev/ThreeShiftSchedulingAlgorithm/dist/phase1',
+   'EXECUTABLE')],)

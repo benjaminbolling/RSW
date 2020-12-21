@@ -28,6 +28,7 @@ from time import time
 import sys
 from math import factorial
 import phase2
+import findAcceptableCombosGUI
 
 class DialogPhase1(QWidget):
     def __init__(self, parent=None):
@@ -195,7 +196,12 @@ class DialogPhase1(QWidget):
         self.fastGenerationTick.stateChanged.connect(lambda:self.fastGenChecked(self.fastGenerationTick))
         row += 1
         self.messageLabel02 = QLabel("")
-        self.layout.addWidget(self.messageLabel02, row, 0, 1, 7)
+        self.layout.addWidget(self.messageLabel02, row, 0, 1, 5)
+        self.fastGenVal = QSpinBox()
+        self.fastGenVal.setRange(1,100000)
+        self.fastGenVal.setValue(100)
+        self.fastGenVal.setVisible(False)
+        self.layout.addWidget(self.fastGenVal, row, 5, 1, 2)
         row += 1
         self.messageLabel03 = QLabel("")
         self.layout.addWidget(self.messageLabel03, row, 0, 1, 7)
@@ -487,8 +493,10 @@ class DialogPhase1(QWidget):
     def fastGenChecked(self,input):
         if input.isChecked() == True:
             self.fastGen = True
+            self.fastGenVal.setVisible(True)
         else:
             self.fastGen = False
+            self.fastGenVal.setVisible(False)
     def freeDaysClusterSpinChanged(self):
         self.freeDaysClusterValue = self.freeDaysClusterSpin.value()
     def workinghoursinputChanged(self):
@@ -682,6 +690,9 @@ class DialogPhase1(QWidget):
         if self.overwrite == 0:
             self.overwrite = 1
             shiftsperpersonpercycle = int(self.workinghours*self.noofweeks/self.shiftlengths)+(self.workinghours*self.noofweeks/self.shiftlengths > 0) # rounding integer up
+            print(shiftsperpersonpercycle)
+            # print(freetimeperpersonpercycle)
+            # Show this in the GUI
             freetimeperpersonpercycle = self.noofweeks*self.workingdays - shiftsperpersonpercycle
             self.freedaysover7days = int(self.weeklyresting/24)+(self.weeklyresting/24 > 0)
             weeksneeded = int(self.noOfPeople*self.workingdays*self.shifttype*self.shiftlengths/self.workinghours) + (self.noOfPeople*self.workingdays*self.shifttype*self.shiftlengths/self.workinghours > 0)
@@ -748,7 +759,7 @@ class DialogPhase1(QWidget):
                 self.messageLabel02.setText("Number of days per week is not 7.")
                 self.messageLabel03.setText(" ")
     def createAllShiftPossibilities(self,iterable, r): # <-- Where the actual magic happens
-        noConstraints = 1
+        noConstraints = 0
         shiftseries = []
         pool = tuple(iterable)
         n = len(pool)
@@ -775,6 +786,7 @@ class DialogPhase1(QWidget):
         self.lp = True
         tempfile = open("temp.combo", 'w')
         while self.lp == True:
+            noConstraints += 1
             for i in reversed(range(r)):
                 if indices[i] != i + n - r:
                     break
@@ -799,20 +811,23 @@ class DialogPhase1(QWidget):
                             for n2 in range(7-self.workingdays):
                                 itemSerie2.append("0")
                         item1 = itemSerie2
-                appendflag = self.freedaysweeklycheck(appendflag,item1)
-                if self.clusterFreeDays == True:
-                    appendflag = self.freeDaysClusterCheck(appendflag,item1)
-                noConstraints += 1
-                if self.fastGen == False and int(100*noConstraints/combosexpected) > percentagecomplete:
+                    appendflag = self.freedaysweeklycheck(appendflag,item1)
+                    if appendflag == True:
+                        if self.clusterFreeDays == True:
+                            appendflag = self.freeDaysClusterCheck(appendflag,item1)
+                        if appendflag == True:
+                            shiftseries.append(" ".join(item1))
+                            tempfile.write(" ".join(item1)+"\n")
+                            if self.fastGen == True and len(shiftseries) > self.fastGenVal.value()-1:
+                                self.lp = False
+                if int(100*noConstraints/combosexpected) > percentagecomplete:
                     percentagecomplete = int(100*noConstraints/combosexpected)
-                    self.messageLabel01.setText("Complete: "+str(percentagecomplete)+"%")
+                    if self.fastGen == False:
+                        self.messageLabel01.setText("Complete: "+str(percentagecomplete)+"%")
+                    else:
+                        self.messageLabel01.setText("Complete: "+str(percentagecomplete)+"% (of full series, stops when "+str(self.fastGenVal.value())+" solutions found)")
                     self.messageLabel02.setText("Number of combinations with constraints found: "+str(len(shiftseries)))
                     QApplication.processEvents()
-                if appendflag == True:
-                    shiftseries.append(" ".join(item1))
-                    tempfile.write(" ".join(item1)+"\n")
-                    if self.fastGen == True and len(shiftseries) > 99:
-                        self.lp = False
         tempfile.close()
         self.generateBtn.setText("Generate Combinations")
         return shiftseries, noConstraints
@@ -903,7 +918,7 @@ class DialogPhase1(QWidget):
         shifts = []
         for n in range(self.shifttype):
             shifts.append(shifts0[n])
-        dialog = phase2.DialogPhase2(self.shifttype,shifts,final,self.shiftlengths)
+        dialog = phase2.DialogPhase2(self.shifttype,shifts,final,self.shiftlengths,self.weeklyresting)
         self.phase2dialogs.append(dialog)
         dialog.show()
 

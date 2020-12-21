@@ -22,7 +22,7 @@
 # # # #                                                                                   # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-from PyQt5.QtWidgets import QApplication,QComboBox,QDialog,QFileDialog,QGridLayout,QHeaderView,QInputDialog,QLabel,QMessageBox,QPushButton,QSlider,QSpinBox,QTableWidget,QVBoxLayout
+from PyQt5.QtWidgets import QApplication,QComboBox,QDialog,QDoubleSpinBox,QFileDialog,QGridLayout,QHeaderView,QInputDialog,QLabel,QMessageBox,QPushButton,QSlider,QSpinBox,QTableWidget,QVBoxLayout
 from PyQt5.QtCore import QSize, Qt, QCoreApplication
 from csv import writer
 import sys, numpy
@@ -30,7 +30,7 @@ from json import dump, load
 from time import time
 
 class DialogPhase2(QDialog):
-    def __init__(self, shifttype, shifts, series, shiftlengths, parent=None):
+    def __init__(self, shifttype, shifts, series, shiftlengths, weeklyresting, parent=None):
         super(DialogPhase2, self).__init__(parent)
         self.setWindowTitle("1o2o3 S-CSV-fcal phase 2")
         if shifttype == 0 and shifts == 0 and series == 0 and shiftlengths == 0:
@@ -40,6 +40,7 @@ class DialogPhase2(QDialog):
             self.shifts = shifts
             self.series = series
             self.shiftlengths = shiftlengths
+            self.weeklyresting = weeklyresting # Length of weekly minimum continuous resting time in hours
             self.initValues()
             self.createLayout()
             self.dailyrestinginputChanged()
@@ -68,14 +69,32 @@ class DialogPhase2(QDialog):
         row += 1
         self.layout.addWidget(toplabel3, row,0,1,7)
         row += 1
+        shiftlengthlbl = QLabel("Shift lengths [h]: ")
+        self.layout.addWidget(shiftlengthlbl,row,0,1,4)
+        self.shiftlengthinput = QDoubleSpinBox()
+        self.shiftlengthinput.setValue(self.shiftlengths)
+        self.shiftlengthinput.setMinimum(1)
+        self.shiftlengthinput.valueChanged.connect(self.shiftlengthinputChanged)
+        self.layout.addWidget(self.shiftlengthinput,row,4,1,3)
+        row += 1
         dailyrestingtimelbl = QLabel("Minimum continuous daily resting time [h]: ")
         self.layout.addWidget(dailyrestingtimelbl,row,0,1,4)
+        self.checkWeeklyRestBtn = QPushButton("Check Weekly Rest")
         self.dailyrestinginput = QSpinBox()
         self.dailyrestinginput.setValue(self.dailyresting)
         self.dailyrestinginput.setMinimum(1)
         self.dailyrestinginput.setToolTip("Swedish law: 11 hours minimum")
         self.dailyrestinginput.valueChanged.connect(self.dailyrestinginputChanged)
         self.layout.addWidget(self.dailyrestinginput,row,4,1,3)
+        row += 1
+        weeklyrestingtimelbl = QLabel("Minimum continuous weekly resting time [h]: ")
+        self.layout.addWidget(weeklyrestingtimelbl,row,0,1,4)
+        self.weeklyrestinginput = QSpinBox()
+        self.weeklyrestinginput.setValue(self.weeklyresting)
+        self.weeklyrestinginput.setMinimum(1)
+        self.weeklyrestinginput.setToolTip("Swedish law: 11 hours minimum")
+        self.weeklyrestinginput.valueChanged.connect(self.weeklyrestinginputChanged)
+        self.layout.addWidget(self.weeklyrestinginput,row,4,1,3)
         row += 1
         toplabel4 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel4.setAlignment(Qt.AlignCenter)
@@ -84,10 +103,13 @@ class DialogPhase2(QDialog):
             row += 1
             self.findSolutionsBtn = QPushButton("Find solutions")
             self.findSolutionsBtn.clicked.connect(self.findSolution)
-            self.layout.addWidget(self.findSolutionsBtn, row, 1, 1, 2)
+            self.layout.addWidget(self.findSolutionsBtn, row, 1, 1, 1)
             self.find1SolutionBtn = QPushButton("Find First Solution")
             self.find1SolutionBtn.clicked.connect(self.find1Solution)
-            self.layout.addWidget(self.find1SolutionBtn, row, 4, 1, 2)
+            self.layout.addWidget(self.find1SolutionBtn, row, 2, 1, 2)
+            self.checkWeeklyRestBtn.clicked.connect(self.checkWeeklyRest)
+            self.layout.addWidget(self.checkWeeklyRestBtn, row, 4, 1, 2)
+
             row += 1
             self.solutionsLbl = QLabel("Solution index: ")
             self.solutionsLbl.setVisible(False)
@@ -201,9 +223,18 @@ class DialogPhase2(QDialog):
         self.layout.addWidget(bottomlabel1, row, 0, 1, 7)
         row += 1
         self.layout.addWidget(bottomlabel2, row, 0, 1, 7)
+    def shiftlengthinputChanged(self):
+        self.shiftlengths = self.shiftlengthinput.value()
+        self.readTableContents()
+        self.checkWeeklyRestBtn.setStyleSheet("background-color:#DCDCDC;")
     def dailyrestinginputChanged(self):
         self.dailyresting = self.dailyrestinginput.value()
         self.readTableContents()
+        self.checkWeeklyRestBtn.setStyleSheet("background-color:#DCDCDC;")
+    def weeklyrestinginputChanged(self):
+        self.weeklyresting = self.weeklyrestinginput.value()
+        self.readTableContents()
+        self.checkWeeklyRestBtn.setStyleSheet("background-color:#DCDCDC;")
     def getQTableWidgetSize(self, table):
         w = table.verticalHeader().width() + 2
         for i in range(table.columnCount()):
@@ -266,6 +297,7 @@ class DialogPhase2(QDialog):
                     widget3.hide()
                     widget3.show()
     def readTableContents(self):
+        self.checkWeeklyRestBtn.setStyleSheet("background-color:#DCDCDC;")
         self.shift1 = 0
         self.shift2 = 0
         self.shift3 = 0
@@ -543,12 +575,48 @@ class DialogPhase2(QDialog):
                 yield matrixOut
     def cartesianProduct(self,days,shifts):
         arrays = []
+        print(days)
+        print(shifts)
         for n in range(days):
             arrays.append(shifts)
         arr = numpy.empty([len(a) for a in arrays] + [days])
         for i, a in enumerate(numpy.ix_(*arrays)):
             arr[...,i] = a
         return arr.reshape(-1, days)
+    def checkWeeklyRest(self):
+        if self.freedaysweeklycheck(self.table1ToSolutionMatrix(),1) == True:
+            self.checkWeeklyRestBtn.setStyleSheet("background-color:#008000;");
+        else:
+            self.checkWeeklyRestBtn.setStyleSheet("background-color:#800000;");
+
+
+    def freedaysweeklycheck(self,item1,printout): # Just another constraint that must be fulfilled
+        shiftstarts = 24/3
+
+        noOnes = 0 # check so that number of free days over 7 day periods rule is followed.
+        item2 = [] # have to check a week back so when last week goes over to next week, rule is also obeyed.
+        appendflag = True
+        for m in range(len(item1)-7,len(item1)):
+            item2.append(item1[m])
+        for m in range(len(item1)):
+            item2.append(item1[m])
+
+        restingTime = 0
+        daysGoneBy = 0
+        hoursSinceShiftEnd = 0
+        for ind,item in enumerate(item2):
+            if item > 0:
+                timetoShift = (item-1)*shiftstarts
+                if timetoShift + hoursSinceShiftEnd >= self.weeklyresting:
+                    daysGoneBy = 0
+                else:
+                    daysGoneBy += 1
+                hoursSinceShiftEnd = 24 - ((item-1)*shiftstarts + self.shiftlengths)
+            elif item == 0:
+                hoursSinceShiftEnd = hoursSinceShiftEnd + 24
+            if daysGoneBy > 6:
+                appendflag = False
+        return appendflag
     def checkifshiftsOK(self,solutionMatrix):
         shiftsOk = True
         prevval = 0
@@ -565,6 +633,8 @@ class DialogPhase2(QDialog):
         if solutionMatrix[0] < int(shift):
             shiftsOk = False
         # Check if all shifts are filled
+        if shiftsOk == True:
+            shiftsOk = self.freedaysweeklycheck(solutionMatrix,0)
         if shiftsOk == True:
             day = -1
             dayShifts = []

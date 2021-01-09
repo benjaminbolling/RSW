@@ -1,26 +1,27 @@
 # -*- coding: utf-8 -*-
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # #                                                                                   # # # #
-# # # #                    1/2/3-shift scheduling algorithm - phase 1:                    # # # #
-# # # #                                                                                   # # # #
-# # # #                         - - - - - - - - - - - - - - - - - -                       # # # #
-# # # #                                                                                   # # # #
-# # # #                             Automatic shift generator                             # # # #
-# # # #                                                                                   # # # #
-# # # #                         - - - - - - - - - - - - - - - - - -                       # # # #
-# # # #                                                                                   # # # #
-# # # #   Author: Benjamin Bolling                                                        # # # #
-# # # #   Affiliation: European Spallation Source ERIC                                    # # # #
-# # # #   Lund, Sweden                                                                    # # # #
-# # # #   Initialization date: 2020-06-08                                                 # # # #
-# # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                     2020-06-29    # # # #
-# # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):         2020-07-01    # # # #
-# # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-03    # # # #
-# # # #   Milestone 4 (phase 2 finished, solution finder implemented):      2020-07-03    # # # #
-# # # #                                                                                   # # # #
-# # # #                                                                                   # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # #                                                                                             # # # #
+# # # #                    1/2/3-shift scheduling algorithm - phase 1:                              # # # #
+# # # #                                                                                             # # # #
+# # # #                         - - - - - - - - - - - - - - - - - -                                 # # # #
+# # # #                                                                                             # # # #
+# # # #                             Automatic shift generator                                       # # # #
+# # # #                                                                                             # # # #
+# # # #                         - - - - - - - - - - - - - - - - - -                                 # # # #
+# # # #                                                                                             # # # #
+# # # #   Author: Benjamin Bolling                                                                  # # # #
+# # # #   Affiliation: European Spallation Source ERIC                                              # # # #
+# # # #   Lund, Sweden                                                                              # # # #
+# # # #   Initialization date: 2020-06-08                                                           # # # #
+# # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                               2020-06-29    # # # #
+# # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):                   2020-07-01    # # # #
+# # # #   Milestone 3 (phase 2 all working, initial version ready):                   2020-07-03    # # # #
+# # # #   Milestone 4 (phase 2 finished, solution finder implemented):                2020-07-03    # # # #
+# # # #   Milestone 5 (abstracting functions, added check for solutions in phase1):   2021-01-09    # # # #
+# # # #                                                                                             # # # #
+# # # #                                                                                             # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 from PyQt5.QtWidgets import QApplication,QCheckBox,QDialog,QDoubleSpinBox,QFileDialog,QGridLayout,QInputDialog,QMessageBox,QLabel,QLineEdit,QPushButton,QRadioButton,QSlider,QSpinBox,QWidget
 from PyQt5.QtCore import Qt
@@ -29,7 +30,7 @@ import sys
 import IO
 from math import factorial
 import phase2
-import findAcceptableCombosGUI
+from copy import deepcopy
 
 class DialogPhase1(QWidget):
     def __init__(self, parent=None):
@@ -41,7 +42,7 @@ class DialogPhase1(QWidget):
         self.afterworkvisibleinvisible(False)
     def valuesInit(self): # Inputs values
         import init
-        self.shifttype,self.workingdays,self.noofweeks,self.shiftlengths,self.workinghours,self.weeklyresting,self.overwrite,self.shiftLabel1,self.shiftLabel2,self.shiftLabel3,self.fastGen,self.clusterFreeDays,self.freeDaysClusterValue,self.noOfPeople = init.init_values()
+        self.shifttype,self.workingdays,self.noofweeks,self.shiftlengths,self.workinghours,self.weeklyresting,self.overwrite,self.shiftLabel1,self.shiftLabel2,self.shiftLabel3,self.fastGen,self.clusterFreeDays,self.freeDaysClusterValue,self.noOfPeople,self.dailyresting = init.init_values()
     def createLayout(self):
         self.layout = QGridLayout(self)
         toplabel1 = QLabel("1-, 2- or 3-Shift Combinations Generator Algorithm.")
@@ -69,6 +70,19 @@ class DialogPhase1(QWidget):
         lengthofshiftlbl = QLabel("Shift Lengths [h]: ")
         workinghourslbl = QLabel("Weekly working hours per person [h]: ")
         weeklyrestingtimelbl = QLabel("Weekly minimum single continuous resting time [h]: ")
+        dailyrestingtimelbl = QLabel("Minimum continuous daily resting time [h]: ")
+        shiftspercycleLbl = QLabel("Shifts per person per cycle:")
+
+        twothreeshiftslbl.setAlignment(Qt.AlignRight)
+        daysperweeklbl.setAlignment(Qt.AlignRight)
+        noOfPeoplelbl.setAlignment(Qt.AlignRight)
+        noOfWeekslbl.setAlignment(Qt.AlignRight)
+        noofpeoplepershiftlbl.setAlignment(Qt.AlignRight)
+        lengthofshiftlbl.setAlignment(Qt.AlignRight)
+        workinghourslbl.setAlignment(Qt.AlignRight)
+        weeklyrestingtimelbl.setAlignment(Qt.AlignRight)
+        dailyrestingtimelbl.setAlignment(Qt.AlignRight)
+        shiftspercycleLbl.setAlignment(Qt.AlignRight)
 
         # Shift type radiobuttons (2 or 3 shift)
         row = 7
@@ -154,9 +168,17 @@ class DialogPhase1(QWidget):
         self.weeklyrestinginput.valueChanged.connect(self.weeklyrestinginputChanged)
         self.layout.addWidget(self.weeklyrestinginput, row, 4, 1, 3)
         row += 1
+        self.layout.addWidget(dailyrestingtimelbl,row,0,1,4)
+        self.dailyrestinginput = QSpinBox()
+        self.dailyrestinginput.setValue(self.dailyresting)
+        self.dailyrestinginput.setMinimum(1)
+        self.dailyrestinginput.setToolTip("Swedish law: 11 hours minimum")
+        self.dailyrestinginput.valueChanged.connect(self.dailyrestinginputChanged)
+        self.layout.addWidget(self.dailyrestinginput, row, 4, 1, 3)
+        row += 1
         self.clusterFreeDaysTick = QCheckBox("Cluster free days?")
         self.clusterFreeDaysTick.setToolTip("Ensure no single free days but clustered days")
-        self.layout.addWidget(self.clusterFreeDaysTick, row, 1, 1, 3)
+        self.layout.addWidget(self.clusterFreeDaysTick, row, 2, 1, 2)
         self.clusterFreeDaysTick.stateChanged.connect(lambda:self.freeClustering(self.clusterFreeDaysTick))
         self.freeDaysClusterSpin = QSpinBox()
         self.freeDaysClusterSpin.setValue(self.freeDaysClusterValue)
@@ -165,7 +187,6 @@ class DialogPhase1(QWidget):
         self.freeDaysClusterSpin.valueChanged.connect(self.freeDaysClusterSpinChanged)
         self.layout.addWidget(self.freeDaysClusterSpin, row, 4, 1, 3)
         row += 1
-        shiftspercycleLbl = QLabel("Shifts per person per cycle:")
         self.layout.addWidget(shiftspercycleLbl,row,0,1,4)
         self.shiftsperpersonpercycle = QLabel()
         self.shiftsperpersonpercycle.setText(str(IO.shiftsperpersonpercycle(self.workinghours,self.noofweeks,self.shiftlengths)))
@@ -447,10 +468,14 @@ class DialogPhase1(QWidget):
         self.AWweek96.setVisible(False)
         self.layout.addWidget(self.AWweek96, row, 6, 1, 1)
         row += 1
+        self.testCombinations = QPushButton("Test For Solutions")
+        self.testCombinations.clicked.connect(self.testCombinationsClicked)
+        self.testCombinations.setVisible(False)
+        self.layout.addWidget(self.testCombinations, row, 0, 1, 3)
         self.nextPhase = QPushButton("Proceed with this combo to next phase")
         self.nextPhase.clicked.connect(self.runPhaseTwo)
         self.nextPhase.setVisible(False)
-        self.layout.addWidget(self.nextPhase, row, 0, 1, 7)
+        self.layout.addWidget(self.nextPhase, row, 3, 1, 4)
         self.setLayout(self.layout)
         row += 1
         bottomlabel1 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
@@ -500,6 +525,8 @@ class DialogPhase1(QWidget):
         self.shiftsperpersonpercycle.setText(str(IO.shiftsperpersonpercycle(self.workinghours,self.noofweeks,self.shiftlengths)))
     def weeklyrestinginputChanged(self):
         self.weeklyresting = self.weeklyrestinginput.value()
+    def dailyrestinginputChanged(self):
+        self.dailyresting = self.dailyrestinginput.value()
     def noOfPeopleinputChanged(self):
         self.noOfPeople = self.noOfPeopleinput.value()
     def afterworkIntChangedS(self):
@@ -518,6 +545,7 @@ class DialogPhase1(QWidget):
             else:
                 weeksvis.append(False)
         self.nextPhase.setVisible(weeksvis[0])
+        self.testCombinations.setVisible(weeksvis[0])
         self.saveCombos.setVisible(weeksvis[0])
         self.AWweek00.setVisible(weeksvis[0])
         self.AWweek01.setVisible(weeksvis[0])
@@ -704,23 +732,29 @@ class DialogPhase1(QWidget):
             if errorflag == 0:
                 t0 = time()
                 self.shiftseries, noConstraints = self.createAllShiftPossibilities(range(self.noofweeks*self.workingdays), shiftsperpersonpercycle)
+                self.testCombinations.setEnabled(True)
+                self.testCombinations.setToolTip("")
                 t1 = time()
+                timeelapsed = t1-t0
                 if self.shiftseries is None or len(self.shiftseries) == 0:
                     self.messageLabel01.setText("No combinations found.")
                 else:
                     self.messageLabel01.setText("Number of combinations with no constraints found:  "+str(noConstraints))
-                    self.messageLabel02.setText("Number of combinations with constraints found: "+str(len(self.shiftseries)))
+                    self.messageLabel02.setText("Number of combinations with constraints found:  "+str(len(self.shiftseries)))
                     saveQ = QMessageBox.question(self, 'Save results', "Save all combinations in .txt or .csv format?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
                     if saveQ == QMessageBox.Yes:
                         self.saveAllCombos()
-                self.messageLabel03.setText("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
-                self.afterworkIntValue = 0
-                self.afterworkvisibleinvisible(True)
-                self.updateafterworkInt()
-                self.afterworkSlide.setValue(self.afterworkIntValue)
-                self.afterworkInt.setValue(self.afterworkIntValue)
-                self.afterworkSlide.setRange(0,len(self.shiftseries)-1)
-                self.afterworkInt.setRange(0,len(self.shiftseries)-1)
+                self.messageLabel03.setText("Time for completion: "+str(float("{:.6f}".format(timeelapsed)))+" s")
+                self.updateShiftSeries()
+        self.generateBtn.setText("Generate Combinations")
+    def updateShiftSeries(self):
+        self.afterworkIntValue = 0
+        self.afterworkvisibleinvisible(True)
+        self.updateafterworkInt()
+        self.afterworkSlide.setValue(self.afterworkIntValue)
+        self.afterworkInt.setValue(self.afterworkIntValue)
+        self.afterworkSlide.setRange(0,len(self.shiftseries)-1)
+        self.afterworkInt.setRange(0,len(self.shiftseries)-1)
     def saveAllCombos(self):
         filename, type = QFileDialog.getSaveFileName(self, 'Save output as...')
         #filename = input("Enter filename: >> ")
@@ -734,7 +768,7 @@ class DialogPhase1(QWidget):
         if filename is not None and len(filename)>0:
             contents = open(filename, "r").read()
             combos = contents.split("\n")
-            if self.noofweeks.is_integer():
+            if isinstance(self.noofweeks, int):
                 self.noofweeks = len(combos[0].split(" "))/7
                 self.shiftseries = combos
                 self.messageLabel01.setText("Combinations loaded from:")
@@ -743,6 +777,8 @@ class DialogPhase1(QWidget):
                 self.afterworkIntValue = 0
                 self.afterworkvisibleinvisible(True)
                 self.updateafterworkInt()
+                self.testCombinations.setEnabled(True)
+                self.testCombinations.setToolTip("")
                 self.afterworkSlide.setValue(self.afterworkIntValue)
                 self.afterworkInt.setValue(self.afterworkIntValue)
                 self.afterworkSlide.setRange(0,len(self.shiftseries)-1)
@@ -758,7 +794,7 @@ class DialogPhase1(QWidget):
         n = len(pool)
         combosexpected = int(factorial(n)/(factorial(r)*factorial(n-r)))
         self.messageLabel01.setText("Complete: 0%")
-        self.messageLabel02.setText("Solutions found: 0")
+        self.messageLabel02.setText("Number of combinations with constraints found: 0")
         self.messageLabel03.setText(" ")
         self.generateBtn.setText("Stop")
         QApplication.processEvents()
@@ -822,22 +858,70 @@ class DialogPhase1(QWidget):
                     self.messageLabel02.setText("Number of combinations with constraints found: "+str(len(shiftseries)))
                     QApplication.processEvents()
         tempfile.close()
-        self.generateBtn.setText("Generate Combinations")
         return shiftseries, noConstraints
     def updateafterworkInt(self):
-        self.activeSerie = IO.returnActiveSeries(self.shiftseries,self.afterworkIntValue,self.workingdays)
+        try:
+            tempActiveSeries = self.shiftseries[self.afterworkIntValue].split(" ")
+            self.afterweeksvisible(True)
+        except:
+            tempActiveSeries = []
+            self.afterweeksvisible(False)
+        self.activeSeries = IO.returnActiveSeries(self.shiftseries,self.workingdays,tempActiveSeries)
         self.afterweekslabels()
     def shiftLabelsClicked(self):
         self.shiftLabel1 = self.shiftLabel1Edit.text()
         self.shiftLabel2 = self.shiftLabel2Edit.text()
         self.shiftLabel3 = self.shiftLabel3Edit.text()
+    def testCombinationsClicked(self):
+        if self.testCombinations.text() == "Test For Solutions":
+            if QMessageBox.warning(self, 'Test Combinations', "Test which combinations have real solutions? This will then scan all combinations for solutions and return if they have real solutions.\n\nCancelling will either terminate the testing or all delete all combinations without any solution and all untested combinations.", QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+                self.lp2 = True
+                self.testCombinations.setText("Cancel Solutions Testing")
+                self.testViableSolutions()
+        elif self.testCombinations.text() == "Cancel Solutions Testing":
+            self.lp2 = False
+            self.testCombinations.setText("Test For Solutions")
+    def testViableSolutions(self):
+        shiftseries = []
+        shifts = []
+        for n in range(self.shifttype):
+            shifts.append(n+1)
+        percentagecomplete = 0
+        ind = -1
+        self.messageLabel03.setText("Complete: "+str(percentagecomplete)+"%. Number of solvable combinations found: "+str(len(shiftseries)))
+        QApplication.processEvents()
+        while self.lp2 == True and ind < len(self.shiftseries):
+        # for ind, raw_matrix in enumerate(self.shiftseries):
+            ind += 1
+            print(self.shiftseries[ind])
+            prevpercentage = percentagecomplete
+            solutions = len(IO.testMatrices(self.shiftseries[ind],self.shifttype,shifts,self.shiftlengths,self.weeklyresting,self.dailyresting))
+            if solutions > 0:
+                shiftseries.append(self.shiftseries[ind])
+            percentagecomplete = int(100*ind/len(self.shiftseries))
+            if percentagecomplete > prevpercentage:
+                self.messageLabel03.setText("Complete: "+str(percentagecomplete)+"%. Number of solvable combinations found: "+str(len(shiftseries)))
+                QApplication.processEvents()
+        if self.lp2 == False:
+            if QMessageBox.warning(self, 'Warning', "Warning: Searching for Solutions Cancelled.\n\nSolutions found: "+str(len(shiftseries))+".\n\nReplace the generated shifts by those? All other combinations will be lost.", QMessageBox.Yes | QMessageBox.No, QMessageBox.No) == QMessageBox.Yes:
+                self.shiftseries = shiftseries
+                self.updateShiftSeries()
+                self.messageLabel03.setText("Search for Solutions Cancelled. Number of solvable combinations found: "+str(len(shiftseries)))
+            else:
+                self.messageLabel03.setText("Checking for Solvable Combinations Cancelled."+str(len(shiftseries)))
+        else:
+            self.testCombinations.setEnabled(False)
+            self.testCombinations.setToolTip("Already Done")
+            self.shiftseries = shiftseries
+            self.updateShiftSeries()
+        self.lp2 = False
     def runPhaseTwo(self):
         final = [self.activeSeries[i * 7:(i + 1) * 7] for i in range((len(self.activeSeries) + 6) // 7 )]
         shifts0 = [self.shiftLabel1, self.shiftLabel2, self.shiftLabel3]
         shifts = []
         for n in range(self.shifttype):
             shifts.append(shifts0[n])
-        dialog = phase2.DialogPhase2(self.shifttype,shifts,final,self.shiftlengths,self.weeklyresting)
+        dialog = phase2.DialogPhase2(self.shifttype,shifts,final,self.shiftlengths,self.weeklyresting,self.dailyresting)
         self.phase2dialogs.append(dialog)
         dialog.show()
 

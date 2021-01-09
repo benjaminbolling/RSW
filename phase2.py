@@ -1,26 +1,27 @@
 # -*- coding: utf-8 -*-
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# # # #                                                                                   # # # #
-# # # #                    1/2/3-shift scheduling algorithm - phase 2:                    # # # #
-# # # #                                                                                   # # # #
-# # # #                         - - - - - - - - - - - - - - - - - -                       # # # #
-# # # #                                                                                   # # # #
-# # # #                             Shifto combo manipulation                             # # # #
-# # # #                                                                                   # # # #
-# # # #                         - - - - - - - - - - - - - - - - - -                       # # # #
-# # # #                                                                                   # # # #
-# # # #   Author: Benjamin Bolling                                                        # # # #
-# # # #   Affiliation: European Spallation Source ERIC                                    # # # #
-# # # #   Lund, Sweden                                                                    # # # #
-# # # #   Initialization date: 2020-06-08                                                 # # # #
-# # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                     2020-06-29    # # # #
-# # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):         2020-07-01    # # # #
-# # # #   Milestone 3 (phase 2 all working, initial version ready):         2020-07-03    # # # #
-# # # #   Milestone 4 (phase 2 finished, solution finder implemented):      2020-07-03    # # # #
-# # # #                                                                                   # # # #
-# # # #                                                                                   # # # #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # #                                                                                             # # # #
+# # # #                    1/2/3-shift scheduling algorithm - phase 1:                              # # # #
+# # # #                                                                                             # # # #
+# # # #                         - - - - - - - - - - - - - - - - - -                                 # # # #
+# # # #                                                                                             # # # #
+# # # #                             Automatic shift generator                                       # # # #
+# # # #                                                                                             # # # #
+# # # #                         - - - - - - - - - - - - - - - - - -                                 # # # #
+# # # #                                                                                             # # # #
+# # # #   Author: Benjamin Bolling                                                                  # # # #
+# # # #   Affiliation: European Spallation Source ERIC                                              # # # #
+# # # #   Lund, Sweden                                                                              # # # #
+# # # #   Initialization date: 2020-06-08                                                           # # # #
+# # # #   Milestone 1 (phase 1, 0:s and 1:s generated):                               2020-06-29    # # # #
+# # # #   Milestone 2 (phase 1 all working, proceeding to phase 2):                   2020-07-01    # # # #
+# # # #   Milestone 3 (phase 2 all working, initial version ready):                   2020-07-03    # # # #
+# # # #   Milestone 4 (phase 2 finished, solution finder implemented):                2020-07-03    # # # #
+# # # #   Milestone 5 (abstracting functions, added check for solutions in phase1):   2021-01-09    # # # #
+# # # #                                                                                             # # # #
+# # # #                                                                                             # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 from PyQt5.QtWidgets import QApplication,QComboBox,QDialog,QDoubleSpinBox,QFileDialog,QGridLayout,QHeaderView,QInputDialog,QLabel,QMessageBox,QPushButton,QSlider,QSpinBox,QTableWidget,QVBoxLayout
 from PyQt5.QtCore import QSize, Qt, QCoreApplication
@@ -28,9 +29,10 @@ from csv import writer
 import sys, numpy
 from json import dump, load
 from time import time
+import IO
 
 class DialogPhase2(QDialog):
-    def __init__(self, shifttype, shifts, series, shiftlengths, weeklyresting, parent=None):
+    def __init__(self, shifttype, shifts, series, shiftlengths, weeklyresting, dailyresting, parent=None):
         super(DialogPhase2, self).__init__(parent)
         self.setWindowTitle("1o2o3 S-CSV-fcal phase 2")
         if shifttype == 0 and shifts == 0 and series == 0 and shiftlengths == 0:
@@ -41,12 +43,12 @@ class DialogPhase2(QDialog):
             self.series = series
             self.shiftlengths = shiftlengths
             self.weeklyresting = weeklyresting # Length of weekly minimum continuous resting time in hours
+            self.dailyresting = 11      # Length of daily minimum resting time between shifts in hours
             self.initValues()
             self.createLayout()
             self.dailyrestinginputChanged()
             self.updateTable2()
     def initValues(self):
-        self.dailyresting = 11      # Length of daily minimum resting time between shifts in hours
         self.shift1 = 0
         self.shift2 = 0
         self.shift3 = 0
@@ -464,7 +466,7 @@ class DialogPhase2(QDialog):
                 if self.checkifshiftsOK(self.solutionMatrices[0]) == False:
                     del self.solutionMatrices[0]
             elif mode == "mem":
-                self.solutionMatrices = list(self.createSolutionMatrices(sum(self.zeroOneS),shifts))
+                self.solutionMatrices = list(IO.createSolutionMatrices(sum(self.zeroOneS),shifts,self.zeroOneS,self.dailyresting,self.shiftlengths,self.shifttype,self.weeklyresting))
             t1  = time()
             if mode == "proc" or mode == "mem":
                 print("Solutions found: "+str(int(len(self.solutionMatrices))))
@@ -563,36 +565,13 @@ class DialogPhase2(QDialog):
                             if level < days:
                                 arrays = self.recursiveCartesianProduct(days,shifts,arrays,array2,level+1,manySolutions)
             return arrays
-    def createSolutionMatrices(self,days,shifts):
-        results = self.cartesianProduct(days,shifts).tolist()
-        for indR, result in enumerate(results):
-            for indV, value in enumerate(result):
-                results[indR][indV] = int(value)
-        for result in results:
-            matrixOut = self.insertFreeDaysInSolutionMatrix(result)
-            shiftsOk = self.checkifshiftsOK(matrixOut)
-            if shiftsOk == True:
-                yield matrixOut
-    def cartesianProduct(self,days,shifts):
-        arrays = []
-        print(days)
-        print(shifts)
-        for n in range(days):
-            arrays.append(shifts)
-        arr = numpy.empty([len(a) for a in arrays] + [days])
-        for i, a in enumerate(numpy.ix_(*arrays)):
-            arr[...,i] = a
-        return arr.reshape(-1, days)
     def checkWeeklyRest(self):
         if self.freedaysweeklycheck(self.table1ToSolutionMatrix(),1) == True:
             self.checkWeeklyRestBtn.setStyleSheet("background-color:#008000;");
         else:
             self.checkWeeklyRestBtn.setStyleSheet("background-color:#800000;");
-
-
     def freedaysweeklycheck(self,item1,printout): # Just another constraint that must be fulfilled
         shiftstarts = 24/3
-
         noOnes = 0 # check so that number of free days over 7 day periods rule is followed.
         item2 = [] # have to check a week back so when last week goes over to next week, rule is also obeyed.
         appendflag = True
@@ -600,7 +579,6 @@ class DialogPhase2(QDialog):
             item2.append(item1[m])
         for m in range(len(item1)):
             item2.append(item1[m])
-
         restingTime = 0
         daysGoneBy = 0
         hoursSinceShiftEnd = 0
@@ -654,10 +632,6 @@ class DialogPhase2(QDialog):
 
 if __name__ == '__main__':
     app = QApplication([sys.argv[0]])
-    # window = DialogPhase2(3,['D', 'E', 'N'],[[1, 1, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 1, 0, 1, 1, 1], [1, 0, 0, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0, 0]],8.33)
-    # window = DialogPhase2(2,['D', 'E'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
-    # window = DialogPhase2(3,['D', 'E', 'N'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
-    window = DialogPhase2(3,['D', 'E', 'N'],[[0, 0, 1, 1, 1, 0, 1], [1, 1, 1, 1, 0, 1, 1], [1, 1, 0, 0, 1, 1, 0]],8.33)
-
+    window = DialogPhase2(2,['D', 'E'],[[1, 1, 1, 1, 1, 0, 1],[1, 1, 1, 1, 0, 1, 1],[ 0, 0, 0, 0, 1, 1, 0]],8.00,36.00,11.00)
     window.show()
     sys.exit(app.exec_())

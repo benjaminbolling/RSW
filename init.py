@@ -14,4 +14,5 @@ def init_values():
     clusterFreeDays = False    # Free days have to be clustered
     freeDaysClusterValue = 2   # Free days clustering value
     noOfPeople = 1           # Minimum number of people per shift
-    return shifttype,workingdays,noofweeks,shiftlengths,workinghours,weeklyresting,overwrite,shiftLabel1,shiftLabel2,shiftLabel3,fastGen,clusterFreeDays,freeDaysClusterValue,noOfPeople
+    dailyresting = 11      # Length of daily minimum resting time between shifts in hours
+    return shifttype,workingdays,noofweeks,shiftlengths,workinghours,weeklyresting,overwrite,shiftLabel1,shiftLabel2,shiftLabel3,fastGen,clusterFreeDays,freeDaysClusterValue,noOfPeople,dailyresting

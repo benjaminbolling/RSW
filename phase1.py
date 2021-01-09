@@ -26,6 +26,7 @@ from PyQt5.QtWidgets import QApplication,QCheckBox,QDialog,QDoubleSpinBox,QFileD
 from PyQt5.QtCore import Qt
 from time import time
 import sys
+import IO
 from math import factorial
 import phase2
 import findAcceptableCombosGUI
@@ -34,26 +35,13 @@ class DialogPhase1(QWidget):
     def __init__(self, parent=None):
         super(DialogPhase1, self).__init__(parent)
         self.setWindowTitle("1o2o3 S-CSV-fcal phase 1")
+        self.phase2dialogs = list() # Make all phase2 dialogs part of a list belonging to this parent
         self.valuesInit()
         self.createLayout()
         self.afterworkvisibleinvisible(False)
-    def valuesInit(self):
-        # Inputs values
-        self.phase2dialogs = list()
-        self.shifttype = 1              # 1-shift or 2-shift or 3-shift, 1, 2, 3, resp.
-        self.workingdays = 7            # Amount of days per week
-        self.noofweeks = 2              # Amount of weeks to cycle over
-        self.shiftlengths = 8.33        # Length of shifts in hours
-        self.workinghours = 36          # Amount of working hours per person each week
-        self.weeklyresting = 36         # Length of weekly minimum single continuous resting time in hours
-        self.overwrite = 0              # In order to avoid re-running the algorithm unnecessarily
-        self.shiftLabel1 = "D"          # Define how this shift is to be labelled in the next phase
-        self.shiftLabel2 = "E"          # Define how this shift is to be labelled in the next phase
-        self.shiftLabel3 = "N"          # Define how this shift is to be labelled in the next phase
-        self.fastGen = False            # Finish algorithm after the first 100 combos
-        self.clusterFreeDays = False    # Free days have to be clustered
-        self.freeDaysClusterValue = 2   # Free days clustering value
-        self.noOfPeople = 1           # Minimum number of people per shift
+    def valuesInit(self): # Inputs values
+        import init
+        self.shifttype,self.workingdays,self.noofweeks,self.shiftlengths,self.workinghours,self.weeklyresting,self.overwrite,self.shiftLabel1,self.shiftLabel2,self.shiftLabel3,self.fastGen,self.clusterFreeDays,self.freeDaysClusterValue,self.noOfPeople = init.init_values()
     def createLayout(self):
         self.layout = QGridLayout(self)
         toplabel1 = QLabel("1-, 2- or 3-Shift Combinations Generator Algorithm.")
@@ -176,6 +164,12 @@ class DialogPhase1(QWidget):
         self.freeDaysClusterSpin.setMaximum(4)
         self.freeDaysClusterSpin.valueChanged.connect(self.freeDaysClusterSpinChanged)
         self.layout.addWidget(self.freeDaysClusterSpin, row, 4, 1, 3)
+        row += 1
+        shiftspercycleLbl = QLabel("Shifts per person per cycle:")
+        self.layout.addWidget(shiftspercycleLbl,row,0,1,4)
+        self.shiftsperpersonpercycle = QLabel()
+        self.shiftsperpersonpercycle.setText(str(IO.shiftsperpersonpercycle(self.workinghours,self.noofweeks,self.shiftlengths)))
+        self.layout.addWidget(self.shiftsperpersonpercycle, row, 4, 1, 3)
         row += 1
         self.generateBtn = QPushButton("Generate Combinations")
         self.generateBtn.clicked.connect(self.generateBtnClicked)
@@ -483,8 +477,10 @@ class DialogPhase1(QWidget):
         self.noofpeople = self.noofpeopleinput.value()
     def noofweeksinputChanged(self):
         self.noofweeks = self.noofweeksinput.value()
+        self.shiftsperpersonpercycle.setText(str(IO.shiftsperpersonpercycle(self.workinghours,self.noofweeks,self.shiftlengths)))
     def shiftlengthsinputChanged(self):
         self.shiftlengths = self.shiftlengthsinput.value()
+        self.shiftsperpersonpercycle.setText(str(IO.shiftsperpersonpercycle(self.workinghours,self.noofweeks,self.shiftlengths)))
     def freeClustering(self,input):
         if input.isChecked() == True:
             self.clusterFreeDays = True
@@ -501,6 +497,7 @@ class DialogPhase1(QWidget):
         self.freeDaysClusterValue = self.freeDaysClusterSpin.value()
     def workinghoursinputChanged(self):
         self.workinghours = self.workinghoursinput.value()
+        self.shiftsperpersonpercycle.setText(str(IO.shiftsperpersonpercycle(self.workinghours,self.noofweeks,self.shiftlengths)))
     def weeklyrestinginputChanged(self):
         self.weeklyresting = self.weeklyrestinginput.value()
     def noOfPeopleinputChanged(self):
@@ -689,13 +686,9 @@ class DialogPhase1(QWidget):
                 self.overwrite = 0
         if self.overwrite == 0:
             self.overwrite = 1
-            shiftsperpersonpercycle = int(self.workinghours*self.noofweeks/self.shiftlengths)+(self.workinghours*self.noofweeks/self.shiftlengths > 0) # rounding integer up
-            print(shiftsperpersonpercycle)
-            # print(freetimeperpersonpercycle)
-            # Show this in the GUI
-            freetimeperpersonpercycle = self.noofweeks*self.workingdays - shiftsperpersonpercycle
-            self.freedaysover7days = int(self.weeklyresting/24)+(self.weeklyresting/24 > 0)
-            weeksneeded = int(self.noOfPeople*self.workingdays*self.shifttype*self.shiftlengths/self.workinghours) + (self.noOfPeople*self.workingdays*self.shifttype*self.shiftlengths/self.workinghours > 0)
+            shiftsperpersonpercycle = IO.shiftsperpersonpercycle(self.workinghours,self.noofweeks,self.shiftlengths)
+            weeksneeded = IO.weeksneeded(self.noOfPeople,self.workingdays,self.shifttype,self.shiftlengths,self.workinghours)
+            self.freedaysover7days = IO.freedaysover7days(self.weeklyresting)
             if self.noofweeks > 4:
                 errorflag = 1
                 override = QMessageBox.warning(self, 'Warning', str(self.noofweeks)+" weeks might require extensive amount of comping power and/or time, as the amount of combinations to go through is "+str(int(factorial(self.noofweeks*self.workingdays)/(factorial(shiftsperpersonpercycle)*factorial(self.noofweeks*self.workingdays-shiftsperpersonpercycle))))+". Continue anyways?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -741,8 +734,8 @@ class DialogPhase1(QWidget):
         if filename is not None and len(filename)>0:
             contents = open(filename, "r").read()
             combos = contents.split("\n")
-            self.noofweeks = len(combos[0].split(" "))/7
             if self.noofweeks.is_integer():
+                self.noofweeks = len(combos[0].split(" "))/7
                 self.shiftseries = combos
                 self.messageLabel01.setText("Combinations loaded from:")
                 self.messageLabel02.setText(filename)
@@ -777,10 +770,10 @@ class DialogPhase1(QWidget):
         for ind in tuple(pool[i] for i in indices):
             item1[ind] = "1"
         appendflag = True # Reset for each combination
-        appendflag = self.freedaysweeklycheck(appendflag,item1)
-        appendflag = self.checkifallshiftsfilled(appendflag,item1)
+        appendflag = IO.freedaysweeklycheck(self.freedaysover7days,appendflag,item1)
+        appendflag = IO.checkifallshiftsfilled(self.workingdays,self.noOfPeople,self.shifttype,appendflag,item1)
         if self.clusterFreeDays == True:
-            appendflag = self.freeDaysClusterCheck(appendflag,item1)
+            appendflag = IO.freeDaysClusterCheck(appendflag,item1)
         if appendflag == True:
             shiftseries.append(" ".join(item1))
         self.lp = True
@@ -800,7 +793,7 @@ class DialogPhase1(QWidget):
                 for ind in tuple(pool[i] for i in indices):
                     item1[ind] = "1"
                 appendflag = True # Reset for each combination
-                appendflag = self.checkifallshiftsfilled(appendflag,item1) # check if all shifts are filled before adding the non-workdays for lists with less than 7 workdays per week
+                appendflag = IO.checkifallshiftsfilled(self.workingdays,self.noOfPeople,self.shifttype,appendflag,item1) # check if all shifts are filled before adding the non-workdays for lists with less than 7 workdays per week
                 if appendflag == True:
                     if self.workingdays < 7:
                         itemSerie2 = []
@@ -811,10 +804,10 @@ class DialogPhase1(QWidget):
                             for n2 in range(7-self.workingdays):
                                 itemSerie2.append("0")
                         item1 = itemSerie2
-                    appendflag = self.freedaysweeklycheck(appendflag,item1)
+                    appendflag = IO.freedaysweeklycheck(self.freedaysover7days,appendflag,item1)
                     if appendflag == True:
                         if self.clusterFreeDays == True:
-                            appendflag = self.freeDaysClusterCheck(appendflag,item1)
+                            appendflag = IO.freeDaysClusterCheck(appendflag,item1)
                         if appendflag == True:
                             shiftseries.append(" ".join(item1))
                             tempfile.write(" ".join(item1)+"\n")
@@ -831,82 +824,8 @@ class DialogPhase1(QWidget):
         tempfile.close()
         self.generateBtn.setText("Generate Combinations")
         return shiftseries, noConstraints
-    def checkifallshiftsfilled(self,appendflag,item1): # Just a constraint that must be fulfilled
-        day = 0
-        cycleseries = []
-        weekseries = []
-        for m in range(len(item1)):
-            weekseries.append(item1[m])
-            day += 1
-            if day > self.workingdays-1:
-                day = 0
-                cycleseries.append(weekseries)
-                weekseries = []
-        cyclecheck = []
-        for a in range(self.workingdays):
-            cyclecheck.append(0)
-        for a in cycleseries:
-            for b in range(len(a)):
-                cyclecheck[b] = cyclecheck[b] + int(a[b])
-        for m in cyclecheck:
-            if m < self.shifttype*self.noOfPeople:
-                appendflag = False
-        return appendflag
-    def freedaysweeklycheck(self,appendflag,item1): # Just another constraint that must be fulfilled
-        noOnes = 0 # check so that number of free days over 7 day periods rule is followed.
-        item2 = [] # have to check a week back so when last week goes over to next week, rule is also obeyed.
-        for m in range(len(item1)-7,len(item1)):
-            item2.append(item1[m])
-        for m in range(len(item1)):
-            item2.append(item1[m])
-        for item in item2:
-            if item == "1":
-                noOnes += 1
-            elif item == "0":
-                noOnes = 0
-            if noOnes > 7-self.freedaysover7days:
-                appendflag = False
-        return appendflag
-    def freeDaysClusterCheck(self,appendflag,item1): # An additional constraint that might need to be fulfilled
-        freeDays = 0
-        item2 = [] # have to check a week back so when last week goes over to next week, rule is also obeyed.
-        for m in range(len(item1)-7,len(item1)):
-            item2.append(item1[m])
-        for m in range(len(item1)):
-            item2.append(item1[m])
-        minzero = 0
-        for item in item2:
-            if item == "0":
-                if minzero == 0:
-                    minzero = 1
-                else:
-                    minzero += 1
-            elif item == "1":
-                if minzero == 1:
-                    appendflag = False
-                else:
-                    minzero = 0
-        return appendflag
     def updateafterworkInt(self):
-        try:
-            activeSeries = self.shiftseries[self.afterworkIntValue].split(" ")
-            self.afterweeksvisible(True)
-        except:
-            activeSeries = []
-            self.afterweeksvisible(False)
-        self.activeSeries = []
-        for s in activeSeries:
-            self.activeSeries.append(int(s))
-        self.activeSeriesSerie = []
-        n = 0
-        activeSerie = []
-        for m in self.activeSeries:
-            n += 1
-            activeSerie.append(m)
-            if n == self.workingdays:
-                self.activeSeriesSerie.append(activeSerie)
-                activeSerie = []
-                n = 0
+        self.activeSerie = IO.returnActiveSeries(self.shiftseries,self.afterworkIntValue,self.workingdays)
         self.afterweekslabels()
     def shiftLabelsClicked(self):
         self.shiftLabel1 = self.shiftLabel1Edit.text()

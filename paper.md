@@ -41,34 +41,30 @@ In this approach, each worker has the same schedule but shifted by one week resu
 
 ## Boolean Shift Arrays (phase 1)
 A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. Then the constraints imposed are:
-| Column 1       | Column 2     |
+
+| Variable       | Meaning     |
 | :------------- | :----------: |
 | n_wd | number of working days per week   |
 | n_W | number of weeks to cycle over      |
+| N | number of shifts per days            |
+| t_s | shift lengths                      |
+| t_W | weekly working hours per worker    |
+| n_cf | number of days off clustered      |
+| t_r | weekly minimum single continuous resting time |
 
+Since each week also resembles a worker, the shift array can be set up as a matrix with 7 columns (each representing the days of a week) and n_W/7 rows (each representing a worker). The columns can then be summed to achieve the shift occupancy (or how many people are working each shift). Thus, the phase1 algorithm only allows shift arrays to pass for which all shifts are occupied by at least one worker, with a shift represented by the first n_wd days for each week. In order to extend to not only use single shifts but also 2- or 3-shifts, a logical condition was added into the algorithm: For *N* shifts per day, each day has to be filled with at least *N* workers.
 
-For simplicity, we begin by using boolean shift arrays with 1 meaning that the person works and 0 meaning that the person does not work. In order to impose some constraints on the shift arrays, we define the  as $n_{wd}$ and  as $n_W$. This results in a shift array of length $7n_W$. For constructing the different combinations of the boolean array, we use Algorithm~\ref{algorithm1}.
+In order to avoid all working days from being clustered together, a constraint for weekly minimum single continuous resting time is added (t_r). The algorithm ensures that all passed shift arrays have at least t_r hours of free-time over any given 7-day period.
 
+The number of shifts per shift array is calculated by
 
-
-
-Since each week also resembles a worker, the shift array can be set up as a matrix with 7 columns, each representing the days of a week. The columns can then be summed to achieve the shift occupancy (or how many people are working each shift). Thus, the algorithm only allows shift arrays to pass for which all shifts are occupied by at least one worker, with a shift represented by the first $n_{wd}$ days for each week. In order to extend to not only use single shifts but also 2- or 3-shifts, a simple logical reasoning was added into the algorithm. For $N$ shifts per day, each day has to be filled with at least $N$ workers.
-
-The next input that the algorithm needs is the shift lengths and the weekly working hours per worker, defined as $t_s$ and $t_W$, respectively. However, in order to generate "good schedules", an additional constraint will be needed in order to avoid all working days being clustered together.
-
-\begin{figure}[h]
-  \centering\includegraphics[width=0.9\columnwidth]{fig1.png}
-\caption{The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.}
-\label{fig:figure1}
-\end{figure}
-
-Hence, the constraint for weekly minimum single continuous resting time is added, defined as $t_r$. The algorithm ensures that all passed shift arrays have at least this many hours of free-time for each week. The number of shifts $n_S$ per shift array is calculated by
-\[
+\begin{equation}
 n_S = \mathrm{ceil}\left(\frac{t_W}{t_s}\right).
-\]
+\end{equation}
+
 The reason for using ceiling function and not the floor function is simply the argument that it is better with a couple of more hours than fewer. In order to cluster days off ($n_cf$), the algorithm's GUI has an optional additional constraint that serves this purpose and simply does not allow shift arrays with 0:s in clusters less than this through.
 
-By using the input $n_Wn_{wd}$ as an iterable and $n_S$ as the length of subsequences of elements from the iterable, we use the same methodology as \textit{itertools} \cite{Itertools} module in Python to create each shift array. The other inputs are used as constraints on whether the shift array should be appended to the array of shift arrays or trashed. The reasoning for not using the built-in module itertools.combinations \cite{Itertools} is that it returns all array combinations it could find. Without the constraints, the returned arrays become too large for a normal up-to-date computer's internal memory to handle.
+By using the input n_W * n_wd as an iterable and $n_S$ as the length of subsequences of elements from the iterable, we use the same methodology as \textit{itertools} \cite{Itertools} module in Python to create each shift array. The other inputs are used as constraints on whether the shift array should be appended to the array of shift arrays or trashed. The reasoning for not using the built-in module itertools.combinations \cite{Itertools} is that it returns all array combinations it could find. Without the constraints, the returned arrays become too large for a normal up-to-date computer's internal memory to handle.
 
 With this, the final result is an array of shift arrays in which each shift array is filled with $7n_S$ 1:s and $n_W(7-n_S)$ 0:s whilst obeying the above mentioned constraints. The number of possible combinations $C$ using Algorithm~\ref{algorithm1} can be expressed as:
 \begin{equation}
@@ -264,3 +260,11 @@ In this article, we have demonstrated that the constructed algorithm can generat
 
 For up to 5 weeks in a shift cycle it is possible to use a general-purpose computer such as the benchmarking Apple MacBook Pro with specifications defined in Table~\ref{tab:computerSpecs}.
 It has thus been demonstrated that the application can be used to generate 1, 2 and 3-shift schedules. Future development plans include adding an automated assignment function of shift types in phase 2, which would further strengthen the usability of this application.
+
+
+# Figures
+\begin{figure}[h]
+  \centering\includegraphics[width=0.9\columnwidth]{fig1.png}
+\caption{The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.}
+\label{fig:figure1}
+\end{figure}

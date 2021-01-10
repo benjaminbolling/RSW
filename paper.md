@@ -20,7 +20,7 @@ affiliations:
    index: 1
  - name: MAX IV Laboratory
    index: 2
-bibliography: paper.bib
+bibliography: docs/paper.bib
 ---
 
 # Summary

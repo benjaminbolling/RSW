@@ -147,6 +147,6 @@ Figure 2: The RWS:ing Application's algorithm's "phase 2 GUI" as launched from t
 Figure 3: The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).
 
 ## Acknowledgements
-The author wants to thank ...
+The author wants to thank his direct line-manager at European Spallation Source for asking the question if it would be possible to create a software for generating shift schedules, which lead to the idea of creating this project and after a while lead to this final state.
 
 ## References

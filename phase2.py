@@ -338,7 +338,7 @@ class DialogPhase2(QDialog):
         self.updateTable2()
         self.matrix = self.createFullMatrix()
     def loadFunction(self):
-        filename, type = QFileDialog.getOpenFileName(self, 'Load File', "", "Text Files (*.txt)", options=QFileDialog.DontUseNativeDialog)
+        filename, type = QFileDialog.getOpenFileName(self, 'Load File', "", "Text Files (*.sol)", options=QFileDialog.DontUseNativeDialog)
         if len(filename) > 0:
             self.solutionsBrowsing.setValue(0)
             self.solutionsSlider.setValue(0)
@@ -351,13 +351,13 @@ class DialogPhase2(QDialog):
             self.solutionMatrices = [solutionMatrix]
             self.solutionMatrix2Table1()
     def saveFunction(self):
-        filename, type = QFileDialog.getSaveFileName(self, 'Save File', "Untitled.txt", "Text Files (*.txt)", options=QFileDialog.DontUseNativeDialog)
+        filename, type = QFileDialog.getSaveFileName(self, 'Save File', "Untitled.sol", "Text Files (*.sol)", options=QFileDialog.DontUseNativeDialog)
         if len(filename) > 0:
             if len(filename.split(".")) > 1:
-                if filename.split(".")[-1] != "txt":
-                    filename = filename+".txt"
+                if filename.split(".")[-1] != "sol":
+                    filename = filename+".sol"
             elif len(filename.split(".")) < 2:
-                filename = filename+".txt"
+                filename = filename+".sol"
             solutionMatrix = self.table1ToSolutionMatrix()
             toSave = [self.shifttype, self.shifts, self.series, self.shiftlengths, self.dailyresting, solutionMatrix]
             with open(filename, 'w') as out_file:

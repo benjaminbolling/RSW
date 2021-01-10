@@ -69,9 +69,9 @@ With this, the final result is an array of shift arrays in which each shift arra
 $$C = \frac{(n_W * n_{wd})!}{n_S! (n_W*n_{wd}-n_S)!}.$$
 
 ## From Boolean Shift Arrays to RWS (phase 2)
-In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure~\ref{fig:figure1} to the right).
+In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure 1 to the right).
 
-Pressing the \textit{Find solutions} results in what is shown in Figure~\ref{fig:figure2} (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
+Pressing the \textit{Find solutions} results in what is shown in Figure 2 (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
 \[
 \mathrm{combinations} =
 \underbrace{
@@ -126,8 +126,6 @@ solutions = recursiveCaPr(N,shifts,arrays,arrays[0],level)
 \caption{Finding solutions to a Cartesian Product of length N using a recursive function.}
 \label{algorithm2}
 \end{algorithm}
-
-
 
 # Benchmarking results
 \subsection{Benchmarking Computer Specifications}
@@ -189,7 +187,7 @@ Three-shift, 7 days/week    & 5 & 1 476 337 800 & 11 383 225\\
 \end{tabular}
 \end{table}
 
-Plotting the benchmarking results yields the logarithmic graph in Figure~\ref{fig:figure4}. As can be seen, the computation time $T_C$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
+Plotting the benchmarking results yields the logarithmic graph in Figure 3. As can be seen, the computation time $T_C$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
 \[
 T_C(full) = \exp(5.046\times n_W)\times9\times10^{-7}
 \]
@@ -198,12 +196,6 @@ and
 T_C(fast) = \exp(4.254\times n_W)\times2\times10^{-6}
 \]
 for the full and fast generations on, respectively.
-
-\begin{figure}[h]
-  \centering\includegraphics[width=0.94\columnwidth]{fig4.png}
-\caption{The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).}
-\label{fig:figure4}
-\end{figure}
 
 ## Phase 2 - Finding Solutions for a given Combination
 If the given combination has only a single shift specie, there is one solution for the given combination. If there are more than one shift specie, multiple solutions may be found. The main impact on time consumption is the number of combinations $N_C$. Limiting factors are not limited to time only but also on the internal memory due to that a Cartesian Product method is used, meaning all combinations are stored as list objects. Some values have been timed and calculated in Table~\ref{tab:phase2} using the Cartesian Product method.
@@ -227,21 +219,15 @@ Type ($N$): & $n_{wd}$: & $n_{W}$: & Combinations: & Solutions: & IM: & Time [s]
 \end{table}
 
 # Conclusions
-In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle, as can be seen in Table~\ref{tab:fullCombos} and Figure~\ref{fig:figure4}. This means that for a higher amount of weeks in a shift cycle, this application will need development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
+In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle, as can be seen in Table~\ref{tab:fullCombos} and Figure 3. This means that for a higher amount of weeks in a shift cycle, this application will need development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
 
 For up to 5 weeks in a shift cycle it is possible to use a general-purpose computer such as the benchmarking Apple MacBook Pro with specifications defined in Table~\ref{tab:computerSpecs}.
 It has thus been demonstrated that the application can be used to generate 1, 2 and 3-shift schedules. Future development plans include adding an automated assignment function of shift types in phase 2, which would further strengthen the usability of this application.
 
 
 # Figures
-\begin{figure}[h]
-  \centering\includegraphics[width=0.9\columnwidth]{fig1.png}
-\caption{The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.}
-\label{fig:figure1}
-\end{figure}
+![The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.](docs/fig1.png)
 
-\begin{figure}[h]
-  \centering\includegraphics[width=0.98\columnwidth]{fig2.png}
-\caption{The RWS:ing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).}
-\label{fig:figure2}
-\end{figure}
+![The RWS:ing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).](docs/fig2.png)
+
+![The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).](docs/fig4.png)

@@ -48,9 +48,11 @@ Table 1: Constraints, i.e. the variables and their meanings, and some example va
 | :------------- | :----------: | :----------: |
 | *N* | number of shifts per days            | 2 |
 | *n<sub>cf</sub>* | number of days off clustered      | 2 |
-| *n<sub>S</sub>* | number of shifts per shift cycle      | 2 |
+| *n<sub>S</sub>* | number of shifts per shift cycle      | 18 |
 | *n<sub>W</sub>* | number of weeks to cycle over      | 4 |
 | *n<sub>wd</sub>* | number of working days per week   | 7 |
+| *n<sub>wS</sub>* | Number of workers per shift (minimum) | 1 |
+| *t<sub>d</sub>* | daily minimum continuous resting time  | 11 |
 | *t<sub>r</sub>* | weekly minimum single continuous resting time | 36 |
 | *t<sub>s</sub>* | shift lengths                      | 8.33 |
 | *t<sub>W</sub>* | weekly working hours per worker    | 36.00 |
@@ -150,3 +152,8 @@ Figure 2: The RWS:ing Application's algorithm's "phase 2 GUI" as launched from t
 
 ![Figure 3](docs/fig4.png)
 Figure 3: The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).
+
+# Acknowledgements
+The author wants to thank ...
+
+# References

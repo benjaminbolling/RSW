@@ -8,7 +8,7 @@ Previous methods for creating rotational workforce schedules included interactio
 In this project, an algorithm takes into account inputs (or constraints) from the schedule maker and then presents the possible combinations (incl. that all shifts must be filled, working hours per week, minimal resting time, etc.) in a first phase. The schedule maker can then select which combinations are most feasible to proceed with in the second phase, where the combinations have solutions presented followed by the final schedules being constructed and exported.
 
 ## Getting Started
-
+Some tips ...
 
 ### Installation procedure
 Step-by-step ...

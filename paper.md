@@ -26,13 +26,13 @@ bibliography: paper.bib
 # Summary
 A Computational Approach to Generate Multi-Shift Rotational Workforce Schedules.
 
-# Introduction
+## Introduction
 Creating shift work schedules has always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout. In order to achieve schedules for the workers that treats everyone equally, the focus will be on so-called rotational workforce schedules (RWS:s). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints.
 
-# Computational Approach and Results
+## Computational Approach and Results
 In this approach, each worker has the same schedule but shifted by one week resulting in that all workers follow the same schedule. The project has been divided into two phases, *Boolean Shift Arrays* (in which boolean shift arrays are generated) and *From Boolean Shift Arrays to a RWS* (in which a selected boolean shift array is shaped into its final RWS layout).
 
-## Boolean Shift Arrays (phase 1)
+### Boolean Shift Arrays (phase 1)
 A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The inputs (also known as constraints) used are shown in Table 1 below.
 
 Table 1: Constraints, i.e. the variables and their meanings, and some example values.
@@ -66,7 +66,7 @@ With this, the final result is an array of shift arrays in which each shift arra
 
 <p align="center"><i>C = (n<sub>W</sub> &times; n<sub>wd</sub>)</i>!<i> / n<sub>S</sub></i>!<i>(n<sub>W</sub> &times; n<sub>wd</sub> - n<sub>S</sub>)</i>!.</p>
 
-## From Boolean Shift Arrays to RWS (phase 2)
+### From Boolean Shift Arrays to RWS (phase 2)
 In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure 1 to the right).
 
 Pressing the *Find solutions* results in what is shown in Figure 2 (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations that obey the given constraints. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
@@ -83,8 +83,8 @@ returning the memory demand IM in bytes and where *N<sub>C</sub> = N<sup>n<sub>S
 
 If the estimated expected internal memory requirement for an operation exceeds 1Gb, the user is prompted whether to continue with the default Cartesian Product method or to use a less internal memory demanding recursive method.
 
-# Benchmarking results
-## Benchmarking Computer Specifications
+## Benchmarking results
+### Benchmarking Computer Specifications
 The algorithm benchmarking was done on an Apple MacBook Pro with the specifications as defined in Table 2.
 
 Table 2: Benchmarking computer specifications.
@@ -97,7 +97,7 @@ Table 2: Benchmarking computer specifications.
 | Internal Memory: | 16 GB 2133 MHz LPDDR3 |
 | Graphics Card: |  Intel Iris Plus Graphics 655 1536 MB |
 
-## Benchmarking Phase 1
+### Benchmarking Phase 1
 In the GUI, there is a "fast generation" checkbox which stops the algorithm from further calculations once the first 100 approved combinations have been found. This way, computation time can be lowered (in comparison to "full generation" which will go through all possible combinations from the boolean array). For the parameters defined in Table 1, the time it took to complete decreased from 508.7 s (for a full generation) to 24.55 s (for the full generation) (see Table 3), which is a decrease in time by 95\%.
 
 The parameters used are defined in Table 1, with the exception of *N* and Shift types' labels. Note that for Table 3, the number (\#) of weeks given is the minimum amount of weeks required for a full shift cycle in order to find acceptable combinations for the N-shift problems (with *N* = 1,2,3 for single-, two- and three-shifts, respectively). The free days clustering option is not selected for the benchmarking.
@@ -118,7 +118,7 @@ and
 <p align="center"><i>T<sub>C</sub></i>(fast) = exp (4.254 &times; <i>n<sub>W</sub></i>) &times; 2 &times; 10<sup>-6</sup></p>
 for the full and fast generations, respectively.
 
-## Benchmarking Phase 2
+### Benchmarking Phase 2
 If the given combination has only a single shift specie, there is one solution for the given combination. If there are more than one shift specie, multiple solutions may be found. The main impact on time consumption is the number of combinations *N<sub>C</sub>*. Limiting factors are not limited to time only but also on the internal memory due to that a Cartesian Product method is used, meaning all combinations are stored as list objects. Some values have been timed and calculated in Table 4 using the Cartesian Product method.
 
 Table 4: Benchmarking for Phase 2: Time and estimated internal memory (IM) required for obtaining all combinations and solutions for different *n<sub>S</sub>* and *N* using the Cartesian Product method.
@@ -130,13 +130,13 @@ Table 4: Benchmarking for Phase 2: Time and estimated internal memory (IM) requi
 | 3-shift | 14    | 3 | 4 782 969 | 0 | 66.96 MB | 92.54 |
 | 3-shift | 18    | 4 | 387 420 489 | - | 6.9736 GB | - |
 
-# Conclusions
+## Conclusions
 In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle, as can be seen in Table 3 and Figure 3. This means that for a higher amount of weeks in a shift cycle, this application will need development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
 
 For up to 5 weeks in a shift cycle it is possible to use a general-purpose computer such as the benchmarking Apple MacBook Pro with specifications defined in Table 2.
 It has thus been demonstrated that the application can be used to generate 1, 2 and 3-shift schedules. Future development plans include adding an automated assignment function of shift types in phase 2, which would further strengthen the usability of this application.
 
-# Figures
+## Figures
 ![Figure 1](docs/fig1.png)
 Figure 1: The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.
 
@@ -146,7 +146,7 @@ Figure 2: The RWS:ing Application's algorithm's "phase 2 GUI" as launched from t
 ![Figure 3](docs/fig4.png)
 Figure 3: The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).
 
-# Acknowledgements
+## Acknowledgements
 The author wants to thank ...
 
-# References
+## References

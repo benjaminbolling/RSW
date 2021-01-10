@@ -1,13 +1,13 @@
 # RSW Algo README
 A Computational Approach to Generate Multi-Shift Rotational Workforce Schedules.
 
-##Installation procedure
+## Installation procedure
 Step-by-step ...
 
-# Phase 1
+## Phase 1
 Phase 1 consists of a list of parameters and ...
 
-# Phase 2
+## Phase 2
 The "phase 2 GUI" is launched with a selected combination as input (which can be seen in Figure 2 to the left).
 
 The free days are all represented by zeroes whilst all other shifts (ones) are converted to the first defined shift type label. For $N>1$, each shift can be replaced by another shift via dropdown menus. The GUI shows the number of shifts of each type per week and a table with the results, i.e. the number of workers per shift and day. Shifts that are occupied have green background whilst shifts that are unoccupied have a red background.
@@ -39,7 +39,7 @@ The slider is moved to combination \#212, and the bottom-right button *Proceed w
 
 These two schedules are filled as evenly as possible with the exception of Fridays, which have been selected such that all shift workers are scheduled to work (suitable for e.g. activities when *all hands on deck* is required. This schedule has also ensured that each shift is occupied by a minimum of two shift workers.
 
-# Figures
+## Figures
 ![Figure 1](docs/fig1.png)
 Figure 1: The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.
 

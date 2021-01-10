@@ -40,67 +40,38 @@ Creating shift work schedules has always been a challenging task, especially suc
 In this approach, each worker has the same schedule but shifted by one week resulting in that all workers follow the same schedule. The project has been divided into two phases, *Boolean Shift Arrays* (in which boolean shift arrays are generated) and *From Boolean Shift Arrays to a RWS* (in which a selected boolean shift array is shaped into its final RWS layout).
 
 ## Boolean Shift Arrays (phase 1)
-A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. Then the constraints imposed are:
+A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The inputs (also known as constraints) used are:
 
 | Variable       | Meaning     |
 | :------------- | :----------: |
-| n_wd | number of working days per week   |
-| n_W | number of weeks to cycle over      |
-| N | number of shifts per days            |
-| t_s | shift lengths                      |
-| t_W | weekly working hours per worker    |
-| n_cf | number of days off clustered      |
-| t_r | weekly minimum single continuous resting time |
+| $n_wd$ | number of working days per week   |
+| $n_W$ | number of weeks to cycle over      |
+| $N$ | number of shifts per days            |
+| $t_s$ | shift lengths                      |
+| $t_W$ | weekly working hours per worker    |
+| $n_cf$ | number of days off clustered      |
+| $t_r$ | weekly minimum single continuous resting time |
 
-Since each week also resembles a worker, the shift array can be set up as a matrix with 7 columns (each representing the days of a week) and n_W/7 rows (each representing a worker). The columns can then be summed to achieve the shift occupancy (or how many people are working each shift). Thus, the phase1 algorithm only allows shift arrays to pass for which all shifts are occupied by at least one worker, with a shift represented by the first n_wd days for each week. In order to extend to not only use single shifts but also 2- or 3-shifts, a logical condition was added into the algorithm: For *N* shifts per day, each day has to be filled with at least *N* workers.
+Since each week also resembles a worker, the shift array can be set up as a matrix with 7 columns (each representing the days of a week) and $n_W/7$ rows (each representing a worker). The columns can then be summed to achieve the shift occupancy (or how many people are working each shift). Thus, the phase1 algorithm only allows shift arrays to pass for which all shifts are occupied by at least one worker, with a shift represented by the first $n_wd$ days for each week. In order to extend to not only use single shifts but also 2- or 3-shifts, a logical condition was added into the algorithm: For $N$ shifts per day, each day has to be filled with at least $N$ workers.
 
-In order to avoid all working days from being clustered together, a constraint for weekly minimum single continuous resting time is added (t_r). The algorithm ensures that all passed shift arrays have at least t_r hours of free-time over any given 7-day period.
+In order to avoid all working days from being clustered together, a constraint for weekly minimum single continuous resting time is added ($t_r$). The algorithm ensures that all passed shift arrays have at least $t_r$ hours of free-time over any given 7-day period.
 
 The number of shifts per shift array is calculated by
 
-\begin{equation}
-n_S = \mathrm{ceil}\left(\frac{t_W}{t_s}\right).
-\end{equation}
+$$n_S = \mathrm{ceil}\left(\frac{t_W}{t_s}\right).$$
 
 The reason for using ceiling function and not the floor function is simply the argument that it is better with a couple of more hours than fewer. In order to cluster days off ($n_cf$), the algorithm's GUI has an optional additional constraint that serves this purpose and simply does not allow shift arrays with 0:s in clusters less than this through.
 
-By using the input n_W * n_wd as an iterable and $n_S$ as the length of subsequences of elements from the iterable, we use the same methodology as \textit{itertools} \cite{Itertools} module in Python to create each shift array. The other inputs are used as constraints on whether the shift array should be appended to the array of shift arrays or trashed. The reasoning for not using the built-in module itertools.combinations \cite{Itertools} is that it returns all array combinations it could find. Without the constraints, the returned arrays become too large for a normal up-to-date computer's internal memory to handle.
+By using the input $n_W * n_wd$ as the iterable and $n_S$ as the length of subsequences of elements from the iterable, the same methodology as the *combinations* function of the *itertools* module in Python is used for creating each shift array. The other inputs are used as constraints on whether the shift array should be appended to the array of shift arrays or trashed. The reasoning for not using the built-in Python module is that it returns all possible array combinations, resulting in the returned arrays being too large for a personal computer's internal memory to handle.
 
-With this, the final result is an array of shift arrays in which each shift array is filled with $7n_S$ 1:s and $n_W(7-n_S)$ 0:s whilst obeying the above mentioned constraints. The number of possible combinations $C$ using Algorithm~\ref{algorithm1} can be expressed as:
-\begin{equation}
-    C = \frac{(n_Wn_{wd})!}{n_S! (n_Wn_{wd}-n_S)!}.
-\end{equation}
+With this, the final result is an array of shift arrays in which each shift array is filled with $7n_S$ 1:s and $n_W(7-n_S)$ 0:s whilst obeying the above mentioned constraints. The number of possible combinations can be expressed as:
 
-\begin{table}[h]
-\centering
-\caption{Parameters selected for the generation of a N-shift RWS.}
-\label{tab:table1}
-\begin{tabular}{| cccccccc |}
-\hline\noalign{\smallskip}
-$N$ & $n_{wd}$ & $n_W$ & $t_S$ & $t_W$ & $t_r$ & $n_cf$ & Shift types' labels\\
-\noalign{\smallskip}
-\hline\noalign{\smallskip}
-2 & 7 & 4 & 8.33 & 36.00 & 36 & 2 & D, E\\
-\noalign{\smallskip}
-\hline
-\end{tabular}
-\end{table}
-
-The parameters selected for the RWS is defined in Table~\ref{tab:table1}. These values are then reflected in the algorithm's GUI for phase 1 can be seen in Figure~\ref{fig:figure1} to the left. Note that the generated shift arrays can be browsed through using the slider or the numerical input field and that the shift arrays are constructed such that each week or worker (depending on the viewing angle) is represented in separate rows.
+$$C = \frac{(n_W * n_{wd})!}{n_S! (n_W*n_{wd}-n_S)!}.$$
 
 ## From Boolean Shift Arrays to RWS (phase 2)
-\begin{figure}[h]
-  \centering\includegraphics[width=0.98\columnwidth]{fig2.png}
-\caption{The RWS:ing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).}
-\label{fig:figure2}
-\end{figure}
-In this phase, we have generated a new list of combinations with free days clustered in pairs, and then we chose to proceed with combination \#212 since it has two out of four weekends off (note the zeroes in the bottom table in Figure~\ref{fig:figure1} to the right). By proceeding, the "phase 2 GUI" is launched with the selected array as input as can be seen in Figure~\ref{fig:figure2} to the left.
+In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure~\ref{fig:figure1} to the right).
 
-The free days are all represented by zeroes whilst all other shifts (ones) are converted to the first defined shift type label. For $N>1$, each shift can be replaced by another shift via dropdown menus. The GUI shows the number of shifts of each type each week or worker has and a table with the results, i.e. number of worker per shift and day. Shifts that are occupied have green background whilst shifts that are unoccupied have a red background.
-
-If the continuous resting time between two assigned shifts is too low, the background colour of the second shift becomes red (e.g. a Friday day-shift after a Thursday evening-shift if the continuous resting time has to be at least 11 hours, as shown in Figure~\ref{fig:figure2} to the left). With enough resting time in between shifts, the background of the second shift is be green.
-
-Pressing the \textit{Find solutions} results in what is shown in Figure~\ref{fig:figure2} (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations. The algorithm is a simple Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
+Pressing the \textit{Find solutions} results in what is shown in Figure~\ref{fig:figure2} (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
 \[
 \mathrm{combinations} =
 \underbrace{
@@ -180,7 +151,7 @@ Graphics Card: &  Intel Iris Plus Graphics 655 1536 MB\\
 ## Phase 1 - Construction of  Combinations as Boolean Arrays
 In the GUI, there is a "fast generation" checkbox which stops the algorithm from further calculations once the first 100 solutions have been found. This way, computation time can be lowered (in comparison to "full generation" which will go through all possible solutions from the boolean array). For our example, the time it took to complete decreased from 508.7 s (for a full generation) to 24.55 s (for the full generation) (see Table~\ref{tab:fullBenchmarking}), which is a decrease in time by 95\%.
 
-We use the parameters defined in Table~\ref{tab:table1}, with the exception of $N$ and Shift types' labels. Note that for Table~\ref{tab:fullBenchmarking} and Table~\ref{tab:fullCombos}, the number (\#) of weeks given is the minimum amount of weeks required for a full shift cycle in order to find solutions for the N-shift problems (with $N = 1,2,3$ for single-, two- and three-shifts, respectively). The free days clustering option is not selected for the benchmarking.
+The parameters used are defined in Table~\ref{tab:table1}, with the exception of $N$ and Shift types' labels. Note that for Table~\ref{tab:fullBenchmarking} and Table~\ref{tab:fullCombos}, the number (\#) of weeks given is the minimum amount of weeks required for a full shift cycle in order to find solutions for the N-shift problems (with $N = 1,2,3$ for single-, two- and three-shifts, respectively). The free days clustering option is not selected for the benchmarking.
 
 \begin{table}[h]
 \centering
@@ -218,7 +189,7 @@ Three-shift, 7 days/week    & 5 & 1 476 337 800 & 11 383 225\\
 \end{tabular}
 \end{table}
 
-Plotting the benchmarking results, we find the logarithmic graph given in Figure~\ref{fig:figure4}. As can be seen, the computation time $T_C$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
+Plotting the benchmarking results yields the logarithmic graph in Figure~\ref{fig:figure4}. As can be seen, the computation time $T_C$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
 \[
 T_C(full) = \exp(5.046\times n_W)\times9\times10^{-7}
 \]
@@ -256,7 +227,7 @@ Type ($N$): & $n_{wd}$: & $n_{W}$: & Combinations: & Solutions: & IM: & Time [s]
 \end{table}
 
 # Conclusions
-In this article, we have demonstrated that the constructed algorithm can generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the computation time) increases with the number of weeks, as can be seen in Table~\ref{tab:fullCombos} and Figure~\ref{fig:figure4}. This means that for a higher amount of weeks in a shift cycle, this application will need development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
+In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle, as can be seen in Table~\ref{tab:fullCombos} and Figure~\ref{fig:figure4}. This means that for a higher amount of weeks in a shift cycle, this application will need development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
 
 For up to 5 weeks in a shift cycle it is possible to use a general-purpose computer such as the benchmarking Apple MacBook Pro with specifications defined in Table~\ref{tab:computerSpecs}.
 It has thus been demonstrated that the application can be used to generate 1, 2 and 3-shift schedules. Future development plans include adding an automated assignment function of shift types in phase 2, which would further strengthen the usability of this application.
@@ -267,4 +238,10 @@ It has thus been demonstrated that the application can be used to generate 1, 2 
   \centering\includegraphics[width=0.9\columnwidth]{fig1.png}
 \caption{The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.}
 \label{fig:figure1}
+\end{figure}
+
+\begin{figure}[h]
+  \centering\includegraphics[width=0.98\columnwidth]{fig2.png}
+\caption{The RWS:ing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).}
+\label{fig:figure2}
 \end{figure}

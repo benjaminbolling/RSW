@@ -23,12 +23,6 @@ We again use the parameters defined in Table 1 and then select to cluster the fr
 
 Thus it can be concluded that in this example procedure two different 4-week (or 4-people) rotational workforce schedules were generated and then combined together. In the first schedule (persons 0-3, Figure 3), each staff has two "normal office-hours" weeks with the weekends off, followed by two weeks with weekends working. The second schedule (persons 4-7, Figure 3) has more evening and weekend shifts, which can be considered as more suited for e.g. students or people working some extra hours. These two schedules have then been combined in order to obtain an a rotational workforce schedule filled as evenly as possible with the exception of Fridays. Fridays have been selected such that all shift workers are scheduled to work, suitable for e.g. activities when \textit{all hands on deck} is required. This schedule has also ensured that each shift is occupied by a minimum of two shift workers.
 
-\begin{figure}[h]
-  \centering\includegraphics[width=\columnwidth]{fig3.png}
-\caption{Example procedure results. Phase 1 was performed using the parameters defined in Table 1 and with free days clustered in pairs. Two boolean combinations were selected, followed by finding and selecting a solution for both, and then exported as CSV and imported in Microsoft Excel (2018).}
-\label{fig:figure3}
-\end{figure}
-
 # Phase 2
 By proceeding with a selected combination, the "phase 2 GUI" is launched with the selected combination as input (which can be seen in Figure 2 to the left).
 

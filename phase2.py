@@ -48,6 +48,7 @@ class DialogPhase2(QDialog):
             self.createLayout()
             self.dailyrestinginputChanged()
             self.updateTable2()
+            self.loadFunction()
     def initValues(self):
         self.shift1 = 0
         self.shift2 = 0

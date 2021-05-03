@@ -32,11 +32,11 @@ from time import time
 import IO
 
 class DialogPhase2(QDialog):
-    def __init__(self, shifttype, shifts, series, shiftlengths, weeklyresting, dailyresting, parent=None):
+    def __init__(self, fn, shifttype, shifts, series, shiftlengths, weeklyresting, dailyresting, parent=None):
         super(DialogPhase2, self).__init__(parent)
-        self.setWindowTitle("1o2o3 S-CSV-fcal phase 2")
-        if shifttype == 0 and shifts == 0 and series == 0 and shiftlengths == 0:
-            self.loadFunction() # For future ...
+        self.setWindowTitle("RSW algorithm phase 2")
+        if fn is not None:
+            self.loadFunction(fn)
         else:
             self.shifttype = shifttype
             self.shifts = shifts
@@ -48,7 +48,6 @@ class DialogPhase2(QDialog):
             self.createLayout()
             self.dailyrestinginputChanged()
             self.updateTable2()
-            self.loadFunction()
     def initValues(self):
         self.shift1 = 0
         self.shift2 = 0
@@ -58,17 +57,21 @@ class DialogPhase2(QDialog):
                 self.shift1 += 1
     def createLayout(self):
         self.layout = QGridLayout(self)
-        toplabel1 = QLabel("1-, 2- or 3-Shift CSV File Constructor Algorithm.")
-        toplabel2 = QLabel("- - - -  Define the parameters below  - - - -")
+        toplabel1 = QLabel("1-, 2- or 3-Shift CSV File Constructor Algorithm")
+        toplabel2 = QLabel("Phase 2: Generate and/or find solution(s) to a combination")
+        toplabel2x = QLabel("- - - -  Define the parameters below  - - - -")
         toplabel3 = QLabel("")
         dailyrestingtimelbl = QLabel("Minimum continuous daily resting time [h]: ")
         toplabel1.setAlignment(Qt.AlignCenter)
         toplabel2.setAlignment(Qt.AlignCenter)
+        toplabel2x.setAlignment(Qt.AlignCenter)
         toplabel3.setAlignment(Qt.AlignCenter)
         row = 0
         self.layout.addWidget(toplabel1, row,0,1,7)
         row += 1
         self.layout.addWidget(toplabel2, row,0,1,7)
+        row += 1
+        self.layout.addWidget(toplabel2x, row,0,1,7)
         row += 1
         self.layout.addWidget(toplabel3, row,0,1,7)
         row += 1
@@ -210,7 +213,7 @@ class DialogPhase2(QDialog):
         self.table2.setMinimumSize(self.getQTableWidgetSize(self.table2))
         row = row + 1 + self.shifttype * 10
         self.loadButton = QPushButton("Load")
-        self.loadButton.clicked.connect(self.loadFunction)
+        self.loadButton.clicked.connect(self.loadFunctionClicked)
         self.layout.addWidget(self.loadButton,row,0,3,2)
         self.saveButton = QPushButton("Save")
         self.saveButton.clicked.connect(self.saveFunction)
@@ -338,8 +341,11 @@ class DialogPhase2(QDialog):
         self.getShiftSums()
         self.updateTable2()
         self.matrix = self.createFullMatrix()
-    def loadFunction(self):
+
+    def loadFunctionClicked(self):
         filename, type = QFileDialog.getOpenFileName(self, 'Load File', "", "Text Files (*.sol)", options=QFileDialog.DontUseNativeDialog)
+        self.loadFunction(filename)
+    def loadFunction(self,filename):
         if len(filename) > 0:
             self.solutionsBrowsing.setValue(0)
             self.solutionsSlider.setValue(0)
@@ -633,6 +639,10 @@ class DialogPhase2(QDialog):
 
 if __name__ == '__main__':
     app = QApplication([sys.argv[0]])
-    window = DialogPhase2(2,['D', 'E'],[[1, 1, 1, 1, 1, 0, 1],[1, 1, 1, 1, 0, 1, 1],[ 0, 0, 0, 0, 1, 1, 0]],8.00,36.00,11.00)
+    try:
+        fn = sys.argv[1]
+    except:
+        fn = None
+    window = DialogPhase2(fn,2,['D', 'E'],[[1, 1, 1, 1, 1, 0, 1],[1, 1, 1, 1, 0, 1, 1],[ 0, 0, 0, 0, 1, 1, 0]],8.00,36.00,11.00)
     window.show()
     sys.exit(app.exec_())

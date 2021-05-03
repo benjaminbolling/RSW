@@ -26,27 +26,29 @@
 from PyQt5.QtWidgets import QApplication,QCheckBox,QDialog,QDoubleSpinBox,QFileDialog,QGridLayout,QInputDialog,QMessageBox,QLabel,QLineEdit,QPushButton,QRadioButton,QSlider,QSpinBox,QWidget
 from PyQt5.QtCore import Qt
 from time import time
-import sys
+import sys, os
 import IO
 from math import factorial
 import phase2
 from copy import deepcopy
 
 class DialogPhase1(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, fn, parent=None):
         super(DialogPhase1, self).__init__(parent)
-        self.setWindowTitle("1o2o3 S-CSV-fcal phase 1")
+        self.setWindowTitle("RSW algorithm phase 1")
         self.phase2dialogs = list() # Make all phase2 dialogs part of a list belonging to this parent
         self.valuesInit()
         self.createLayout()
         self.afterworkvisibleinvisible(False)
+        if fn is not None:
+            self.loadAllcombos(fn)
     def valuesInit(self): # Inputs values
         import init
         self.shifttype,self.workingdays,self.noofweeks,self.shiftlengths,self.workinghours,self.weeklyresting,self.overwrite,self.shiftLabel1,self.shiftLabel2,self.shiftLabel3,self.fastGen,self.clusterFreeDays,self.freeDaysClusterValue,self.noOfPeople,self.dailyresting = init.init_values()
     def createLayout(self):
         self.layout = QGridLayout(self)
-        toplabel1 = QLabel("1-, 2- or 3-Shift Combinations Generator Algorithm.")
-        toplabelx1 = QLabel("A Computational Approach to Generate Multi-Shift Rotational Workforce Schedules")
+        toplabel1 = QLabel("RSW Algo")
+        toplabelx1 = QLabel("Phase 1: Generate combinations and select combination to solve")
         toplabelx2 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel2 = QLabel("- - - -  Define the parameters below  - - - -")
         toplabel3 = QLabel("")
@@ -200,7 +202,7 @@ class DialogPhase1(QWidget):
         self.saveCombos.setVisible(False)
         self.layout.addWidget(self.saveCombos, row, 2, 1, 2)
         self.loadCombos = QPushButton("Load combos")
-        self.loadCombos.clicked.connect(self.loadAllcombos)
+        self.loadCombos.clicked.connect(self.loadAllCombosDialog)
         self.layout.addWidget(self.loadCombos, row, 0, 1, 2)
         row += 1
         self.messageLabel01 = QLabel(">> ")
@@ -763,8 +765,11 @@ class DialogPhase1(QWidget):
             for combo in self.shiftseries:
                 file.write(combo+"\n")
             file.close()
-    def loadAllcombos(self):
+    def loadAllCombosDialog(self):
         filename, type = QFileDialog.getOpenFileName(self, 'Open File', '', 'Combo-files (*.combo)')
+        self.loadAllcombos(filename)
+
+    def loadAllcombos(self,filename):
         if filename is not None and len(filename)>0:
             contents = open(filename, "r").read()
             combos = contents.split("\n")
@@ -772,7 +777,7 @@ class DialogPhase1(QWidget):
                 self.noofweeks = len(combos[0].split(" "))/7
                 self.shiftseries = combos
                 self.messageLabel01.setText("Combinations loaded from:")
-                self.messageLabel02.setText(filename)
+                self.messageLabel02.setText(str(os.path.split(filename)[1]))
                 self.messageLabel03.setText("Number of weeks: "+str(self.noofweeks))
                 self.afterworkIntValue = 0
                 self.afterworkvisibleinvisible(True)
@@ -787,6 +792,7 @@ class DialogPhase1(QWidget):
                 self.messageLabel01.setText("Error: Could not load "+filename+".combo, data corrupt.")
                 self.messageLabel02.setText("Number of days per week is not 7.")
                 self.messageLabel03.setText(" ")
+
     def createAllShiftPossibilities(self,iterable, r): # <-- Where the actual magic happens
         noConstraints = 0
         shiftseries = []
@@ -927,6 +933,10 @@ class DialogPhase1(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = DialogPhase1()
+    try:
+        inp = sys.argv[1]
+    except:
+        inp = None
+    window = DialogPhase1(inp)
     window.show()
     sys.exit(app.exec_())

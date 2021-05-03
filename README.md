@@ -1,5 +1,5 @@
 # RSW Algo README
-A Computational Approach to Generate Multi-Shift Rotational Workforce Schedules.
+A simple Python-based Computational Approach to Generate Multi-Shift Rotational Workforce Schedules.
 
 Generating schedules for shift workers is essential for many employers, whether the employer is a small or a large industrial complex, research laboratory, or other businesses involving shift works.
 

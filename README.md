@@ -7,8 +7,13 @@ Previous methods for creating rotational workforce schedules included interactio
 
 In this project, an algorithm takes into account inputs (or constraints) from the schedule maker and then presents the possible combinations (incl. that all shifts must be filled, working hours per week, minimal resting time, etc.) in a first phase. The schedule maker can then select which combinations are most feasible to proceed with in the second phase, where the combinations have solutions presented followed by the final schedules being constructed and exported.
 
-## Getting Started
-Some tips ...
+## Getting started
+A suggestion on how to get started is given in a chronologically suggested order:
+1. Installation Procedure
+2. Description of how to launch the package
+3. Description of the first phase
+4. Description of the second phase
+5. Example usage procedure
 
 ### Installation procedure
 1. In order to setup this package, ensure that Python 3.x (3.7 is recommended) is installed on the computer.
@@ -18,6 +23,13 @@ Some tips ...
     conda env create --file environments.yml
 
 4. If all required Python packages have been successfully installed, the package is ready.
+
+### Launcher
+The package includes a simple launcher which can be launched by executing the following (with current directory being this repository):
+
+    python RSW.py
+
+The launcher gives the user to either start from scratch (phase 1), continue from a saved file in phase 1 (a list of combinations), or continue from a saved file in phase 2 (the solutions). See respective sections Phase 1 and Phase 2 below for descriptions of each.
 
 ### Phase 1
 Phase 1 consists of a list of parameters that are to be filled in such that schedules can be generated (by clicking on the *Generate Combinations* button). Note that the larger the number of weeks is, the longer it will take to generate the combinations.
@@ -59,6 +71,9 @@ The slider is moved to combination \#212, and the bottom-right button *Proceed w
 These two schedules are filled as evenly as possible with the exception of Fridays, which have been selected such that all shift workers are scheduled to work (suitable for e.g. activities when *all hands on deck* is required. This schedule has also ensured that each shift is occupied by a minimum of two shift workers.
 
 ## Figures
+![Figure 0](docs/fig0.png)
+Figure 0: The RWS:ing Application's launcher.
+
 ![Figure 1](docs/fig1.png)
 Figure 1: The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.
 

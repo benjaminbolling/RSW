@@ -749,6 +749,7 @@ class DialogPhase1(QWidget):
                 self.messageLabel03.setText("Time for completion: "+str(float("{:.6f}".format(timeelapsed)))+" s")
                 self.updateShiftSeries()
         self.generateBtn.setText("Generate Combinations")
+
     def updateShiftSeries(self):
         self.afterworkIntValue = 0
         self.afterworkvisibleinvisible(True)
@@ -757,6 +758,7 @@ class DialogPhase1(QWidget):
         self.afterworkInt.setValue(self.afterworkIntValue)
         self.afterworkSlide.setRange(0,len(self.shiftseries)-1)
         self.afterworkInt.setRange(0,len(self.shiftseries)-1)
+
     def saveAllCombos(self):
         filename, type = QFileDialog.getSaveFileName(self, 'Save output as...')
         #filename = input("Enter filename: >> ")
@@ -765,6 +767,7 @@ class DialogPhase1(QWidget):
             for combo in self.shiftseries:
                 file.write(combo+"\n")
             file.close()
+            
     def loadAllCombosDialog(self):
         filename, type = QFileDialog.getOpenFileName(self, 'Open File', '', 'Combo-files (*.combo)')
         self.loadAllcombos(filename)

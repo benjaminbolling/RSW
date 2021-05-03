@@ -46,7 +46,7 @@ The free days are all represented by zeroes whilst all other shifts (ones) are c
 If the continuous resting time between two assigned shifts is too low, the background colour of the second shift becomes red (e.g. a Friday day-shift after a Thursday evening-shift if the continuous resting time has to be at least 11 hours, as shown in Figure 2 to the left). With enough resting time in between shifts, the background of the second shift is be green.
 
 ### Example Usage Procedure
-Phase 1 is launched, and the parameters selected are as defined in Table 1 below.
+Phase 1 is launched as *New* using the *RSW.py* launcher, and the parameters selected are as defined in Table 1 below.
 
 Table 1: Constraints, i.e. the variables and their meanings, and some example values.
 

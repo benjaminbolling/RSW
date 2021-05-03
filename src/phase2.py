@@ -44,10 +44,13 @@ class DialogPhase2(QDialog):
             self.shiftlengths = shiftlengths
             self.weeklyresting = weeklyresting # Length of weekly minimum continuous resting time in hours
             self.dailyresting = 11      # Length of daily minimum resting time between shifts in hours
-            self.initValues()
-            self.createLayout()
-            self.dailyrestinginputChanged()
-            self.updateTable2()
+        self.initValues()
+        self.createLayout()
+        self.dailyrestinginputChanged()
+        self.updateTable2()
+        if fn is not None:
+            self.solutionMatrix2Table1()
+
     def initValues(self):
         self.shift1 = 0
         self.shift2 = 0
@@ -345,7 +348,6 @@ class DialogPhase2(QDialog):
     def loadFunctionClicked(self):
         filename, type = QFileDialog.getOpenFileName(self, 'Load File', "", "Text Files (*.sol)", options=QFileDialog.DontUseNativeDialog)
         self.loadFunction(filename)
-    def loadFunction(self,filename):
         if len(filename) > 0:
             self.solutionsBrowsing.setValue(0)
             self.solutionsSlider.setValue(0)
@@ -353,10 +355,12 @@ class DialogPhase2(QDialog):
             self.solutionsBrowsing.setVisible(False)
             self.solutionsSlider.setVisible(False)
             self.solutionsLbl.setVisible(False)
-            with open(filename, 'r') as in_file:
-                self.shifttype, self.shifts, self.series, self.shiftlengths, self.dailyresting, solutionMatrix = load(in_file)
-            self.solutionMatrices = [solutionMatrix]
             self.solutionMatrix2Table1()
+    def loadFunction(self,filename):
+        if len(filename) > 0:
+            with open(filename, 'r') as in_file:
+                self.shifttype, self.shifts, self.series, self.shiftlengths, self.dailyresting, self.weeklyresting, solutionMatrix = load(in_file)
+            self.solutionMatrices = [solutionMatrix]
     def saveFunction(self):
         filename, type = QFileDialog.getSaveFileName(self, 'Save File', "Untitled.sol", "Text Files (*.sol)", options=QFileDialog.DontUseNativeDialog)
         if len(filename) > 0:
@@ -366,7 +370,7 @@ class DialogPhase2(QDialog):
             elif len(filename.split(".")) < 2:
                 filename = filename+".sol"
             solutionMatrix = self.table1ToSolutionMatrix()
-            toSave = [self.shifttype, self.shifts, self.series, self.shiftlengths, self.dailyresting, solutionMatrix]
+            toSave = [self.shifttype, self.shifts, self.series, self.shiftlengths, self.dailyresting, self.weeklyresting, solutionMatrix]
             with open(filename, 'w') as out_file:
                 dump(toSave, out_file)
     def exportFunction(self):

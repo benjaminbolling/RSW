@@ -9,11 +9,11 @@ In this project, an algorithm takes into account inputs (or constraints) from th
 
 ## Getting started
 A suggestion on how to get started is given in a chronologically suggested order:
-1. Installation Procedure
-2. Description of how to launch the package
-3. Description of the first phase
-4. Description of the second phase
-5. Example usage procedure
+- Installation procedure
+- Description of how to launch the package
+- Description of how to generate combinations fulfilling user requirements
+- Description of how to solve different combinations
+- Example usage procedure
 
 ### Installation procedure
 1. In order to setup this package, ensure that Python 3.x (3.7 is recommended) is installed on the computer.

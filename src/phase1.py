@@ -778,6 +778,7 @@ class DialogPhase1(QWidget):
                 self.shiftseries = combos
                 self.messageLabel01.setText("Combinations loaded from:")
                 self.messageLabel02.setText(str(os.path.split(filename)[1]))
+                self.messageLabel02.setToolTip(filename)
                 self.messageLabel03.setText("Number of weeks: "+str(self.noofweeks))
                 self.afterworkIntValue = 0
                 self.afterworkvisibleinvisible(True)

@@ -11,7 +11,13 @@ In this project, an algorithm takes into account inputs (or constraints) from th
 Some tips ...
 
 ### Installation procedure
-Step-by-step ...
+1. In order to setup this package, ensure that Python 3.x (3.7 is recommended) is installed on the computer.
+2. Check Python version used with the PIP package manager such that it points to the correct Python version (pip -V).
+3. Use PIP to install all packages required, see [requirements](requirements.txt), or use conda to create the environment:
+
+    conda env create --file environments.yml
+
+4. If all required Python packages have been successfully installed, the package is ready.
 
 ### Phase 1
 Phase 1 consists of a list of parameters that are to be filled in such that schedules can be generated (by clicking on the *Generate Combinations* button). Note that the larger the number of weeks is, the longer it will take to generate the combinations.

@@ -1,0 +1,8 @@
+name: rsw
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python
+  - numpy
+  - pyqt

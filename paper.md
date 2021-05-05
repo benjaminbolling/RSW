@@ -104,7 +104,9 @@ where each array in the resulting product is considered as a possible shift sche
 
 Since all combinations are stored in a matrix form before different combinations are removed from the final solutions matrix, large datasets require severe amount of internal memory for the Cartesian Product method to work. For this, a controlling script has been implemented which calculates a pre-estimate of required internal memory. The required internal memory for different operations can be roughly calculated by
 
-<p align="center">IM <i>&approx; N<sub>C</sub> &times; n<sub>S</sub> = N<sup>n<sub>S</sub></sup> &times; n<sub>S</sub></i></p>
+\begin{equation}
+IM \approx N_{C} \times n_{S} = N^{n_{S}} \times n_S
+\end{equation}
 
 returning the memory demand IM in bytes and where *N<sub>C</sub> = N<sup>n<sub>S</sub></sup>* is the total number of combinations (without any constraints imposed).
 

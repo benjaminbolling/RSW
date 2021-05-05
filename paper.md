@@ -78,23 +78,17 @@ Pressing the *Find solutions* results in what is shown in Figure 2 (right figure
 \begin{pmatrix}
 1\\
 2\\
-\cdot\\
-\cdot\\
-\cdot
+\vdots
 \end{pmatrix} \times
 \begin{pmatrix}
 1\\
 2\\
-\cdot\\
-\cdot\\
-\cdot
+\vdots
 \end{pmatrix}  \times ... \times
 \begin{pmatrix}
 1\\
 2\\
-\cdot\\
-\cdot\\
-\cdot
+\vdots
 \end{pmatrix} =
 \prod_{i=1}^{n_{wd}}
 \begin{pmatrix}

@@ -135,6 +135,9 @@ For up to 5 weeks in a shift cycle it is possible to use a general-purpose compu
 It has thus been demonstrated that the application can be used to generate 1, 2 and 3-shift schedules. Future development plans include adding an automated assignment function of shift types in phase 2, which would further strengthen the usability of this application.
 
 ## Figures
+![Figure 0](docs/fig0.png)
+Figure 0: The RWS:ing Application's launcher.
+
 ![Figure 1](docs/fig1.png)
 Figure 1: The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.
 

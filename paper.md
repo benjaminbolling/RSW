@@ -141,10 +141,10 @@ Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as def
 
 | Type: | \# of weeks: | Combinations: | Approved Combinations: | Time (fast) [s]: | Time (full) [s]: |
 | :------------- | :----------: | :----------: | :----------: | :----------: | :----------: |
-| Single-shift, 5 days/week   | 1 | 1 | 1 | 7.224e-05 | 7.224e-05 |
-| Single-shift, 7 days/week   | 2 | 2 002 | 462 | 1.497e-02 | 5.211e-02 |
-| Two-shift, 7 days/week      | 4 | 13 123 110 | 1 668 226 | 24.55 | 508.7 |
-| Three-shift, 7 days/week    | 5 | 1 476 337 800 | 11 383 225 | 3 087 | 6.627e+04 |
+| Single-shift\\5 days/week   | 1 | 1 | 1 | 7.224e-05 | 7.224e-05 |
+| Single-shift\\7 days/week   | 2 | 2 002 | 462 | 1.497e-02 | 5.211e-02 |
+| Two-shift\\7 days/week      | 4 | 13 123 110 | 1 668 226 | 24.55 | 508.7 |
+| Three-shift\\7 days/week    | 5 | 1 476 337 800 | 11 383 225 | 3 087 | 6.627e+04 |
 
 Plotting the benchmarking results yields the logarithmic graph in Figure 3. As can be seen, the computation time T<sub>C</sub> increases exponentially with the number of weeks in a shift cycle on average in accordance with
 

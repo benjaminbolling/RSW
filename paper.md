@@ -13,10 +13,11 @@ tags:
 authors:
   - name: Benjamin Edward Bolling
     orcid: 0000-0002-6650-5365
-    affiliation: "1, 2"
+    affiliation: "1"
 date: 05 May 2021
 affiliations:
  - name: European Spallation Source ERIC
+   index: 1
 bibliography: docs/paper.bib
 ---
 

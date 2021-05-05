@@ -135,7 +135,7 @@ Table 2: Benchmarking computer specifications.
 ### Benchmarking Phase 1
 In the GUI, there is a "fast generation" checkbox which stops the algorithm from further calculations once the first 100 approved combinations have been found. This way, computation time can be lowered (in comparison to "full generation" which will go through all possible combinations from the boolean array). For the parameters defined in Table 1, the time it took to complete decreased from 508.7 s (for a full generation) to 24.55 s (for the full generation) (see Table 3), which is a decrease in time by 95\%.
 
-The parameters used are defined in Table 1, with the exception of *N* and Shift types' labels. Note that for Table 3, the number (\#) of weeks given is the minimum amount of weeks required for a full shift cycle in order to find acceptable combinations for the N-shift problems (with *N* = 1,2,3 for single-, two- and three-shifts, respectively). The free days clustering option is not selected for the benchmarking.
+The parameters used are defined in Table 1, with the exception of $N$ and Shift types' labels. Note that for Table 3, the number (\#) of weeks given is the minimum amount of weeks required for a full shift cycle in order to find acceptable combinations for the N-shift problems (with $N = 1,2,3$ for single-, two- and three-shifts, respectively). The free days clustering option is not selected for the benchmarking.
 
 Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as defined in Section 3.1 for Phase 1), and the number of combinations and approved combinations found for full generations of the Boolean Arrays (as defined in Section 3.1 for Phase 1).
 
@@ -157,11 +157,11 @@ T_C \text{(fast)} = \exp{\{4.254 \times n_W\}} \times 2  \times 10^{-6}
 for the full and fast generations, respectively.
 
 ### Benchmarking Phase 2
-If the given combination has only a single shift specie, there is one solution for the given combination. If there are more than one shift specie, multiple solutions may be found. The main impact on time consumption is the number of combinations *N<sub>C</sub>*. Limiting factors are not limited to time only but also on the internal memory due to that a Cartesian Product method is used, meaning all combinations are stored as list objects. Some values have been timed and calculated in Table 4 using the Cartesian Product method.
+If the given combination has only a single shift specie, there is one solution for the given combination. If there are more than one shift specie, multiple solutions may be found. The main impact on time consumption is the number of combinations $N_{C}$. Limiting factors are not limited to time only but also on the internal memory due to that a Cartesian Product method is used, meaning all combinations are stored as list objects. Some values have been timed and calculated in Table 4 using the Cartesian Product method.
 
-Table 4: Benchmarking for Phase 2: Time and estimated internal memory (IM) required for obtaining all combinations and solutions for different *n<sub>S</sub>* and *N* using the Cartesian Product method.
+Table 4: Benchmarking for Phase 2: Time and estimated internal memory (IM) required for obtaining all combinations and solutions for different $n_{S}$ and $N$ using the Cartesian Product method.
 
-| Type (*N*): | *n<sub>S</sub>*: | *n<sub>W</sub>*: | Combinations: | Solutions: | IM: | Time [s]: |
+| Type ($N$): | $n_{S}$: | $n_{W}$: | Combinations: | Solutions: | IM: | Time [s]: |
 | :------------- | :----------: | :----------: | :----------: | :----------: | :----------: | :----------: |
 | 2-shift | 14    | 3 | 16 384 | 7 | 229.38 kB | 0.2963 |
 | 2-shift | 18    | 4 | 262 144 | 64 | 4.7186 MB | 5.843 |

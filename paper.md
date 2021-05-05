@@ -94,9 +94,7 @@ Pressing the *Find solutions* results in what is shown in Figure 2 (right figure
 \begin{pmatrix}
 1\\
 2\\
-\cdot\\
-\cdot\\
-\cdot
+\vdots
 \end{pmatrix}_{i}
 =
 \begin{cases}

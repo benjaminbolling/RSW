@@ -84,7 +84,7 @@ Pressing the *Find solutions* results in what is shown in Figure 2 (right figure
 1\\
 2\\
 \vdots
-\end{pmatrix}  \times ... \times
+\end{pmatrix}  \times \hdots \times
 \begin{pmatrix}
 1\\
 2\\
@@ -98,11 +98,11 @@ Pressing the *Find solutions* results in what is shown in Figure 2 (right figure
 \end{pmatrix}_{i}
 =
 \begin{cases}
-[1\text{ }1\text{ }\cdot\cdot\cdot\text{ }1]\\
-[1\text{ }1\text{ }\cdot\cdot\cdot\text{ }2]\\
+[1\text{ }1\text{ }\hdots\text{ }1]\\
+[1\text{ }1\text{ }\hdots\text{ }2]\\
 \vdots\\
-[2\text{ }2\text{ }\cdot\cdot\cdot\text{ }1]\\
-[2\text{ }2\text{ }\cdot\cdot\cdot\text{ }2]
+[2\text{ }2\text{ }\hdots\text{ }1]\\
+[2\text{ }2\text{ }\hdots\text{ }2]
 \end{cases}
 \end{equation}
 

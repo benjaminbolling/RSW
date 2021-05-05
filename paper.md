@@ -69,7 +69,7 @@ In this phase, a new list of combinations with free days clustered in pairs has 
 
 Pressing the *Find solutions* results in what is shown in Figure 2 (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations that obey the given constraints. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
 
-![eq1](docs/eq1.png)
+![](docs/eq1.png =250x)
 
 where each array in the resulting product is considered as a possible shift schedule matrix. Imposing constraints (resting time between shifts and ensuring all shifts are filled) on each combinations results in solutions from which the user can choose between.
 

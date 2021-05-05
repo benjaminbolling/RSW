@@ -48,21 +48,25 @@ Table 1: Constraints, i.e. the variables and their meanings, and some example va
 | *t<sub>s</sub>* | shift lengths                      | 8.33 |
 | *t<sub>W</sub>* | weekly working hours per worker    | 36.00 |
 
-Since each week also resembles a worker, the shift array can be set up as a matrix with 7 columns (each representing the days of a week) and $n_{W}/7$ rows (each representing a worker). The columns can then be summed to achieve the shift occupancy (or how many people are working each shift). Thus, the phase1 algorithm only allows shift arrays to pass for which all shifts are occupied by at least one worker, with a shift represented by the first *n<sub>wd</sub>* days for each week. In order to extend to not only use single shifts but also 2- or 3-shifts, a logical condition was added into the algorithm: For *N* shifts per day, each day has to be filled with at least *N* workers.
+Since each week also resembles a worker, the shift array can be set up as a matrix with 7 columns (each representing the days of a week) and $n_{W}/7$ rows (each representing a worker). The columns can then be summed to achieve the shift occupancy (or how many people are working each shift). Thus, the phase1 algorithm only allows shift arrays to pass for which all shifts are occupied by at least one worker, with a shift represented by the first $n_{wd}$ days for each week. In order to extend to not only use single shifts but also 2- or 3-shifts, a logical condition was added into the algorithm: For $N$ shifts per day, each day has to be filled with at least $N$ workers.
 
-In order to avoid all working days from being clustered together, the constraint for weekly minimum single continuous resting time is added (*t<sub>r</sub>*). The algorithm ensures that all passed shift arrays have at least *t<sub>r</sub>* hours of free-time over any given 7-day period.
+In order to avoid all working days from being clustered together, the constraint for weekly minimum single continuous resting time is added ($t_{r}$). The algorithm ensures that all passed shift arrays have at least $t_r$ hours of free-time over any given 7-day period.
 
 The number of shifts per shift array is calculated by
 
-<p align="center"><i>n<sub>S</sub></i> = ceil (<i>t<sub>W</sub> / t<sub>s</sub></i>)</p>
+\begin{equation}
+n_{S} = \text{ceil}(t_W / t_s)
+\end{equation}
 
-with the reason for using ceiling function (and not the floor function) is the argument that it is better with a couple of more hours than fewer. In order to cluster days off (n<sub>cf</sub>), the algorithm's GUI has an optional additional constraint that serves this purpose and simply does not allow shift arrays with 0:s in clusters less than this through.
+with the reason for using ceiling function (and not the floor function) is the argument that it is better with a couple of more hours than fewer. In order to cluster days off (n_{cf}), the algorithm's GUI has an optional additional constraint that serves this purpose and simply does not allow shift arrays with 0:s in clusters less than this through.
 
-By using the input *n<sub>W</sub>* &times; *n<sub>wd</sub>* as the iterable and n<sub>S</sub> as the length of subsequences of elements from the iterable, the same methodology as the *combinations* function of the *itertools* module in Python is used for creating each shift array. The other inputs are used as constraints on whether the shift array should be appended to the array of shift arrays or trashed, which shows the reason for not using the built-in Python module (which returns all array combinations that are possible, resulting in the returned arrays being too large for a personal computer's internal memory to handle).
+By using the input $n_W \times n_{wd}$ as the iterable and $n_{S}$ as the length of subsequences of elements from the iterable, the same methodology as the *combinations* function of the *itertools* module in Python is used for creating each shift array. The other inputs are used as constraints on whether the shift array should be appended to the array of shift arrays or trashed, which shows the reason for not using the built-in Python module (which returns all array combinations that are possible, resulting in the returned arrays being too large for a personal computer's internal memory to handle).
 
-With this, the final result is an array of shift arrays in which each shift array is filled with *7n<sub>S</sub>* 1:s and *n<sub>W</sub>(7-n<sub>S</sub>)* 0:s whilst obeying the above mentioned constraints. The number of possible combinations (*C*) can be then be expressed as:
+With this, the final result is an array of shift arrays in which each shift array is filled with $7n_{S}$ 1:s and $n_{W}(7-n_{S})$ 0:s whilst obeying the above mentioned constraints. The number of possible combinations ($C$) can be then be expressed as:
 
-<p align="center"><i>C = (n<sub>W</sub> &times; n<sub>wd</sub>)</i>!<i> / n<sub>S</sub></i>!<i>(n<sub>W</sub> &times; n<sub>wd</sub> - n<sub>S</sub>)</i>!.</p>
+\begin{equation}
+C = (n_{W} \times \frac{n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!}.
+\end{equation}
 
 ### From Boolean Shift Arrays to RWS (phase 2)
 In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure 1 to the right).
@@ -108,7 +112,7 @@ Since all combinations are stored in a matrix form before different combinations
 IM \approx N_{C} \times n_{S} = N^{n_{S}} \times n_S
 \end{equation}
 
-returning the memory demand IM in bytes and where *N<sub>C</sub> = N<sup>n<sub>S</sub></sup>* is the total number of combinations (without any constraints imposed).
+returning the memory demand IM in bytes and where $N_{C} = N^{n_{S}}$ is the total number of combinations (without any constraints imposed).
 
 If the estimated expected internal memory requirement for an operation exceeds 1Gb, the user is prompted whether to continue with the default Cartesian Product method or to use a less internal memory demanding recursive method.
 

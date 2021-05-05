@@ -17,7 +17,6 @@ authors:
 date: 05 May 2021
 affiliations:
  - name: European Spallation Source ERIC
-   index: 1
 bibliography: docs/paper.bib
 ---
 

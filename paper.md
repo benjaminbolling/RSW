@@ -103,7 +103,7 @@ Pressing the *Find solutions* results in what is shown in Figure 2 (right figure
 \cdot\\
 \cdot\\
 \cdot
-\end{pmatrix}
+\end{pmatrix}_i
 =
 \begin{cases}
 [1\text{ }1\text{ }\cdot\cdot\cdot\text{ }1]\\

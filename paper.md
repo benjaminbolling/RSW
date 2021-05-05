@@ -96,7 +96,7 @@ Pressing the *Find solutions* results in what is shown in Figure 2 (right figure
 \cdot\\
 \cdot
 \end{pmatrix} =
-\prod_{i=1}^{\n_{wd}}
+\Pi_{i=1}^{\n_{wd}}
 \begin{pmatrix}
 1\\
 2\\

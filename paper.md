@@ -14,17 +14,18 @@ authors:
   - name: Benjamin Edward Bolling
     orcid: 0000-0002-6650-5365
     affiliation: "1, 2"
-date: 10 January 2021
+date: 05 May 2021
 affiliations:
  - name: European Spallation Source ERIC
    index: 1
- - name: MAX IV Laboratory
-   index: 2
 bibliography: docs/paper.bib
 ---
 
 # Summary
 A Computational Approach to Generate Multi-Shift Rotational Workforce Schedules.
+
+# Purpose
+The purpose and aim of this package is to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules in a way that rules, such as minimum daily and weekly single continuous resting time, are followed. The software was initially built by the author for shift scheduling in the Operations Section at the European Spallation Source ERIC.
 
 ## Introduction
 Creating shift work schedules has always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout. In order to achieve schedules for the workers that treats everyone equally, the focus will be on so-called rotational workforce schedules (RWS:s). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints.

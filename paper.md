@@ -139,18 +139,21 @@ The parameters used are defined in Table 1, with the exception of *N* and Shift 
 
 Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as defined in Section 3.1 for Phase 1), and the number of combinations and approved combinations found for full generations of the Boolean Arrays (as defined in Section 3.1 for Phase 1).
 
-| Type: | \# of weeks: | Combinations: | Appr. Combinations: | Time (fast) [s]: | Time (full) [s]: |
+| Type: | \# of weeks: | Total \# of Combinations: | Approved Combinations: | Time (fast) [s]: | Time (full) [s]: |
 | :------------- | :----------: | :----------: | :----------: | :----------: | :----------: |
 | Single-shift, 5 days/week   | 1 | 1 | 1 | 7.224e-05 | 7.224e-05 |
 | Single-shift, 7 days/week   | 2 | 2,002 | 462 | 1.497e-02 | 5.211e-02 |
 | Two-shift, 7 days/week      | 4 | 13 123 110 | 1 668 226 | 24.55 | 508.7 |
 | Three-shift, 7 days/week    | 5 | 1 476 337 800 | 11 383 225 | 3 087 | 6.627e+04 |
 
-Plotting the benchmarking results yields the logarithmic graph in Figure 3. As can be seen, the computation time T<sub>C</sub> increases exponentially with the number of weeks in a shift cycle on average in accordance with
-
-<p align="center"><i>T<sub>C</sub></i>(full) = exp (5.046 &times; <i>n<sub>W</sub></i>) &times; 9 &times; 10<sup>-7</sup></p>
+Plotting the benchmarking results yields the logarithmic graph in Figure 3. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
+\begin{equation}
+T_C \text{full} = \exp{(5.046 \times n_W)} \times 9e-07
+\end{equation}
 and
-<p align="center"><i>T<sub>C</sub></i>(fast) = exp (4.254 &times; <i>n<sub>W</sub></i>) &times; 2 &times; 10<sup>-6</sup></p>
+\begin{equation}
+T_C \text{fast} = \exp{(4.254 \times n_W)} \times 2e-06
+\end{equation}
 for the full and fast generations, respectively.
 
 ### Benchmarking Phase 2

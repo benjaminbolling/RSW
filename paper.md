@@ -65,7 +65,7 @@ By using the input $n_W \times n_{wd}$ as the iterable and $n_{S}$ as the length
 With this, the final result is an array of shift arrays in which each shift array is filled with $7n_{S}$ 1:s and $n_{W}(7-n_{S})$ 0:s whilst obeying the above mentioned constraints. The number of possible combinations ($C$) can be then be expressed as:
 
 \begin{equation}
-C = (n_{W} \times \frac{n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!}.
+C = n_{W} \times \frac{n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!}.
 \end{equation}
 
 ### From Boolean Shift Arrays to RWS (phase 2)
@@ -74,7 +74,7 @@ In this phase, a new list of combinations with free days clustered in pairs has 
 Pressing the *Find solutions* results in what is shown in Figure 2 (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations that obey the given constraints. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
 
 \begin{equation}
-combinations =
+\text{combinations} =
 \begin{pmatrix}
 1\\
 2\\
@@ -88,7 +88,7 @@ combinations =
 \cdot\\
 \cdot\\
 \cdot
-\end{pmatrix} \times ...
+\end{pmatrix}  \times ... \times
 \begin{pmatrix}
 1\\
 2\\
@@ -96,8 +96,17 @@ combinations =
 \cdot\\
 \cdot
 \end{pmatrix} =
+\prod_{i=1}^{\n_{wd}}
+\begin{pmatrix}
+1\\
+2\\
+\cdot\\
+\cdot\\
+\cdot
+\end{pmatrix}
+=
 \begin{cases}
-[1\text{ }1\text{ }\cdot\cdot\cdot1]\\
+[1\text{ }1\text{ }\cdot\cdot\cdot\text{ }1]\\
 [1\text{ }1\text{ }\cdot\cdot\cdot\text{ }2]\\
 [2\text{ }2\text{ }\cdot\cdot\cdot\text{ }1]\\
 [2\text{ }2\text{ }\cdot\cdot\cdot\text{ }2]

@@ -108,11 +108,7 @@ Pressing the *Find solutions* results in what is shown in Figure 2 (right figure
 \begin{cases}
 [1\text{ }1\text{ }\cdot\cdot\cdot\text{ }1]\\
 [1\text{ }1\text{ }\cdot\cdot\cdot\text{ }2]\\
-\begin{matrix}
-\cdot\\
-\cdot\\
-\cdot
-\end{matrix}\\
+\vdots\\
 [2\text{ }2\text{ }\cdot\cdot\cdot\text{ }1]\\
 [2\text{ }2\text{ }\cdot\cdot\cdot\text{ }2]
 \end{cases}

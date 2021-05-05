@@ -37,16 +37,16 @@ Table 1: Constraints, i.e. the variables and their meanings, and some example va
 
 | Variable       | Meaning     | Value |
 | :------------- | :----------: | :----------: |
-| *N* | number of shifts per days            | 2 |
-| *n<sub>cf</sub>* | number of days off clustered      | 2 |
-| *n<sub>S</sub>* | number of shifts per shift cycle      | 18 |
-| *n<sub>W</sub>* | number of weeks to cycle over      | 4 |
-| *n<sub>wd</sub>* | number of working days per week   | 7 |
-| *n<sub>wS</sub>* | Number of workers per shift (minimum) | 1 |
-| *t<sub>d</sub>* | daily minimum continuous resting time  | 11 |
-| *t<sub>r</sub>* | weekly minimum single continuous resting time | 36 |
-| *t<sub>s</sub>* | shift lengths                      | 8.33 |
-| *t<sub>W</sub>* | weekly working hours per worker    | 36.00 |
+| $N$ | number of shifts per days            | 2 |
+| $n_{cf}$ | number of days off clustered      | 2 |
+| $n_{S}$ | number of shifts per shift cycle      | 18 |
+| $n_{W}$ | number of weeks to cycle over      | 4 |
+| $n_{wd}$ | number of working days per week   | 7 |
+| $n_{wS}$ | Number of workers per shift (minimum) | 1 |
+| $t_{d}$ | daily minimum continuous resting time  | 11 |
+| $t_{r}$ | weekly minimum single continuous resting time | 36 |
+| $t_{s}$ | shift lengths                      | 8.33 |
+| $t_{W}$ | weekly working hours per worker    | 36.00 |
 
 Since each week also resembles a worker, the shift array can be set up as a matrix with 7 columns (each representing the days of a week) and $n_{W}/7$ rows (each representing a worker). The columns can then be summed to achieve the shift occupancy (or how many people are working each shift). Thus, the phase1 algorithm only allows shift arrays to pass for which all shifts are occupied by at least one worker, with a shift represented by the first $n_{wd}$ days for each week. In order to extend to not only use single shifts but also 2- or 3-shifts, a logical condition was added into the algorithm: For $N$ shifts per day, each day has to be filled with at least $N$ workers.
 

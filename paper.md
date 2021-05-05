@@ -148,11 +148,11 @@ Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as def
 
 Plotting the benchmarking results yields the logarithmic graph in Figure 3. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
 \begin{equation}
-T_C \text{full} = \exp{(5.046 \times n_W)} \times 9e-07
+T_C \text{(full)} = \exp{(5.046 \times n_W)} \times 9 \times 10^{-7}
 \end{equation}
 and
 \begin{equation}
-T_C \text{fast} = \exp{(4.254 \times n_W)} \times 2e-06
+T_C \text{(fast)} = \exp{(4.254 \times n_W)} \times 2  \times 10^{-6}
 \end{equation}
 for the full and fast generations, respectively.
 

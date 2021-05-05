@@ -96,14 +96,14 @@ Pressing the *Find solutions* results in what is shown in Figure 2 (right figure
 \cdot\\
 \cdot
 \end{pmatrix} =
-\Pi_{i=1}^{\n_{wd}}
+\prod_{i=1}^{n_{wd}}
 \begin{pmatrix}
 1\\
 2\\
 \cdot\\
 \cdot\\
 \cdot
-\end{pmatrix}_i
+\end{pmatrix}_{i}
 =
 \begin{cases}
 [1\text{ }1\text{ }\cdot\cdot\cdot\text{ }1]\\

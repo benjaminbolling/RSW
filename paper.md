@@ -93,7 +93,7 @@ combinations =
 \cdot
 \end{pmatrix} =
 \begin{cases}
-[1\text{for }1\text{ }\cdot\cdot\cdot1]\\
+[1\text{ }1\text{ }\cdot\cdot\cdot1]\\
 [1\text{ }1\text{ }\cdot\cdot\cdot\text{ }2]\\
 [2\text{ }2\text{ }\cdot\cdot\cdot\text{ }1]\\
 [2\text{ }2\text{ }\cdot\cdot\cdot\text{ }2]

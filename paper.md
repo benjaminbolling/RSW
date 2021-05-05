@@ -21,17 +21,16 @@ affiliations:
 bibliography: docs/paper.bib
 ---
 
-# Summary
-A Computational Approach to Generate Multi-Shift Rotational Workforce Schedules.
-
-# Purpose
-The purpose and aim of this package is to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules in a way that rules, such as minimum daily and weekly single continuous resting time, are followed. The software was initially built by the author for shift scheduling in the Operations Section at the European Spallation Source ERIC.
+# Motivation
+The purpose and aim of this package is to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules in a way that rules, such as minimum daily and weekly single continuous resting time, are followed.
 
 ## Introduction
 Creating shift work schedules has always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout. In order to achieve schedules for the workers that treats everyone equally, the focus will be on so-called rotational workforce schedules (RWS:s). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints.
 
 ## Computational Approach and Results
-In this approach, each worker has the same schedule but shifted by one week resulting in that all workers follow the same schedule. The project has been divided into two phases, *Boolean Shift Arrays* (in which boolean shift arrays are generated) and *From Boolean Shift Arrays to a RWS* (in which a selected boolean shift array is shaped into its final RWS layout).
+In this approach, each worker has the same schedule shifted by one week, resulting in that all workers follow the same schedule. The project has been divided into two phases, *Boolean Shift Arrays* (in which boolean shift arrays are generated) and *From Boolean Shift Arrays to a RWS* (in which a selected boolean shift array is shaped into its final RWS layout).
+
+\pagebreak
 
 ### Boolean Shift Arrays (phase 1)
 A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The inputs (also known as constraints) used are shown in Table 1 below.

@@ -10,6 +10,8 @@ tags:
   - Rotational Workforce
   - Scheduling
   - Schedules
+  - Combinatoric-Generator
+  - Cartesian-Product
 authors:
   - name: Benjamin Edward Bolling
     orcid: 0000-0002-6650-5365
@@ -21,13 +23,13 @@ affiliations:
 bibliography: docs/paper.bib
 ---
 
-# Motivation
-All around the world, research institutes and industrial complexes make use of a workforce working multiple shifts per day in order to utilise maximum efficiency and profitability of the facility. However, the scheduling of rotational workforces often requires a lot of work of e.g. the manager, still ending up with schedules that are not always as good as they could be.
+# Statement of Need
+All around the world, research institutes and industrial complexes make use of a workforce working multiple shifts per day in order to utilise maximum efficiency and profitability of the facility. Creating shift work schedules has, however, always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout.
 
-The purpose and aim of this package is to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules by providing the user (schedule-maker) with all possible schedules for different input conditions (configurations).
+The purpose and aim of this package is hence to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules by providing the user (schedule-maker) with all possible schedules for a set of input conditions, including parameters such as shift lengths, weekly working hours and -resting time, etc., by utilising a Combinatoric Generator and a Cartesian Product calculator.
 
 ## Introduction
-Creating shift work schedules has always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout. In order to achieve schedules for the workers that treats everyone equally, the focus will be on so-called rotational workforce schedules (RWS:s). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints, originating from e.g. country laws and/or workforce requests.
+In order to achieve schedules for the workers that treats everyone equally, the focus of this project is on so-called rotational workforce schedules (RWSs). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints, originating from e.g. country laws and/or workforce requests.
 
 ## Computational Approach and Results
 In this approach, each worker has the same schedule shifted by one week, resulting in that all workers follow the same schedule. The project has been divided into two phases, *Boolean Shift Arrays* (in which boolean shift arrays are generated) and *From Boolean Shift Arrays to a RWS* (in which a selected boolean shift array is shaped into its final RWS layout).
@@ -60,9 +62,9 @@ The number of shifts per shift array is calculated by
 n_{S} = \text{ceil}(t_W / t_s)
 \end{equation}
 
-with the reason for using ceiling function (and not the floor function) is the argument that it is better with a couple of more hours than fewer. In order to cluster days off (n_{cf}), the algorithm's GUI has an optional additional constraint that serves this purpose and simply does not allow shift arrays with 0:s in clusters less than this through.
+with the reason for using ceiling function (and not the floor function) being the argument that it is better with a couple of more hours than fewer. In order to cluster days off (n_{cf}), the algorithm's GUI has an optional additional constraint that serves this purpose and simply does not allow shift arrays with 0:s in clusters less than this through.
 
-By using the input $n_W \times n_{wd}$ as the iterable and $n_{S}$ as the length of subsequences of elements from the iterable, the same methodology as the *combinations* function of the *itertools* module in Python is used for creating each shift array. The other inputs are used as constraints on whether the shift array should be appended to the array of shift arrays or trashed, which shows the reason for not using the built-in Python module (which returns all array combinations that are possible, resulting in the returned arrays being too large for a personal computer's internal memory to handle).
+By using the input $n_W \times n_{wd}$ as the iterable and $n_{S}$ as the length of subsequences of elements from the iterable, the same methodology as the *combinations* function of the *itertools* module in Python (a combinatoric generator) is used for creating each shift array. By imposing the other inputs as constraints on whether a shift array should be appended to accepted shift arrays, the reason for not using the built-in Python module becomes clear: Python's built-in module returns all array combinations that are possible without any imposed constraints which quickly escalates to becoming too large for a personal computer's internal memory to handle.
 
 With this, the final result is an array of shift arrays in which each shift array is filled with $7n_{S}$ 1:s and $n_{W}(7-n_{S})$ 0:s whilst obeying the above mentioned constraints. The number of possible combinations ($C$) can be then be expressed as:
 
@@ -179,13 +181,13 @@ It has thus been demonstrated that the application can be used to generate 1, 2 
 
 ## Figures
 ![Figure 0](docs/fig0.png)
-Figure 0: The RWS:ing Application's launcher.
+Figure 0: The RWSing Application's launcher.
 
 ![Figure 1](docs/fig1.png)
-Figure 1: The RWS:ing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.
+Figure 1: The RWSing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.
 
 ![Figure 2](docs/fig2.png)
-Figure 2: The RWS:ing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).
+Figure 2: The RWSing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).
 
 ![Figure 3](docs/fig4.png)
 Figure 3: The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).

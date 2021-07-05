@@ -261,3 +261,32 @@ def testMatrices(raw_matrix,shifttype,shifts,shiftlengths,weeklyresting,dailyres
         return 0
     else:
         return idCombos(matrix,shifttype,shifts,shiftlengths,weeklyresting,dailyresting)
+
+def createODS(matrix,weeks,fn,shifts):
+    from pyexcel import save_as
+    weekdays = "Mon;Tue;Wed;Thu;Fri;Sat;Sun"
+    for week in range(weeks):
+        if week == 0:
+            headlabel = "Worker:;"+weekdays
+        else:
+            headlabel = headlabel + ";" + weekdays
+    rows = [headlabel.split(";")]
+
+    results = {}
+    for shift in shifts:
+         results[shift] = [0] * len(matrix[0])
+
+    for ind, person in enumerate(matrix):
+        for ind2, shift in enumerate(person):
+            for shifttype in shifts:
+                if shift == shifttype:
+                    results[shifttype][ind2] += 1
+        person.insert(0,"Person "+str(ind))
+        rows.append(person)
+
+    rows.append([' '] * len(matrix[0]))
+    for shift in shifts:
+        results[shift].insert(0,"{}-shifts: ".format(shift))
+        rows.append(results[shift])
+
+    save_as(bookdict={'RSW': rows}, dest_file_name="{}.ods".format(fn))

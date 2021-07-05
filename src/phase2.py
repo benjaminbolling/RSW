@@ -375,7 +375,7 @@ class DialogPhase2(QDialog):
                 dump(toSave, out_file)
     def exportFunction(self):
         filename, type = QFileDialog.getSaveFileName(self, 'Save output as...')
-        format, ok = QInputDialog.getItem(self, "Export filetype", "Select filetype to export file into", ["CSV", "txt"], 1, False)
+        format, ok = QInputDialog.getItem(self, "Export filetype", "Select filetype to export file into", ["CSV", "ODS", "txt"], 1, False)
         if filename is not None and len(filename)>0 and ok is True:
             matrix = self.createFullMatrix()
             weeks = len(self.series)
@@ -401,6 +401,9 @@ class DialogPhase2(QDialog):
                 for ind, person in enumerate(matrix):
                     person.insert(0,"Person "+str(ind))
                     file.writerow(person)
+            elif format == "ODS":
+                IO.createODS(matrix,weeks,filename,self.shifts)
+
     def createFullMatrix(self):
         matrix0 = []
         for i in range(len(self.series)):

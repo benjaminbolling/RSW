@@ -28,7 +28,7 @@ All around the world, research institutes and industrial complexes make use of a
 
 The purpose and aim of this package is hence to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules by providing the user (schedule-maker) with all possible schedules for a set of input conditions (such as shift lengths, weekly working hours and -resting time) by constructing and utilising a Combinatoric Generator and a Cartesian Product calculator.
 
-This package provides the end-user with a simple tool for generating ready-to-use shift arrays that can be exported as standard `.CSV`-files for easy import into any spreadsheet, where they can either be used as templates for further modifications (e.g. taking into account individual workers' needs).
+This package provides the end-user with a tool for generating and constructing ready-to-use shift arrays that can be exported as standard `.CSV`-files for easy import into any spreadsheet, where they can either be used as templates for further modifications (e.g. taking into account individual workers' needs).
 
 ## Introduction
 In order to achieve schedules for the workers that treats everyone equally, the focus of this project is on so-called rotational workforce schedules (RWSs). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints, originating from e.g. country laws, organisational needs, and/or workforce requests.

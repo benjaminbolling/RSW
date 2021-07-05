@@ -1,5 +1,5 @@
 [![status](https://joss.theoj.org/papers/b41d06d174b2f0692ed9ac06d745a895/status.svg)](https://joss.theoj.org/papers/b41d06d174b2f0692ed9ac06d745a895)
-
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE.txt)
 
 # RSW Algo README
 A simple Python-based Computational Approach to Generate Multi-Shift Rotational Workforce Schedules.
@@ -88,7 +88,6 @@ Figure 3: Example procedure results. Phase 1 was performed using the parameters 
 
 ## License
 The `RSW` package is licensed under the GNU General Public License v3.0.
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE.txt)
 
 ## Contribution
 Any contribution is more than welcome, just follow [Contributing](CONTRIBUTING.md).

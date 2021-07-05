@@ -85,3 +85,10 @@ Figure 2: The RWS:ing Application's algorithm's "phase 2 GUI" as launched from t
 
 ![Figure 3](docs/fig3.png)
 Figure 3: Example procedure results. Phase 1 was performed using the parameters defined in Table 1 and with free days clustered in pairs. Two boolean combinations were selected, followed by finding and selecting a solution for both, and then exported as CSV and imported in Microsoft Excel (2018).
+
+## License
+The `RSW` package is licensed under the GNU General Public License v3.0.
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE.txt)
+
+## Contribution
+Any contribution is more than welcome, just follow [Contributing](CONTRIBUTING.md).

@@ -1,3 +1,6 @@
+[![status](https://joss.theoj.org/papers/b41d06d174b2f0692ed9ac06d745a895/status.svg)](https://joss.theoj.org/papers/b41d06d174b2f0692ed9ac06d745a895)
+
+
 # RSW Algo README
 A simple Python-based Computational Approach to Generate Multi-Shift Rotational Workforce Schedules.
 

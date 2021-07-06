@@ -39,6 +39,8 @@ In this approach, each worker has the same schedule shifted by one week, resulti
 ### Boolean Shift Arrays (phase 1)
 A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The input species (also known as constraints) and their respective values used are shown in Table 1 below.
 
+\pagebreak
+
 Table 1: Constraints, i.e. the variables and their meanings, and some example values.
 
 | Variable       | Meaning     | Value |
@@ -73,8 +75,6 @@ With this, the final result is an array of shift arrays in which each shift arra
 \begin{equation}
 C = n_{W} \times \frac{n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!}.
 \end{equation}
-
-\pagebreak
 
 ### From Boolean Shift Arrays to RWS (phase 2)
 In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure 1 to the right).

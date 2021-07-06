@@ -108,6 +108,10 @@ class DialogPhase2(QDialog):
         toplabel4 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         toplabel4.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(toplabel4, row, 0, 1, 7)
+        self.solutionsBrowsing = QSpinBox()
+        self.solutionsBrowsing.valueChanged.connect(self.solutionIntChangedI)
+        self.solutionsBrowsing.setVisible(False)
+        self.solutionsBrowsing.setKeyboardTracking(False)
         if self.shifttype > 1:
             row += 1
             self.findSolutionsBtn = QPushButton("Find solutions")
@@ -123,10 +127,7 @@ class DialogPhase2(QDialog):
             self.solutionsLbl = QLabel("Solution index: ")
             self.solutionsLbl.setVisible(False)
             self.layout.addWidget(self.solutionsLbl, row, 0, 1, 2)
-            self.solutionsBrowsing = QSpinBox()
-            self.solutionsBrowsing.valueChanged.connect(self.solutionIntChangedI)
-            self.solutionsBrowsing.setVisible(False)
-            self.solutionsBrowsing.setKeyboardTracking(False)
+
             self.layout.addWidget(self.solutionsBrowsing, row, 2, 1, 2)
             self.solutionsSlider = QSlider()
             self.solutionsSlider.setOrientation(Qt.Horizontal)
@@ -362,7 +363,7 @@ class DialogPhase2(QDialog):
                 self.shifttype, self.shifts, self.series, self.shiftlengths, self.dailyresting, self.weeklyresting, solutionMatrix = load(in_file)
             self.solutionMatrices = [solutionMatrix]
     def saveFunction(self):
-        filename, type = QFileDialog.getSaveFileName(self, 'Save File', "Untitled.sol", "Text Files (*.sol)", options=QFileDialog.DontUseNativeDialog)
+        filename, type = QFileDialog.getSaveFileName(self, 'Save File', "Untitled.sol", "Solution Files (*.sol)", options=QFileDialog.DontUseNativeDialog)
         if len(filename) > 0:
             if len(filename.split(".")) > 1:
                 if filename.split(".")[-1] != "sol":

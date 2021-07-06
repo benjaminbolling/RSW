@@ -29,6 +29,7 @@ from time import time
 import sys, os
 import IO
 from math import factorial
+from json import dump
 import phase2
 from copy import deepcopy
 
@@ -477,7 +478,11 @@ class DialogPhase1(QWidget):
         self.nextPhase = QPushButton("Proceed with this combo to next phase")
         self.nextPhase.clicked.connect(self.runPhaseTwo)
         self.nextPhase.setVisible(False)
-        self.layout.addWidget(self.nextPhase, row, 3, 1, 4)
+        self.layout.addWidget(self.nextPhase, row, 4, 1, 3)
+        self.saveCombo = QPushButton("Save combo")
+        self.saveCombo.clicked.connect(self.saveThisCombo)
+        self.saveCombo.setVisible(False)
+        self.layout.addWidget(self.saveCombo, row, 3, 1, 1)
         row += 1
         bottomlabel1 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         bottomlabel2 = QLabel("Coder: Benjamin Bolling (benjaminbolling@icloud.com)")
@@ -562,6 +567,7 @@ class DialogPhase1(QWidget):
             else:
                 weeksvis.append(False)
         self.nextPhase.setVisible(weeksvis[0])
+        self.saveCombo.setVisible(weeksvis[0])
         self.testCombinations.setVisible(weeksvis[0])
         self.saveCombos.setVisible(weeksvis[0])
         self.AWweek00.setVisible(weeksvis[0])
@@ -775,16 +781,20 @@ class DialogPhase1(QWidget):
         self.afterworkInt.setRange(0,len(self.shiftseries)-1)
 
     def saveAllCombos(self):
-        filename, type = QFileDialog.getSaveFileName(self, 'Save output as...')
-        #filename = input("Enter filename: >> ")
-        if filename is not None and len(filename)>0:
-            file = open(filename+".combo", 'w')
+        filename, type = QFileDialog.getSaveFileName(self, 'Save File', "Untitled.combo", "Combinations Files (*.combo)", options=QFileDialog.DontUseNativeDialog)
+        if len(filename) > 0:
+            if len(filename.split(".")) > 1:
+                if filename.split(".")[-1] != "combo":
+                    filename = filename+".combo"
+            elif len(filename.split(".")) < 2:
+                filename = filename+".combo"
+            file = open(filename, 'w')
             for combo in self.shiftseries:
                 file.write(combo+"\n")
             file.close()
 
     def loadAllCombosDialog(self):
-        filename, type = QFileDialog.getOpenFileName(self, 'Open File', '', 'Combo-files (*.combo)')
+        filename, type = QFileDialog.getOpenFileName(self, 'Open File', '', 'Combinations Files (*.combo)')
         self.loadAllcombos(filename)
 
     def loadAllcombos(self,filename):
@@ -949,6 +959,25 @@ class DialogPhase1(QWidget):
         dialog = phase2.DialogPhase2(None,self.shifttype,shifts,final,self.shiftlengths,self.weeklyresting,self.dailyresting)
         self.phase2dialogs.append(dialog)
         dialog.show()
+
+    def saveThisCombo(self):
+        filename, type = QFileDialog.getSaveFileName(self, 'Save File', "Untitled.sol", "Solution Files (*.sol)", options=QFileDialog.DontUseNativeDialog)
+        if len(filename) > 0:
+            if len(filename.split(".")) > 1:
+                if filename.split(".")[-1] != "sol":
+                    filename = filename+".sol"
+            elif len(filename.split(".")) < 2:
+                filename = filename+".sol"
+
+            final = [self.activeSeries[i * 7:(i + 1) * 7] for i in range((len(self.activeSeries) + 6) // 7 )]
+            shifts0 = [self.shiftLabel1, self.shiftLabel2, self.shiftLabel3]
+            shifts = []
+            for n in range(self.shifttype):
+                shifts.append(shifts0[n])
+
+            toSave = [self.shifttype, shifts, final, self.shiftlengths, self.dailyresting, self.weeklyresting, self.activeSeries]
+            with open(filename, 'w') as out_file:
+                dump(toSave, out_file)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

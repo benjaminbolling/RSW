@@ -147,7 +147,7 @@ In the GUI, there is a "fast generation" checkbox which stops the algorithm from
 
 The parameters used are defined in Table 1, with the exception of $N$ and Shift types' labels. Note that for Table 3, the number (\#) of weeks given is the minimum amount of weeks required for a full shift cycle in order to find acceptable combinations for the N-shift problems (with $N = 1,2,3$ for single-, two- and three-shifts, respectively). The free days clustering option is not selected for the benchmarking.
 
-Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as defined in Section 3.1 for Phase 1), and the number of combinations and approved combinations found for full generations of the Boolean Arrays (as defined in Section 3.1 for Phase 1).
+Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as defined in Section 3.1 for Phase 1), and the number of combinations and approved combinations found for full generations of the Boolean Arrays (as defined in Section 3.1 for Phase 1). The types are single-, two- or three-shifts during 5 or 7 days per week.
 
 | Type: | \# of weeks: | Total \# of Combinations: | Approved Combinations: | Time (fast) [s]: | Time (full) [s]: |
 | :------------- | :----------: | :----------: | :----------: | :----------: | :----------: |

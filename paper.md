@@ -40,6 +40,7 @@ In this approach, each worker has the same schedule shifted by one week, resulti
 A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The input species (also known as constraints) and their respective values used are shown in Table 1 below.
 
 Table 1: Constraints, i.e. the variables and their meanings, and some example values.
+
 | Variable       | Meaning     | Value |
 | :------------- | :----------: | :----------: |
 | $N$ | number of shifts per days            | 2 |

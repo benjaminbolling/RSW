@@ -9,6 +9,7 @@ A manual testing procedure for the RSW package.
 1. Execute `python RSW.py` in the same terminal as from *Test preparation*.
 2. Select *New* to launch Phase 1.
 3. Fill in the Phase 1 window with the following values:
+
 | Parameter     | Value |
 | :----------: | :----------: |
 | Shift type:            | 2-shift |
@@ -21,6 +22,7 @@ A manual testing procedure for the RSW package.
 | Weekly minimum single continuous resting time: | 36 |
 | Minimum continuous daily resting time:  | 11 |
 | Cluster free days?      | Ticked, value: 2 |
+
 4. Press *Generate Combinations*.
 5. When completed, a prompt window will ask user to save all combinations. Press yes.
 6. Name the file *test01* and click save, it will automatically save the file in a *.combos*-format.

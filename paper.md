@@ -79,9 +79,9 @@ C = n_{W} \times \frac{n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!}.
 \pagebreak
 
 ### From Boolean Shift Arrays to RWS (phase 2)
-In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure \autoref{fig:phase1} to the right).
+In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in \autoref{fig:phase1} to the right).
 
-Pressing the *Find solutions* results in what is shown in Figure \autoref{fig:phase2} (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations that obey the given constraints. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
+Pressing the *Find solutions* results in what is shown in \autoref{fig:phase2} (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations that obey the given constraints. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
 
 \begin{equation}
 \text{combinations} =
@@ -156,7 +156,7 @@ Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as def
 | 2-shift, 7d/w   | 4 | 1.312e+07 | 1.668e+06 | 24.55 | 508.7 |
 | 3-shift, 7d/w   | 5 | 1.476e+09 | 1.138e+07 | 3 087 | 6.627e+04 |
 
-Plotting the benchmarking results yields the logarithmic graph in Figure \autoref{fig:benchmarking}. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
+Plotting the benchmarking results yields the logarithmic graph in \autoref{fig:benchmarking}. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
 \begin{equation}
 T_C \text{(full)} = \exp{\{5.046 \times n_W\}} \times 9 \times 10^{-7}
 \end{equation}
@@ -181,7 +181,7 @@ Table 4: Benchmarking for Phase 2: Time and estimated internal memory (IM) requi
 | 3-shift | 18    | 4 | 387 420 489 | - | 6.9736 GB | - |
 
 ## Conclusions
-In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle, as can be seen in Table 3 and Figure \autoref{fig:benchmarking}. This means that for a higher amount of weeks in a shift cycle, this application will need further development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
+In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle, as can be seen in Table 3 and \autoref{fig:benchmarking}. This means that for a higher amount of weeks in a shift cycle, this application will need further development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
 
 For up to 5 weeks in a shift cycle it is possible to use a general-purpose computer such as the benchmarking Apple MacBook Pro with specifications defined in Table 2.
 

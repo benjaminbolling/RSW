@@ -194,7 +194,7 @@ Figure 0: The RWSing Application's launcher.
 ![Figure 1](docs/fig1.png)
 Figure 1: The RWSing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.
 
-![Figure 2](docs/fig2.png){width=0.3\textwidth}
+![Figure 2](docs/fig2.png){ width=20% }
 Figure 2: The RWSing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).
 
 ![Figure 3](docs/fig4.png)

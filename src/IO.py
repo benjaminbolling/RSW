@@ -169,7 +169,7 @@ def checkifshiftsOK(solutionMatrix,dailyresting,shiftlengths,shifttype,weeklyres
             prevval = int(shift)
             shiftsOk = False
     # Check so time between each last and first shift is obliged since shift 0 follows shift -1
-    if solutionMatrix[0] < int(shift):
+    if solutionMatrix[0] < solutionMatrix[-1] and solutionMatrix[0] != 0:
         shiftsOk = False
     # Check if all shifts are filled
     if shiftsOk == True:

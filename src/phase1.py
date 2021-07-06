@@ -23,7 +23,7 @@
 # # # #                                                                                             # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-from PyQt5.QtWidgets import QApplication,QCheckBox,QDialog,QDoubleSpinBox,QFileDialog,QGridLayout,QInputDialog,QMessageBox,QLabel,QLineEdit,QPushButton,QRadioButton,QSlider,QSpinBox,QWidget
+from PyQt5.QtWidgets import QApplication,QCheckBox,QDialog,QDoubleSpinBox,QFileDialog,QGridLayout,QInputDialog,QMessageBox,QLabel,QLineEdit,QPushButton,QRadioButton,QScrollArea,QSlider,QSpinBox,QWidget
 from PyQt5.QtCore import Qt
 from time import time
 import sys, os
@@ -478,13 +478,33 @@ class DialogPhase1(QWidget):
         self.nextPhase.clicked.connect(self.runPhaseTwo)
         self.nextPhase.setVisible(False)
         self.layout.addWidget(self.nextPhase, row, 3, 1, 4)
-        self.setLayout(self.layout)
         row += 1
         bottomlabel1 = QLabel("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
         bottomlabel2 = QLabel("Coder: Benjamin Bolling (benjaminbolling@icloud.com)")
         self.layout.addWidget(bottomlabel1, row, 0, 1, 7)
         row += 1
         self.layout.addWidget(bottomlabel2, row, 0, 1, 7)
+
+        self.scroll = QScrollArea()
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+
+        self.mainWidget = QWidget()
+        self.mainWidget.setLayout(self.layout)
+
+        #   Scroll Area Properties
+        self.scroll = QScrollArea()
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.mainWidget)
+
+        self.mainLayout = QGridLayout(self)
+        self.mainLayout.addWidget(self.scroll)
+        self.mainLayout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(self.mainLayout)
+
     def shifttyperadiobuttonClicked(self):
         self.shifttyperadiobutton = self.sender()
         if self.shifttyperadiobutton.isChecked():
@@ -767,7 +787,7 @@ class DialogPhase1(QWidget):
             for combo in self.shiftseries:
                 file.write(combo+"\n")
             file.close()
-            
+
     def loadAllCombosDialog(self):
         filename, type = QFileDialog.getOpenFileName(self, 'Open File', '', 'Combo-files (*.combo)')
         self.loadAllcombos(filename)

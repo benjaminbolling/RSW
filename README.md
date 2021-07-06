@@ -52,6 +52,7 @@ If the continuous resting time between two assigned shifts is too low, the backg
 Phase 1 is launched as *New* using the *RSW.py* launcher, and the parameters selected are as defined in Table 1 below.
 
 Table 1: Constraints, i.e. the variables and their meanings, and some example values.
+
 | Parameter     | Value |
 | :----------: | :----------: |
 | Number of shifts per days                     | 2 |

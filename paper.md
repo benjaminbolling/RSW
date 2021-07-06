@@ -190,7 +190,7 @@ It has thus been demonstrated that the application can be used to generate 1, 2 
 ## Figures
 ![The RWSing Application's launcher.\label{fig:launcher}](docs/fig0.png){ width=80% }
 
-![The RWSing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.\label{fig:phase1}](docs/fig1.png){ width=80% }
+![The RWSing Application's algorithm's "phase 1 GUI", in which the combinations have been generated.\label{fig:phase1}](docs/fig1.png){ width=80% }
 
 ![The RWSing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).\label{fig:phase2}](docs/fig2.png){ width=80% }
 

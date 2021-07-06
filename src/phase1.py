@@ -485,11 +485,6 @@ class DialogPhase1(QWidget):
         row += 1
         self.layout.addWidget(bottomlabel2, row, 0, 1, 7)
 
-        self.scroll = QScrollArea()
-        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
-
         self.mainWidget = QWidget()
         self.mainWidget.setLayout(self.layout)
 
@@ -796,8 +791,8 @@ class DialogPhase1(QWidget):
         if filename is not None and len(filename)>0:
             contents = open(filename, "r").read()
             combos = contents.split("\n")
-            if isinstance(self.noofweeks, int):
-                self.noofweeks = len(combos[0].split(" "))/7
+            self.noofweeks = len(combos[0].split(" "))/7
+            if self.noofweeks.is_integer():
                 self.shiftseries = combos
                 self.messageLabel01.setText("Combinations loaded from:")
                 self.messageLabel02.setText(str(os.path.split(filename)[1]))
@@ -951,7 +946,7 @@ class DialogPhase1(QWidget):
         shifts = []
         for n in range(self.shifttype):
             shifts.append(shifts0[n])
-        dialog = phase2.DialogPhase2(self.shifttype,shifts,final,self.shiftlengths,self.weeklyresting,self.dailyresting)
+        dialog = phase2.DialogPhase2(None,self.shifttype,shifts,final,self.shiftlengths,self.weeklyresting,self.dailyresting)
         self.phase2dialogs.append(dialog)
         dialog.show()
 

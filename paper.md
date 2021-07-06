@@ -79,9 +79,9 @@ C = n_{W} \times \frac{n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!}.
 \pagebreak
 
 ### From Boolean Shift Arrays to RWS (phase 2)
-In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure 1 to the right).
+In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure \autoref{fig:phase1} to the right).
 
-Pressing the *Find solutions* results in what is shown in Figure 2 (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations that obey the given constraints. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
+Pressing the *Find solutions* results in what is shown in Figure \autoref{fig:phase2} (right figure). A schedule can also be constructed completely by hand, but note that the algorithm will find all possible combinations that obey the given constraints. The algorithm is a Cartesian Product calculator, in which each set is a list of shifts (1 = Day, 2 = Evening, etc.) with one set per working day:
 
 \begin{equation}
 \text{combinations} =
@@ -156,7 +156,7 @@ Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as def
 | 2-shift, 7d/w   | 4 | 1.312e+07 | 1.668e+06 | 24.55 | 508.7 |
 | 3-shift, 7d/w   | 5 | 1.476e+09 | 1.138e+07 | 3 087 | 6.627e+04 |
 
-Plotting the benchmarking results yields the logarithmic graph in Figure 3. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
+Plotting the benchmarking results yields the logarithmic graph in Figure \autoref{fig:benchmarking}. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
 \begin{equation}
 T_C \text{(full)} = \exp{\{5.046 \times n_W\}} \times 9 \times 10^{-7}
 \end{equation}
@@ -181,20 +181,20 @@ Table 4: Benchmarking for Phase 2: Time and estimated internal memory (IM) requi
 | 3-shift | 18    | 4 | 387 420 489 | - | 6.9736 GB | - |
 
 ## Conclusions
-In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle, as can be seen in Table 3 and Figure 3. This means that for a higher amount of weeks in a shift cycle, this application will need further development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
+In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle, as can be seen in Table 3 and Figure \autoref{fig:benchmarking}. This means that for a higher amount of weeks in a shift cycle, this application will need further development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
 
 For up to 5 weeks in a shift cycle it is possible to use a general-purpose computer such as the benchmarking Apple MacBook Pro with specifications defined in Table 2.
 
 It has thus been demonstrated that the application can be used to generate 1, 2 and 3-shift schedules. Future development plans include adding an automated assignment function of shift types in phase 2, which would further strengthen the usability of this application.
 
 ## Figures
-![Figure 0: The RWSing Application's launcher.\label{fig:launcher}](docs/fig0.png){ width=80% }
+![The RWSing Application's launcher.\label{fig:launcher}](docs/fig0.png){ width=80% }
 
-![Figure 1: The RWSing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.\label{fig:phase1}](docs/fig1.png){ width=80% }
+![The RWSing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.\label{fig:phase1}](docs/fig1.png){ width=80% }
 
-![Figure 2: The RWSing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).\label{fig:phase2}](docs/fig2.png){ width=80% }
+![The RWSing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).\label{fig:phase2}](docs/fig2.png){ width=80% }
 
-![Figure 3: The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).\label{fig:benchmarking}](docs/fig4.png){ width=80% }
+![The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).\label{fig:benchmarking}](docs/fig4.png){ width=80% }
 
 ## Acknowledgements
 The author wants to thank his direct line-manager at European Spallation Source for asking the question if it would be possible to create a software for generating shift schedules, which lead to the idea of creating this project and after a while lead to this final state. The author also wants to thank the reviewers for taking their time reviewing this project.

@@ -76,6 +76,8 @@ With this, the final result is an array of shift arrays in which each shift arra
 C = n_{W} \times \frac{n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!}.
 \end{equation}
 
+\pagebreak
+
 ### From Boolean Shift Arrays to RWS (phase 2)
 In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in Figure 1 to the right).
 

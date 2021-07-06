@@ -24,11 +24,11 @@ bibliography: docs/paper.bib
 ---
 
 # Statement of Need
-All around the world, research institutes and industrial complexes make use of a workforce working multiple shifts per day in order to utilise maximum efficiency and profitability of the facility. Creating shift work schedules has, however, always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout.
+All around the world, research institutes and industrial complexes make use of workforces working multiple shifts per day in order to utilise maximum efficiency and profitability of the facility. Creating shift work schedules has, however, always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout.
 
-The purpose and aim of this package is hence to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules by providing the user (schedule-maker) with all possible schedules for a set of input conditions (such as shift lengths, weekly working hours and -resting time) by constructing and utilising a Combinatoric Generator and a Cartesian Product calculator.
+The purpose and aim of this package is hence to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules by providing the user (schedule-maker) with all possible schedules for a set of input constraints/conditions (such as shift lengths, weekly working hours and -resting time) by constructing and utilising a Combinatoric Generator and a Cartesian Product calculator.
 
-This package provides the end-user with a tool for generating and constructing ready-to-use shift arrays that can be exported as standard `.CSV`-files for easy import into any spreadsheet or as `.ODS`-files (OpenDocument Spreadsheet), where they can either be used as they are or as templates for further modifications (e.g. swapping shifts between workers and hence taking into account individual workers' needs).
+This package provides a tool for generating and constructing acceptable shift arrays if there are any possible arrays following all user-defined constraints. The arrays can be exported as `.CSV`-files for easy import into any spreadsheet or as `.ODS`-files (OpenDocument Spreadsheet), which can either be used as they are or as templates for further modifications (e.g. swapping shifts between workers and hence taking into account individual workers' needs).
 
 ## Introduction
 In order to achieve schedules for the workers that treats everyone equally, the focus of this package is on so-called rotational workforce schedules (RWSs). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints, originating from e.g. country laws, organisational needs, and/or workforce requests.
@@ -37,7 +37,7 @@ In order to achieve schedules for the workers that treats everyone equally, the 
 In this approach, each worker has the same schedule shifted by one week, resulting in that all workers follow the same schedule. The project has been divided into two phases, *Boolean Shift Arrays* (in which boolean shift arrays are generated) and *From Boolean Shift Arrays to a RWS* (in which a selected boolean shift array is shaped into its final RWS layout).
 
 ### Boolean Shift Arrays (phase 1)
-A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The inputs (also known as constraints) used are shown in Table 1 below.
+A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The input species (also known as constraints) and their respective values used are shown in Table 1 below.
 
 Table 1: Constraints, i.e. the variables and their meanings, and some example values.
 

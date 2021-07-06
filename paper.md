@@ -188,17 +188,13 @@ For up to 5 weeks in a shift cycle it is possible to use a general-purpose compu
 It has thus been demonstrated that the application can be used to generate 1, 2 and 3-shift schedules. Future development plans include adding an automated assignment function of shift types in phase 2, which would further strengthen the usability of this application.
 
 ## Figures
-![Figure 0](docs/fig0.png){ width=80% }
-Figure 0: The RWSing Application's launcher.
+![Figure 0: The RWSing Application's launcher.\label{fig:launcher}](docs/fig0.png){ width=80% }
 
-![Figure 1](docs/fig1.png){ width=80% }
-Figure 1: The RWSing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.
+![Figure 1: The RWSing Application's algorithm's "phase 1 GUI" (dark and light themes, left and right, respectively). In the left figure, the combinations have been generated. In the right figure, the combinations have been loaded from a file.\label{fig:phase1}](docs/fig1.png){ width=80% }
 
-![Figure 2](docs/fig2.png){ width=80% }
-Figure 2: The RWSing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).
+![Figure 2: The RWSing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).\label{fig:phase2}](docs/fig2.png){ width=80% }
 
-![Figure 3](docs/fig4.png){ width=80% }
-Figure 3: The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).
+![Figure 3: The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis).\label{fig:benchmarking}](docs/fig4.png){ width=80% }
 
 ## Acknowledgements
 The author wants to thank his direct line-manager at European Spallation Source for asking the question if it would be possible to create a software for generating shift schedules, which lead to the idea of creating this project and after a while lead to this final state. The author also wants to thank the reviewers for taking their time reviewing this project.

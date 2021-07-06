@@ -34,6 +34,7 @@ The test is a success if the file could load without any issues.
 1. Execute `python RSW.py` in the same terminal as from *Test preparation*.
 2. Select *New* to launch Phase 1.
 3. Fill in the Phase 1 window with the following values:
+
 | Parameter     | Value |
 | :----------: | :----------: |
 | Shift type:            | 2-shift |
@@ -46,6 +47,7 @@ The test is a success if the file could load without any issues.
 | Weekly minimum single continuous resting time: | 36 |
 | Minimum continuous daily resting time:  | 11 |
 | Cluster free days?      | Unticked |
+
 4. Press *Generate Combinations*.
 5. When completed, a prompt window will ask user to save all combinations. Press no.
 6. Using the slider and/or the spinner in the *Post table generation schedule work* section, browse to combination with index 392.

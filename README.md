@@ -21,7 +21,11 @@ A suggestion on how to get started is given in a chronologically suggested order
 ### Installation procedure
 1. In order to setup this package, ensure that Python 3.x (3.7 is recommended) is installed on the computer.
 2. Check Python version used with the PIP package manager such that it points to the correct Python version (pip -V).
-3. Use PIP to install all packages required, see [requirements](requirements.txt), or use conda to create the environment:
+3. Use PIP to install all packages required individually, see [requirements](requirements.txt), install them as a package via:
+
+    pip install -r requirements.txt
+
+  or use conda to create the environment:
 
     conda env create --file environments.yml
 

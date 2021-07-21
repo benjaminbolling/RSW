@@ -81,24 +81,23 @@ class DialogLauncher(QWidget):
         self.setLayout(self.layout)
 
     def newPhase1(self):
-        dirpath = os.path.abspath(os.path.dirname(__file__))
         self.close()
-        os.system("python {}/src/phase1.py &".format(dirpath))
-
+        os.system("python src/phase1.py &")
 
     def loadPhase1(self):
-        dirpath = os.path.abspath(os.path.dirname(__file__))
         fn, type = QFileDialog.getOpenFileName(self, 'Open File', '', 'Combo-files (*.combo)')
         if fn:
             self.close()
-            os.system("python {}/src/phase1.py '{}' &".format(dirpath,fn))
+            os.system("python src/phase1.py '{}' &".format(fn))
 
     def loadPhase2(self):
-        dirpath = os.path.abspath(os.path.dirname(__file__))
         fn, type = QFileDialog.getOpenFileName(self, 'Load File', "", "Text Files (*.sol)")
         if fn:
             self.close()
-            os.system("python {}/src/phase2.py '{}' &".format(dirpath,fn))
+            os.system("python src/phase2.py '{}' &".format(fn))
+
+    def getDirPath(self):
+        dirpath = os.path.abspath(os.path.dirname(__file__))
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

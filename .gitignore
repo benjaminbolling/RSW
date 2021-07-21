@@ -1,0 +1,9 @@
+*.pyc
+.idea/*
+*.env
+*checkpoints*
+*.combo
+*.ods
+*.xlsx
+*.sol
+*.csv

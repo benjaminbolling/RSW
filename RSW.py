@@ -28,6 +28,8 @@ from PyQt5.QtWidgets import QApplication,QCheckBox,QDialog,QDoubleSpinBox,QFileD
 from PyQt5.QtCore import Qt
 from time import time
 import sys, os
+import subprocess
+
 
 class DialogLauncher(QWidget):
     def __init__(self, parent=None):
@@ -88,13 +90,13 @@ class DialogLauncher(QWidget):
         fn, type = QFileDialog.getOpenFileName(self, 'Open File', '', 'Combo-files (*.combo)')
         if fn:
             self.close()
-            os.system("python src/phase1.py '{}' &".format(fn))
+            os.system('python src/phase1.py "{}" &'.format(fn))
 
     def loadPhase2(self):
         fn, type = QFileDialog.getOpenFileName(self, 'Load File', "", "Text Files (*.sol)")
         if fn:
             self.close()
-            os.system("python src/phase2.py '{}' &".format(fn))
+            os.system('python src/phase2.py "{}" &'.format(fn))
 
     def getDirPath(self):
         dirpath = os.path.abspath(os.path.dirname(__file__))

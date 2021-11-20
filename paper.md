@@ -78,13 +78,13 @@ As there are ${n\choose r}$ ways to choose r elements from a set of n elements [
 C = \frac{n!}{r! \times (n-r)!}.
 \end{equation}
 
-with $n$ being the number of days in total in a shift cycle and $r$ being the number of working days per worker in the shift cycle. Translating this into the variables defined in Table 1 yields
+with $n$ being the number of days in total in a shift cycle and $r$ being the number of working days per worker in the shift cycle.
+
+Translating this into the variables defined in Table 1 yields
 
 \begin{equation}
 C = \frac{n_{W} \times n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!)}.
 \end{equation}
-
-\pagebreak
 
 ### From Boolean Shift Arrays to RWS (phase 2)
 In this phase, a new list of combinations with free days clustered in pairs has been generated and a combination selected to proceed with (combination 212 as it has two out of four weekends off (note the zeroes in the bottom table in \autoref{fig:phase1} to the right).
@@ -124,18 +124,18 @@ Pressing the *Find solutions* results in what is shown in \autoref{fig:phase2} (
 \end{cases}
 \end{equation}
 
-TODO : Add reference here.
-
 where each array in the resulting product is considered as a possible shift schedule matrix. Imposing constraints (resting time between shifts and ensuring all shifts are filled) on each combinations results in solutions from which the user can choose between.
 
-Since all combinations are stored in a matrix form before different combinations are removed from the final solutions matrix, large datasets require severe amount of internal memory for the Cartesian Product method to work. For this, a controlling script has been implemented which calculates a pre-estimate of required internal memory. The required internal memory for different operations can be roughly calculated by
+Since all combinations are stored in a matrix form before different combinations are removed from the final solutions matrix, large datasets require severe amount of internal memory for the Cartesian Product method to work. For this, a controlling script has been implemented which calculates a pre-estimate of required internal memory. Since the array consists of integers (zeroes and ones) and an integer in Python occupies 4 bytes, a list occupies 64 bytes with 8 byte per item within, a simple expression can be created as follows:
 
 \begin{equation}
-IM \approx N_{C} \times n_{S} = N^{n_{S}} \times n_S
+IM \approx 64 + 12 \times (number of integers).
 \end{equation}
 
-TODO : Add reference here.
-
+This means that the required internal memory for different operations can be roughly calculated by
+\begin{equation}
+IM \approx 64 + 12 \times N_{C} \times n_{S} = 64 + 12 \times N^{n_{S}} \times n_S
+\end{equation}
 returning the memory demand IM in bytes and where $N_{C} = N^{n_{S}}$ is the total number of combinations (without any constraints imposed).
 
 If the estimated expected internal memory requirement for an operation exceeds 1Gb, the user is prompted whether to continue with the default Cartesian Product method or to use a less internal memory demanding recursive method.

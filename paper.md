@@ -24,9 +24,9 @@ bibliography: docs/paper.bib
 ---
 
 # Statement of Need
-All around the world, research institutes and industrial complexes make use of workforces working multiple shifts per day in order to utilise maximum efficiency and profitability of the facility. Creating shift work schedules has, however, always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout. TODO : Add reference here.
+All around the world, research institutes and industrial complexes make use of workforces working multiple shifts per day in order to utilise maximum efficiency and profitability of the facility. Creating shift work schedules has, however, always been a challenging task, especially such that are equal for all workers and at the same time distributes the shifts evenly and properly to prevent staff burnout [@Tristan2020].
 
-The purpose and aim of this package is hence to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules by providing the user (schedule-maker) with all possible schedules for a set of input constraints/conditions (such as shift lengths, weekly working hours and -resting time) by constructing and utilising a Combinatoric Generator and a Cartesian Product calculator.
+The purpose and aim of this package is to support research institutes and industrial complexes at which non-standard working hours are applicable with a computational tool to create rotational workforce schedules by providing the user (schedule-maker) with all possible schedules for a set of input constraints/conditions (such as shift lengths, weekly working hours and -resting time) by constructing and utilising a Combinatoric Generator and a Cartesian Product calculator.
 
 Conclusively, this package provides a graphical user interface (based on PyQt5 [@PyQtReference]) tool for generating and constructing acceptable shift arrays if there are any possible arrays following all user-defined constraints. These can be exported to the file formats ODS, CSV, and txt, with the arrays ready to be used as they are or as templates for further modifications (e.g. swapping shifts between workers and hence taking into account individual workers' needs).
 
@@ -60,25 +60,29 @@ Since each week also resembles a worker, the shift array can be set up as a matr
 
 In order to avoid all working days from being clustered together, the constraint for weekly minimum single continuous resting time is added ($t_{r}$). The algorithm ensures that all passed shift arrays have at least $t_r$ hours of free-time over any given 7-day period.
 
-The number of shifts per shift array is calculated by
+The number of shifts per shift array is, in this algorithm, calculated by
 
 \begin{equation}
 n_{S} = \text{ceil}(t_W / t_s)
 \end{equation}
 
-TODO : Add reference here.
-
 with the reason for using ceiling function (and not the floor function) being the argument that it is better with a couple of more hours than fewer. In order to cluster days off (n_{cf}), the algorithm's GUI has an optional additional constraint that serves this purpose and simply does not allow shift arrays with 0:s in clusters less than this through.
 
-By using the input $n_W \times n_{wd}$ as the iterable and $n_{S}$ as the length of subsequences of elements from the iterable, the same methodology as the *combinations* function of the *itertools* module in Python [@PythonReference] (a combinatoric generator) is used for creating each shift array. By imposing the other inputs as constraints on whether a shift array should be appended to accepted shift arrays, the reason for not using the built-in Python module becomes clear: Python's built-in module returns all array combinations that are possible without any imposed constraints which quickly escalates to becoming too large for a personal computer's internal memory to handle.
+By using the input $n_W \times n_{wd}$ as the iterable and $n_{S}$ as the length of subsequences of elements from the iterable, the same methodology as the *combinations* function of the *itertools* module in Python [@PythonReference] (a combinatoric generator) is used for creating each shift array. It can be simply described as creating an array of combinations (in this case, zeroes and ones corresponding to a day off or shift work, respectively) with a specific length (number of days in a cycle). By imposing the other inputs as constraints on whether a shift array should be appended to accepted shift arrays, the reason for not using the built-in Python module becomes clear: Python's built-in module returns all array combinations that are possible without any imposed constraints, which quickly escalates to becoming too large for a personal computer's internal memory to handle.
 
-With this, the final result is an array of shift arrays in which each shift array is filled with $7n_{S}$ 1:s and $n_{W}(7-n_{S})$ 0:s whilst obeying the above mentioned constraints. The number of possible combinations ($C$) can be then be expressed as:
+With this, the final result is an array of shift arrays in which each shift array is filled with $7n_{S}$ 1:s and $n_{W}(7-n_{S})$ 0:s whilst obeying the above mentioned constraints.
+
+As there are ${n\choose r}$ ways to choose r elements from a set of n elements [@EncyMath], the number of possible combinations ($C$) can be expressed by using the factorial of the binomial coefficient:
 
 \begin{equation}
-C = n_{W} \times \frac{n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!}.
+C = \frac{n!}{r! \times (n-r)!}.
 \end{equation}
 
-TODO : Add reference here.
+with $n$ being the number of days in total in a shift cycle and $r$ being the number of working days per worker in the shift cycle. Translating this into the variables defined in Table 1 yields
+
+\begin{equation}
+C = \frac{n_{W} \times n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!)}.
+\end{equation}
 
 \pagebreak
 

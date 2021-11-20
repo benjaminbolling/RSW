@@ -129,8 +129,9 @@ where each array in the resulting product is considered as a possible shift sche
 Since all combinations are stored in a matrix form before different combinations are removed from the final solutions matrix, large datasets require severe amount of internal memory for the Cartesian Product method to work. For this, a controlling script has been implemented which calculates a pre-estimate of required internal memory. Since the array consists of integers (zeroes and ones) and an integer in Python occupies 4 bytes, a list occupies 64 bytes with 8 byte per item within, a simple expression can be created as follows:
 
 \begin{equation}
-IM \approx 64 + 12 \times (number of integers).
+IM \approx 64 + 12 \times (N_{int})
 \end{equation}
+with $N_{int}$ being the total number of integers from all combinations combined.
 
 This means that the required internal memory for different operations can be roughly calculated by
 \begin{equation}

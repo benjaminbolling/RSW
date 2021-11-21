@@ -41,7 +41,7 @@ A boolean shift array is defined such that 1 means that the worker is working an
 
 \pagebreak
 
-Table 1: Constraints, i.e. the variables and their meanings, and some example values.\label{tab:table1}
+Table 1: Constraints, i.e. the variables and their meanings, and some example values.
 
 | Variable       | Meaning     | Value |
 | :------------- | :----------: | :----------: |
@@ -80,7 +80,7 @@ C = \frac{n!}{r! \times (n-r)!}.
 
 with $n$ being the number of days in total in a shift cycle and $r$ being the number of working days per worker in the shift cycle.
 
-Translating this into the variables defined in Table 1 \autoref{tab:table} yields the total number of combinations (without constraints), which is hence also the maximum number of accepted combinations:
+Translating this into the variables defined in Table 1 yields the total number of combinations (without constraints), which is hence also the maximum number of accepted combinations:
 
 \begin{equation}
 C = \frac{n_{W} \times n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!)}.

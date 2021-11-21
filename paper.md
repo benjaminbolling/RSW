@@ -217,6 +217,8 @@ Future development plans include adding functionalities in phase 1 such as filte
 
 ![The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis), for different number of weeks in a shift cycle (see Table 3).\label{fig:benchmarking}](docs/fig4.png){ width=80% }
 
+\pagebreak
+
 ## Acknowledgements
 The author wants to thank his direct line-manager at European Spallation Source for asking the question if it would be possible to create a software for generating shift schedules, which lead to the idea of creating this project and after a while lead to this final state. The author also wants to thank the reviewers for taking their time reviewing this project.
 

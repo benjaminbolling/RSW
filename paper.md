@@ -80,7 +80,7 @@ C = \frac{n!}{r! \times (n-r)!}.
 
 with $n$ being the number of days in total in a shift cycle and $r$ being the number of working days per worker in the shift cycle.
 
-Translating this into the variables defined in Table 1 yields the total number of combinations (without constraints), which is also the maximum number of accepted combinations (imposing no constraints):
+Translating this into the variables defined in Table 1 yields the total number of combinations (without constraints), which is hence also the maximum number of accepted combinations:
 
 \begin{equation}
 C = \frac{n_{W} \times n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!)}.

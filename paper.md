@@ -155,12 +155,14 @@ The parameters used are defined in Table 1, with the exception of $N$ and Shift 
 
 Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as defined in Section 3.1 for Phase 1), and the number of combinations and approved combinations found for full generations of the Boolean Arrays (as defined in Table 1). The types are single-, two- or three-shifts during 5 or 7 days per week, and the internal memory (IM) is given for the different shift array objects.
 
-| Type: | \# of weeks: | Combinations (total): | Combinations (accepted): | IM: | Time (fast) [s]: | Time (full) [s]: |
-| :------------- | :----------: | :----------: | :----------: | :----------: | :----------: |
-| 1-shift, 5d/w   | 1 | 1 | 1 | 88 B | 7.224e-05 | 7.224e-05 |
-| 1-shift, 7d/w   | 2 | 2 002 | 462 | 4.216 kB | 1.497e-02 | 5.211e-02 |
-| 2-shift, 7d/w   | 4 | 1.312e+07 | 1.668e+06 | 13.53 MB | 24.55 | 508.7 |
-| 3-shift, 7d/w   | 5 | 1.476e+09 | 1.138e+07 | 100.4 MB | 3 087 | 6.627e+04 |
+| Type: | 1-shift, 5d/w | 1-shift, 7d/w | 2-shift, 7d/w | 3-shift, 7d/w   |
+| :------------- | :----------: | :----------: | :----------: | :----------: |
+| \# of weeks: | 1 | 2 | 4 | 5 |
+| Combinations (total): | 1 | 2 002 | 1.312e+07 | 1.476e+09 |
+| Combinations (accepted): | 1 | 462 | 1.668e+06 | 1.138e+07 |
+| IM: | 88 B | 4.216 kB | 13.53 MB | 100.4 MB |
+| Time (fast) [s]: | 7.224e-05 | 1.497e-02 | 24.55 | 3 087 |
+| Time (full) [s]: | 7.224e-05 | 5.211e-02 | 508.7 | 6.627e+04 |
 
 Plotting the benchmarking results yields the logarithmic graph in \autoref{fig:benchmarking}. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
 \begin{equation}

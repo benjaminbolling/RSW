@@ -183,11 +183,14 @@ If the given combination has only a single shift specie, there is one solution f
 
 Table 4: Benchmarking for Phase 2: Time required for obtaining all solutions for different $n_{S}$, $n_{W}$ and $N$ using the Cartesian Product method, and the internal memory (IM).
 
-| Type ($N$): | $n_{S}$: | $n_{W}$: | Combinations (accepted): | Solutions (for each combination): | Time [s]: |
-| :------------- | :----------: | :----------: | :----------: | :----------: | :----------: |
-| 2-shift | 14    | 3 | 16 384 | 7 | 0.2963 |
-| 2-shift | 18    | 4 | 262 144 | 64 | 5.843 |
-| 2-shift | 20    | 4 | 293 328 | 1 048 576 | 12.72 |
+| Type ($N$): | 2-shift | 2-shift | 2-shift |
+| :------------- | :----------: | :----------: | :----------: |
+| $n_{W}$: | 3 | 4 | 4 |
+| $n_{S}$: |14 | 18 | 20 |
+| Solutions (for each combination): | 16 384 | 262 144 | 1 048 576 |
+| Time [s]: | 0.2963 |  5.843 | 12.72 |
+
+Note: The number of solutions for each combination in Table 4 is the total number of combinations for the solution matrix (and not the number of viable solutions).
 
 ## Comparison to similar softwares
 Different commercial softwares are available for shift scheduling using computational methods. In 2004, [@Burke2004] made a comprehensive literature review of a wide range of approaches, including optimising approaches (mathematical programming), multi-criteria approaches (goal programming), artificial intelligence methods, heuristic approaches, and metaheuristic approaches. Common for these approaches is that they use the constraints by the user and are able to provide more-or-less ready schedule(s), with the limitations for the mathematical approaches not being appropriate and requiring post-generation work. Goal programming defines a target for each criterion and their relative priorities ([@Burke2004]) by applying mathematical programming or by tackling metaheuristics within a multi-objective framework. The complexities from goal programming arise from that real world problems are difficult to solve without some optimisation from a planner.

@@ -126,7 +126,7 @@ Pressing the *Find solutions* results in what is shown in \autoref{fig:phase2} (
 
 where each array in the resulting product is considered as a possible shift schedule matrix. Imposing constraints (resting time between shifts and ensuring all shifts are filled) on each combinations results in solutions from which the user can choose between.
 
-Since all combinations are stored in a matrix form before different combinations are removed from the final solutions matrix, large datasets require severe amount of internal memory for the Cartesian Product method to work. For this, a controlling script has been implemented which calculates a pre-estimate of required internal memory. Approximating that each character in the shiftarray takes up 8 byte of memory;
+Since all combinations are stored in a matrix form before different combinations are removed from the final solutions matrix, large datasets require severe amount of internal memory for the Cartesian Product method to work. For this, a controlling script has been implemented which calculates a pre-estimate of required internal memory. Approximating that each character in the shiftarray takes up 8 byte of memory yields
 
 \begin{equation}
 IM \propto N_{size} = N^{n_{S}} \times n_S,

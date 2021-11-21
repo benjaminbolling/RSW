@@ -755,6 +755,8 @@ class DialogPhase1(QWidget):
             if errorflag == 0:
                 t0 = time()
                 self.shiftseries, noConstraints = self.createAllShiftPossibilities(range(self.noofweeks*self.workingdays), shiftsperpersonpercycle)
+                # print('Size of object: {}'.format(sys.getsizeof(self.shiftseries)))
+                # print('Number of combinations: {}'.format(len(self.shiftseries)))
                 self.testCombinations.setEnabled(True)
                 self.testCombinations.setToolTip("")
                 t1 = time()
@@ -804,6 +806,8 @@ class DialogPhase1(QWidget):
             self.noofweeks = len(combos[0].split(" "))/7
             if self.noofweeks.is_integer():
                 self.shiftseries = combos
+                # print('Size of object: {}'.format(sys.getsizeof(self.shiftseries)))
+                # print('Number of combinations: {}'.format(len(self.shiftseries)))
                 self.messageLabel01.setText("Combinations loaded from:")
                 self.messageLabel02.setText(str(os.path.split(filename)[1]))
                 self.messageLabel02.setToolTip(filename)
@@ -928,7 +932,6 @@ class DialogPhase1(QWidget):
         while self.lp2 == True and ind < len(self.shiftseries):
         # for ind, raw_matrix in enumerate(self.shiftseries):
             ind += 1
-            print(self.shiftseries[ind])
             prevpercentage = percentagecomplete
             solutions = len(IO.testMatrices(self.shiftseries[ind],self.shifttype,shifts,self.shiftlengths,self.weeklyresting,self.dailyresting))
             if solutions > 0:

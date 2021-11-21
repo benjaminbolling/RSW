@@ -129,7 +129,7 @@ where each array in the resulting product is considered as a possible shift sche
 Since all combinations are stored in a matrix form before different combinations are removed from the final solutions matrix, large datasets require severe amount of internal memory for the Cartesian Product method to work. For this, a controlling script has been implemented which calculates a pre-estimate of required internal memory. Approximating that each character in the shiftarray takes up 8 byte of memory yields
 
 \begin{equation}
-IM \propto N_{size} = N^{n_{S}} \times n_S,
+IM \approx N_{size} = N^{n_{S}} \times n_S,
 \end{equation}
 
 where $N_{size}$ is the total number of zeroes and ones in the full matrix. If the estimated size of the resulting matrix from the operation exceeds 1Gb, the user is prompted whether to continue with the default Cartesian Product method or to use a less internal memory demanding recursive method.

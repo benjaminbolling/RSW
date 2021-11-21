@@ -126,6 +126,14 @@ Pressing the *Find solutions* results in what is shown in \autoref{fig:phase2} (
 
 where each array in the resulting product is considered as a possible shift schedule matrix. Imposing constraints (resting time between shifts and ensuring all shifts are filled) on each combinations results in solutions from which the user can choose between.
 
+Since all combinations are stored in a matrix form before different combinations are removed from the final solutions matrix, large datasets require severe amount of internal memory for the Cartesian Product method to work. For this, a controlling script has been implemented which calculates a pre-estimate of required internal memory. Approximating that each character in the shiftarray takes up 8 byte of memory;
+
+\begin{equation}
+IM \propto N_{size} = N^{n_{S}} \times n_S,
+\end{equation}
+
+where $N_{size}$ is the total number of zeroes and ones in the full matrix. If the estimated size of the resulting matrix from the operation exceeds 1Gb, the user is prompted whether to continue with the default Cartesian Product method or to use a less internal memory demanding recursive method.
+
 ## Benchmarking results
 ### Benchmarking Computer Specifications
 The algorithm benchmarking was done on an Apple MacBook Pro with the specifications defined in Table 2.
@@ -145,14 +153,14 @@ In the GUI, there is a "fast generation" checkbox which stops the algorithm from
 
 The parameters used are defined in Table 1, with the exception of $N$ and Shift types' labels. Note that for Table 3, the number (\#) of weeks given is the minimum amount of weeks required for a full shift cycle in order to find acceptable combinations for the N-shift problems (with $N = 1,2,3$ for single-, two- and three-shifts, respectively). The free days clustering option is not selected for the benchmarking.
 
-Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as defined in Section 3.1 for Phase 1), and the number of combinations and approved combinations found for full generations of the Boolean Arrays (as defined in Table 1). The types are single-, two- or three-shifts during 5 or 7 days per week.
+Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as defined in Section 3.1 for Phase 1), and the number of combinations and approved combinations found for full generations of the Boolean Arrays (as defined in Table 1). The types are single-, two- or three-shifts during 5 or 7 days per week, and the internal memory (IM) is given for the different shift array objects.
 
-| Type: | \# of weeks: | Total \# of Combinations: | Accepted Combinations: | Time (fast) [s]: | Time (full) [s]: |
+| Type: | \# of weeks: | Combinations (total): | Combinations (accepted): | IM: | Time (fast) [s]: | Time (full) [s]: |
 | :------------- | :----------: | :----------: | :----------: | :----------: | :----------: |
-| 1-shift, 5d/w   | 1 | 1 | 1 | 7.224e-05 | 7.224e-05 |
-| 1-shift, 7d/w   | 2 | 2 002 | 462 | 1.497e-02 | 5.211e-02 |
-| 2-shift, 7d/w   | 4 | 1.312e+07 | 1.668e+06 | 24.55 | 508.7 |
-| 3-shift, 7d/w   | 5 | 1.476e+09 | 1.138e+07 | 3 087 | 6.627e+04 |
+| 1-shift, 5d/w   | 1 | 1 | 1 | 88 B | 7.224e-05 | 7.224e-05 |
+| 1-shift, 7d/w   | 2 | 2 002 | 462 | 4.216 kB | 1.497e-02 | 5.211e-02 |
+| 2-shift, 7d/w   | 4 | 1.312e+07 | 1.668e+06 | 13.53 MB | 24.55 | 508.7 |
+| 3-shift, 7d/w   | 5 | 1.476e+09 | 1.138e+07 | 100.4 MB | 3 087 | 6.627e+04 |
 
 Plotting the benchmarking results yields the logarithmic graph in \autoref{fig:benchmarking}. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
 \begin{equation}
@@ -167,16 +175,15 @@ for the full and fast generations, respectively, calculated with an exponential 
 \pagebreak
 
 ### Benchmarking Phase 2
-If the given combination has only a single shift specie, there is one solution for the given combination. If there are more than one shift specie, multiple solutions may be found. The main impact on time consumption is the number of accepted combinations $N_{C}$. Limiting factors are not limited to time only but also on the internal memory due to that a Cartesian Product method is used, meaning all combinations are stored as list objects. Some values have been timed and calculated in Table 4 using the Cartesian Product method.
+If the given combination has only a single shift specie, there is one solution for the given combination. If there are more than one shift specie, multiple solutions may be found. The main impact on time consumption is the number of accepted combinations $N_{C}$. Limiting factors are not limited to time only but also on the internal memory due to that a Cartesian Product method is used, meaning all combinations are stored as string objects in an array. Some values have been timed and calculated in Table 4 using the Cartesian Product method.
 
-Table 4: Benchmarking for Phase 2: Time and estimated internal memory (IM) required for obtaining all combinations and solutions for different $n_{S}$ and $N$ using the Cartesian Product method.
+Table 4: Benchmarking for Phase 2: Time required for obtaining all solutions for different $n_{S}$, $n_{W}$ and $N$ using the Cartesian Product method, and the internal memory (IM).
 
-| Type ($N$): | $n_{S}$: | $n_{W}$: | Combinations: | Solutions: | IM: | Time [s]: |
-| :------------- | :----------: | :----------: | :----------: | :----------: | :----------: | :----------: |
-| 2-shift | 14    | 3 | 16 384 | 7 | 229.38 kB | 0.2963 |
-| 2-shift | 18    | 4 | 262 144 | 64 | 4.7186 MB | 5.843 |
-| 3-shift | 14    | 3 | 4 782 969 | 0 | 66.96 MB | 92.54 |
-| 3-shift | 18    | 4 | 387 420 489 | 0 | 6.9736 GB | 0 |
+| Type ($N$): | $n_{S}$: | $n_{W}$: | Combinations (accepted): | Solutions (for each combination): | Time [s]: |
+| :------------- | :----------: | :----------: | :----------: | :----------: | :----------: |
+| 2-shift | 14    | 3 | 16 384 | 7 | 0.2963 |
+| 2-shift | 18    | 4 | 262 144 | 64 | 5.843 |
+| 2-shift | 20    | 4 | 293 328 | 1 048 576 | 12.72 |
 
 ## Comparison to similar softwares
 Different commercial softwares are available for shift scheduling using computational methods. In 2004, [@Burke2004] made a comprehensive literature review of a wide range of approaches, including optimising approaches (mathematical programming), multi-criteria approaches (goal programming), artificial intelligence methods, heuristic approaches, and metaheuristic approaches. Common for these approaches is that they use the constraints by the user and are able to provide more-or-less ready schedule(s), with the limitations for the mathematical approaches not being appropriate and requiring post-generation work. Goal programming defines a target for each criterion and their relative priorities ([@Burke2004]) by applying mathematical programming or by tackling metaheuristics within a multi-objective framework. The complexities from goal programming arise from that real world problems are difficult to solve without some optimisation from a planner.

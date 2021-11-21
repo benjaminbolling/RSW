@@ -447,11 +447,11 @@ class DialogPhase2(QDialog):
             shifts.append(m+1)
         # Now we have to try to construct solution matrices
         noofcombinations = int(float(self.shifttype)**float(sum(self.zeroOneS)))
-        print(noofcombinations)
-        if noofcombinations > 10**9:
+        # print(noofcombinations)
+        if noofcombinations*len(self.series)*8 > 10**9: # assuming 8 byte per character, very simplified calculation
             msgbox = QMessageBox()
             msgbox.setWindowTitle("Select how to proceed")
-            memoryNeeded = noofcombinations*sum(self.zeroOneS)
+            memoryNeeded = noofcombinations*len(self.series)*8
             if memoryNeeded < 10**12:
                 memoryNeeded = str(memoryNeeded/(10**9)) + " Gb"
             else:
@@ -484,8 +484,8 @@ class DialogPhase2(QDialog):
                 self.solutionMatrices = list(IO.createSolutionMatrices(sum(self.zeroOneS),shifts,self.zeroOneS,self.dailyresting,self.shiftlengths,self.shifttype,self.weeklyresting))
             t1  = time()
             if mode == "proc" or mode == "mem":
-                print("Solutions found: "+str(int(len(self.solutionMatrices))))
-                print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
+                # print("Solutions found: "+str(int(len(self.solutionMatrices))))
+                # print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
                 self.findSolutionsBtn.setText("Solutions found: "+str(int(len(self.solutionMatrices))))
                 if len(self.solutionMatrices) > 0:
                     self.findSolutionsBtn.setEnabled(False)
@@ -557,7 +557,7 @@ class DialogPhase2(QDialog):
         if self.checkifshiftsOK(self.solutionMatrices[0]) == False:
             del self.solutionMatrices[0]
         t1  = time()
-        print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
+        # print("Time for completion: "+str(float("{:.6f}".format(t1-t0)))+" s")
         if len(self.solutionMatrices) > 0:
             self.find1SolutionBtn.setEnabled(False)
             self.solutionMatrix2Table1()

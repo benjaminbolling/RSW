@@ -80,7 +80,7 @@ C = \frac{n!}{r! \times (n-r)!}.
 
 with $n$ being the number of days in total in a shift cycle and $r$ being the number of working days per worker in the shift cycle.
 
-Translating this into the variables defined in Table 1 yields
+Translating this into the variables defined in Table 1 yields the total number of combinations (without constraints), which is also the maximum number of accepted combinations (imposing no constraints):
 
 \begin{equation}
 C = \frac{n_{W} \times n_{wd}!}{n_{S}!(n_{W} \times n_{wd} - n_{S}!)}.
@@ -147,12 +147,12 @@ The parameters used are defined in Table 1, with the exception of $N$ and Shift 
 
 Table 3: Benchmarking for fast and full generation of the Boolean Arrays (as defined in Section 3.1 for Phase 1), and the number of combinations and approved combinations found for full generations of the Boolean Arrays (as defined in Table 1). The types are single-, two- or three-shifts during 5 or 7 days per week.
 
-| Type: | \# of weeks: | Total \# of Combinations: | Accepted Combinations: | Time (fast) [s]: | Time (full) [s]: | Size of accepted combinations: |
-| :------------- | :----------: | :----------: | :----------: | :----------: | :----------: | :----------: |
-| 1-shift, 5d/w   | 1 | 1 | 1 | 7.224e-05 | 7.224e-05 | 88 B|
-| 1-shift, 7d/w   | 2 | 2 002 | 462 | 1.497e-02 | 5.211e-02 | 4.216 kB |
-| 2-shift, 7d/w   | 4 | 1.312e+07 | 1.668e+06 | 24.55 | 508.7 | 13.533 kB |
-| 3-shift, 7d/w   | 5 | 1.476e+09 | 1.138e+07 | 3 087 | 6.627e+04 | 100.43 MB |
+| Type: | \# of weeks: | Total \# of Combinations: | Accepted Combinations: | Time (fast) [s]: | Time (full) [s]: |
+| :------------- | :----------: | :----------: | :----------: | :----------: | :----------: |
+| 1-shift, 5d/w   | 1 | 1 | 1 | 7.224e-05 | 7.224e-05 |
+| 1-shift, 7d/w   | 2 | 2 002 | 462 | 1.497e-02 | 5.211e-02 |
+| 2-shift, 7d/w   | 4 | 1.312e+07 | 1.668e+06 | 24.55 | 508.7 |
+| 3-shift, 7d/w   | 5 | 1.476e+09 | 1.138e+07 | 3 087 | 6.627e+04 |
 
 Plotting the benchmarking results yields the logarithmic graph in \autoref{fig:benchmarking}. As can be seen, the computation time $T_{C}$ increases exponentially with the number of weeks in a shift cycle on average in accordance with
 \begin{equation}

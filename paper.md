@@ -38,7 +38,7 @@ Conclusively, this package provides a graphical user interface (based on PyQt5 [
 In order to achieve schedules for the workers that treats everyone equally, the focus of this package is on so-called rotational workforce schedules (RWSs). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints, originating from e.g. country laws, organisational needs, and/or workforce requests.
 
 ## Computational Approach and Results
-In this approach, each worker has the same schedule shifted by one week, resulting in that all workers follow the same schedule. The project has been divided into two phases, *Boolean Shift Arrays* (in which boolean shift arrays are generated) and *From Boolean Shift Arrays to a RWS* (in which a selected boolean shift array is shaped into its final RWS layout). The high-level software architecture flow can be seen in \autoref{fig:flow}.
+In this approach, each worker has the same schedule shifted by one week, resulting in that all workers follow the same schedule. The project has been divided into two phases, *Boolean Shift Arrays* (in which boolean shift arrays are generated) and *From Boolean Shift Arrays to a RWS* (in which a selected boolean shift array is shaped into its final RWS layout). The high-level software architecture flow and a user flowchart can be seen in \autoref{fig:flow} and \autoref{fig:userflow}, respectively.
 
 ### Boolean Shift Arrays (phase 1)
 A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The input species (also known as constraints) and their respective values used are shown in Table 1 below.
@@ -218,6 +218,8 @@ Future development plans include adding functionalities in phase 1 such as filte
 ![The RWSing Application's algorithm's "phase 2 GUI" as launched from the "phase 1 GUI" and with the second Thursday's shift changed to an evening shift (left) and after finding solutions, showing the first solution (right).\label{fig:phase2}](docs/fig2.png){ width=80% }
 
 ![The RWSing Application's high-level software architecture flow.\label{fig:flow}](docs/soft_arch_flow.png){ width=80% }
+
+![The RWSing Application's high-level user flowchart.\label{fig:userflow}](docs/user_flowchart.png){ width=80% }
 
 ![The benchmarking results in respect of time for fast- and full generation of the boolean arrays (on the left vertical axis), and the number of combinations gone through and the solutions found (on the right vertical axis), for different number of weeks in a shift cycle (see Table 3).\label{fig:benchmarking}](docs/fig4.png){ width=80% }
 

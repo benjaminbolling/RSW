@@ -46,6 +46,20 @@ The launcher gives the user to either start from scratch, continue from a saved 
 ### Phase 1
 Phase 1 consists of creating boolean combinations that may solve the problem, see Figure 1 for the GUI.
 
+| Parameter | Meaning |
+| :----------: | :----------: |
+| Number of shifts per days                     | How many shifts per day are needed |
+| Shift Labels                                  | Labels for each shift |
+| Number of working days per week               | How many days per week are the multiple shifts needed (e.g. Mon-Thu = 4, Mon-Sat = 6, etc.) |
+| Number of weeks to cycle over                 | How many weeks are to be cycled over, which can be made equal to the number of teams of workers |
+| Number of workers per shift (minimum)         | How many persons are required during each shift |
+| Shift lengths                                 | The length of each shift in hours (including overlap) |
+| Weekly working hours per worker               | How many hours each worker has to work per week |
+| Weekly minimum single continuous resting time | How much continuous uninterrupted resting-time each worker requires over any rolling week |
+| Daily minimum continuous resting time         | How much continuous uninterrupted resting-time each worker requires between each shift |
+| Number of days off clustered                  | If possible; only present combinations which has days off grouped together rather than having single days scattered (e.g. work-free-free-work instead ofwork-free-work-free) |
+| Number of shifts per shift cycle              | The amount of shifts per cycle each worker will be estimated to have |
+
 Upon filling in the list of constraints, pressing the "Generate Combinations" button activates the algorithm that runs through the various permutations of boolean lists. The algorithm returns a list of combinations, of which each have the potential of solving the problem.
 
 Each combination is presented one-by-one in a simple matrix where each column is a day (e.g. Mon-Fri or Sun-Sat). The slider and spin-box next to it allows for quick browsing through the different combinations.
@@ -66,7 +80,7 @@ The problem can be defined as follows:
 
 Table 1: The constraints for the 4-week 2-shifts workforce schedule.
 
-| Parameter     | Value |
+| Parameter | Value |
 | :----------: | :----------: |
 | Number of shifts per days                     | 2 |
 | Shift Labels                                  | D, E |

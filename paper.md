@@ -138,8 +138,6 @@ IM \approx N_{size} = N^{n_{S}} \times n_S,
 
 where $N_{size}$ is the total number of zeroes and ones in the full matrix. If the estimated size of the resulting matrix from the operation exceeds 1Gb, the user is prompted whether to continue with the default Cartesian Product method or to use a less internal memory demanding recursive method.
 
-\pagebreak
-
 ## Benchmarking results
 ### Benchmarking Computer Specifications
 The algorithm benchmarking was done on an Apple MacBook Pro with the specifications defined in Table 2.

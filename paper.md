@@ -211,7 +211,7 @@ For up to 5 weeks in a shift cycle it is possible to use a general-purpose compu
 Future development plans include adding functionalities in phase 1 such as filtering on number of free weekends and taking into account competences of the shift workers (to ensure full coverage of potential shift competence requirements). An important future development needed is restructuring part of the algorithm to lower the required processing power and hence time needed. Another future development plan includes importing an existing schedule with labels as a CSV-file directly into phase 2 such that modifications and/or checks can be done to assure the schedule is compliant with local rules for the workers. These improvements would further strengthen the usability of this application.
 
 ## Figures
-![The RWSing Application's launcher.\label{fig:launcher}](docs/fig0.png){ width=80% }
+![The RWSing Application's launcher.\label{fig:launcher}](docs/fig0.png){ width=70% }
 
 ![The RWSing Application's algorithm's "phase 1 GUI", in which the combinations have been generated.\label{fig:phase1}](docs/fig1.png){ width=80% }
 

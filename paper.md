@@ -178,8 +178,6 @@ T_C \text{(fast)} = \exp{\{4.254 \times n_W\}} \times 2  \times 10^{-6}
 \end{equation}
 for the full and fast generations, respectively, calculated with an exponential regression.
 
-\pagebreak
-
 ### Benchmarking Phase 2
 If the given combination has only a single shift specie, there is one solution for the given combination. If there are more than one shift specie, multiple solutions may be found. The main impact on time consumption is the number of accepted combinations $N_{C}$. Limiting factors are not limited to time only but also on the internal memory due to that a Cartesian Product method is used, meaning all combinations are stored as string objects in an array. Some values have been timed and calculated in Table 4 using the Cartesian Product method.
 

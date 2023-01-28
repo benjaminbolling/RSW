@@ -34,6 +34,8 @@ Another approach and need of the application is to serve as a support function f
 
 Conclusively, this package provides a graphical user interface (based on PyQt5 [@PyQtReference]) tool for generating and constructing acceptable shift arrays if there are any possible arrays following all user-defined constraints. These can be exported to the file formats ODS, CSV, and txt, with the arrays ready to be used as they are or as templates for further modifications (e.g. swapping shifts between workers and hence taking into account individual workers' needs).
 
+\pagebreak
+
 ## Introduction
 In order to achieve schedules for the workers that treats everyone equally, the focus of this package is on so-called rotational workforce schedules (RWSs). Rotational workforce schedules means that the schedule rotates after time, and hence, the other option would be static shift schedules. In this project, the term 'shift arrays' is defined to represent all possible schedules following a list of constraints, originating from e.g. country laws, organisational needs, and/or workforce requests.
 
@@ -42,8 +44,6 @@ In this approach, each worker has the same schedule shifted by one week, resulti
 
 ### Boolean Shift Arrays (phase 1)
 A boolean shift array is defined such that 1 means that the worker is working and 0 that the worker is not. The input species (also known as constraints) and their respective values used are shown in Table 1 below.
-
-\pagebreak
 
 Table 1: Constraints, i.e. the variables and their meanings, and some example values.
 

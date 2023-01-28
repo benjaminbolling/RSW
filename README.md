@@ -13,9 +13,7 @@ In this project, an algorithm takes into account inputs (or constraints) from th
 ## Getting started
 A suggestion on how to get started is given in a chronologically suggested order:
 - Installation procedure
-- Description of how to launch the package
-- Description of how to generate combinations fulfilling user requirements
-- Description of how to solve different combinations
+- Description of how to use the package
 - Example usage procedure
 
 ### Installation procedure
@@ -31,31 +29,42 @@ A suggestion on how to get started is given in a chronologically suggested order
 
 4. If all required Python packages have been successfully installed, the package is ready.
 
+## Description of software
+### Nomenclature
+In this application, the following terminology is used:
+- The problem: The rotational shift-work schedule that needs to be created based upon a set of constraints.
+- Combination: A list of zeroes (days off) and ones (work days)
+- Solution: A combination that solves the problem.
+
 ### Launcher
 The package includes a simple launcher which can be launched by executing the following (with current directory being this repository):
 
     python RSW.py
 
-The launcher gives the user to either start from scratch (phase 1), continue from a saved file in phase 1 (a list of combinations), or continue from a saved file in phase 2 (the solutions). See respective sections Phase 1 and Phase 2 below for descriptions of each.
+The launcher gives the user to either start from scratch, continue from a saved file in "Phase 1" (from a previously generated list of combinations), or continue from a saved file in "Phase 2" (potential solutions).
 
 ### Phase 1
-Phase 1 consists of a list of parameters that are to be filled in such that schedules can be generated (by clicking on the *Generate Combinations* button). Note that the larger the number of weeks is, the longer it will take to generate the combinations.
+Phase 1 consists of creating boolean combinations that may solve the problem, see Figure 1 for the GUI.
 
-When the combinations have been generated and at least one is approved (fulfilling the constraints), the combinations can be browsed using the combination index spinbox or -slider. Each column represents a workday and each row a worker for week \#0, with booleans showing if a worker is working (1) or is free (0).
+Upon filling in the list of constraints, pressing the "Generate Combinations" button activates the algorithm that runs through the various permutations of boolean lists. The algorithm returns a list of combinations, of which each have the potential of solving the problem.
 
-The combinations can be tested if they have any real solution in phase 2 by clicking the bottom-left button *Test For Solutions*. Note: This procedure can take long time to complete, with time for completion increasing with number of shifts and number of weeks in a cycle.
+Each combination is presented one-by-one in a simple matrix where each column is a day (e.g. Mon-Fri or Sun-Sat). The slider and spin-box next to it allows for quick browsing through the different combinations.
+
+The button "Proceed with this combo to next phase" launches "Phase 2" with the combination.
 
 ### Phase 2
-The "phase 2 GUI" is launched with a selected combination as input (which can be seen in Figure 2 to the left).
+Phase 2 consists of finding solutions to a combination that can solve the problem, see Figure 2 for the GUI.
 
-The free days are all represented by zeroes whilst all other shifts (ones) are converted to the first defined shift type label. For *N* > 1, each shift can be replaced by another shift via dropdown menus. The GUI shows the number of shifts of each type per week and a table with the results, i.e. the number of workers per shift and day. Shifts that are occupied have green background whilst shifts that are unoccupied have a red background.
+It can be launched with a saved file from the launcher or from Phase 1.
 
-If the continuous resting time between two assigned shifts is too low, the background colour of the second shift becomes red (e.g. a Friday day-shift after a Thursday evening-shift if the continuous resting time has to be at least 11 hours, as shown in Figure 2 to the left). With enough resting time in between shifts, the background of the second shift is be green.
+Days off are represented by zeroes whilst shifts are converted to the shift type label. Shifts can be manually altered one-by-one or the application can check which solutions follow the existing constraints if there are any valid solutions. Shift orders not allowed are marked in red, weekly resting checks ensure rolling weekly resting time is enforced, and the bottom table shows the shift occupancy.
 
 ### Example Usage Procedure
-Phase 1 is launched as *New* using the *RSW.py* launcher, and the parameters selected are as defined in Table 1 below.
+The problem can be defined as follows:
 
-Table 1: Constraints, i.e. the variables and their meanings, and some example values.
+*A rotational 4-week 2-shifts workforce schedule has to be constructed with the parameters defined in Table 1.*
+
+Table 1: The constraints for the 4-week 2-shifts workforce schedule.
 
 | Parameter     | Value |
 | :----------: | :----------: |
@@ -71,11 +80,17 @@ Table 1: Constraints, i.e. the variables and their meanings, and some example va
 | Number of days off clustered                  | 2 |
 | Number of shifts per shift cycle              | 18 |
 
-After defining these values, the *Generate Combinations* button is clicked. During the generation, the approved combinations are stored in a temporary file. When finished, the generated shift arrays (combinations) can be browsed through using the slider or the numerical input field. The shift arrays are constructed such that each week or worker (depending on the viewing angle) is represented in separate rows.
+1. Start the launcher.
+2. Launch "Phase 1" by clicking on *New*.
+3. Define the parameters as in Table 1 above.
+4. Click on *Generate Combinations* and wait until this is completed.
+5. Drag the slider to combination \#212.
+6. Click on *Proceed with this combo to next phase*, assuming this combination seems to solve the problem, to launch "Phase 2" with this combination.
+7. Click on *Find Solutions* and wait until this is completed.
+8. Select solution \#0 using the slider and click on the *Export* button.
+9. Define a name for the file, proceed, and select .CSV as file format.
 
-The slider is moved to combination \#212, and the bottom-right button *Proceed with this combo to next phase* is clicked - launching phase 2 on this combination as input. In the phase2 window, the button *Find Solutions* is clicked, generating all possible solutions for the combination. The slider in this window is not moved, making it remain on solution \#0. The solution is exported as a .CSV file. The same is repeated but using combination \#71 in phase1 and solution \#19 in phase 2. The files are imported into a new spreadsheet in Microsoft Excel (2018) and combined, followed by adding colours to highlight and differentiate each week, and lines for all rows and columns. The sum of each shift specie per day has also been calculated in the spreadsheet (using the COUNTIF(cells;shift) formula of Microsoft Excel (2018)), see bottom of Figure 3. Another schedule was exported directly as a .ODS-file (OpenDocument Spreadsheet), in which the sum of each shift specie per day is included in the exported file with a screenshot attached in Figure 4.
-
-These two schedules are filled as evenly as possible with the exception of Fridays, which have been selected such that all shift workers are scheduled to work (suitable for e.g. activities when *all hands on deck* is required. This schedule has also ensured that each shift is occupied by a minimum of two shift workers.
+The end result is a CSV-file that can be imported into e.g. Microsoft Excel (2018), with some modifications resulting in a ready schedule for the rotational shift workforce and hence effectively solving the problem presented.
 
 ## Figures
 ![Figure 0](docs/fig0.png)
@@ -89,9 +104,6 @@ Figure 2: The RWS:ing Application's algorithm's "phase 2 GUI" as launched from t
 
 ![Figure 3](docs/fig3.png)
 Figure 3: Example procedure results. Phase 1 was performed using the parameters defined in Table 1 and with free days clustered in pairs. Two boolean combinations were selected, followed by finding and selecting a solution for both, and then exported as CSV and imported in Microsoft Excel (2018).
-
-![Figure 4](docs/fig5.png)
-Figure 4: A combination for 2-shifts was put together but not solved (for demo-purposes) showing the shift arrays and the occupancy per shift and day.
 
 ## License
 The `RSW` package is licensed under the GNU General Public License v3.0.

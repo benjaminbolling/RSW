@@ -15,11 +15,7 @@ tags:
 authors:
   - name: Benjamin Edward Bolling
     orcid: 0000-0002-6650-5365
-    affiliation: "1"
 date: 25 September 2021
-affiliations:
- - name: European Spallation Source ERIC
-   index: 1
 bibliography: docs/paper.bib
 ---
 
@@ -143,7 +139,7 @@ where $N_{size}$ is the total number of zeroes and ones in the full matrix. If t
 ## Comparison to similar softwares
 Different commercial softwares are available for shift scheduling using computational methods. In 2004, [@Burke2004] made a comprehensive literature review of a wide range of approaches, including optimising approaches (mathematical programming), multi-criteria approaches (goal programming), artificial intelligence methods, heuristic approaches, and metaheuristic approaches. Common for these approaches is that they use the constraints by the user and are able to provide more-or-less ready schedule(s), with the limitations for the mathematical approaches not being appropriate and requiring post-generation work. Goal programming defines a target for each criterion and their relative priorities [@Burke2004] by applying mathematical programming or by tackling metaheuristics within a multi-objective framework. The complexities from goal programming arise from that real world problems are difficult to solve without some optimisation from a planner.
 
-Many approaches utilising artificial intelligence imitate human reasoning and may hence produce reasonable schedules, such as [@PATAT2002] which takes into account parameters such as the appropriate skill mix and staff-to-patient ratios.
+Many approaches utilising artificial intelligence imitate human reasoning and may hence produce reasonable schedules, such as @PATAT:2002 which takes into account parameters such as the appropriate skill mix and staff-to-patient ratios.
 
 [@Laporte2004] developed a constraint programming algorithm for the construction of rotating shift schedules with the algorithm building the schedules per column (per day), looking for allowed shift stretches (including days off). The pros of their method over this project is that the required computing power is lower than in this project as the shift patterns. However, the method populates the shift schedules with the shift species and does not allow the user to perform the middle step from this project, which is selecting the shift- and rest-day-patterns (referred to as a combination). Therefore, the cons of their algorithm in comparison to this would be that the number of solutions could be very high and require a large amount of computer storage. Moreover, their method had difficulties to obtain evenly spaced full weekends off, which the shift pattern scroll tool in this project can be utilised for finding (see bottom of \autoref{fig:phase1}).
 

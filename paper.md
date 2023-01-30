@@ -165,7 +165,7 @@ Future development plans include adding functionalities in phase 1 such as filte
 
 ![The RWSing Application's high-level user flowchart.\label{fig:userflow}](docs/user_flowchart.png){ width=80% }
 
-
+\pagebreak
 
 ## Acknowledgements
 The author wants to thank his direct line-manager at European Spallation Source for asking the question if it would be possible to create a software for generating shift schedules, which lead to the idea of creating this project and after a while lead to this final state. The author also wants to thank the reviewers for taking their time reviewing this project.

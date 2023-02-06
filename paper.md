@@ -145,6 +145,8 @@ Many approaches utilising artificial intelligence imitate human reasoning and ma
 
 @Laporte:2004 developed a constraint programming algorithm for the construction of rotating shift schedules with the algorithm building the schedules per column (per day), looking for allowed shift stretches (including days off). The pros of their method over this project is that the required computing power is lower than in this project as the shift patterns. However, the method populates the shift schedules with the shift species and does not allow the user to perform the middle step from this project, which is selecting the shift- and rest-day-patterns (referred to as a combination). Therefore, the cons of their algorithm in comparison to this would be that the number of solutions could be very high and require a large amount of computer storage. Moreover, their method had difficulties to obtain evenly spaced full weekends off, which the shift pattern scroll tool in this project can be utilised for finding (see bottom of \autoref{fig:phase1}).
 
+\pagebreak
+
 ## Conclusions
 In this project, an algorithm has been constructed which generate schedules for different number of weeks to cycle over. The current issue is that the computational complexity (and hence the required computation time) increases with the number of weeks per cycle (see Table 2 and in Figure 1 in [benchmarking](https://github.com/benjaminbolling/RSW/blob/master/docs/benchmarking.md)). This means that for a higher amount of weeks in a shift cycle, this application will need further development in order to have more efficient ways of finding the solutions and/or deployment of the application onto super-computers for generating the Boolean Arrays.
 

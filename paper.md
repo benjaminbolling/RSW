@@ -154,6 +154,9 @@ For up to 5 weeks in a shift cycle it is possible to use a general-purpose compu
 
 Future development plans include adding functionalities in phase 1 such as filtering on number of free weekends and taking into account competences of the shift workers (to ensure full coverage of potential shift competence requirements). An important future development needed is restructuring part of the algorithm to lower the required processing power and hence time needed. Another future development plan includes importing an existing schedule with labels as a CSV-file directly into phase 2 such that modifications and/or checks can be done to assure the schedule is compliant with local rules for the workers. These improvements would further strengthen the usability of this application.
 
+## Acknowledgements
+The author wants to thank his direct line-manager at European Spallation Source for asking the question if it would be possible to create a software for generating shift schedules, which lead to the idea of creating this project and after a while lead to this final state. The author also wants to thank the reviewers for taking their time reviewing this project.
+
 ## Figures
 ![The RWSing Application's launcher.\label{fig:launcher}](docs/fig0.png){ width=50% }
 
@@ -166,8 +169,5 @@ Future development plans include adding functionalities in phase 1 such as filte
 ![The RWSing Application's high-level user flowchart.\label{fig:userflow}](docs/user_flowchart.png){ width=80% }
 
 \pagebreak
-
-## Acknowledgements
-The author wants to thank his direct line-manager at European Spallation Source for asking the question if it would be possible to create a software for generating shift schedules, which lead to the idea of creating this project and after a while lead to this final state. The author also wants to thank the reviewers for taking their time reviewing this project.
 
 ## References

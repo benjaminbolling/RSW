@@ -138,8 +138,6 @@ IM \approx N_{size} = N^{n_{S}} \times n_S,
 
 where $N_{size}$ is the total number of zeroes and ones in the full matrix. If the estimated size of the resulting matrix from the operation exceeds 1Gb, the user is prompted whether to continue with the default Cartesian Product method or to use a less internal memory demanding recursive method.
 
-\pagebreak
-
 ## Comparison to similar softwares
 Different commercial softwares are available for shift scheduling using computational methods. In 2004, @Burke:2004 made a comprehensive literature review of a wide range of approaches, including optimising approaches (mathematical programming), multi-criteria approaches (goal programming), artificial intelligence methods, heuristic approaches, and metaheuristic approaches. Common for these approaches is that they use the constraints by the user and are able to provide more-or-less ready schedule(s), with the limitations for the mathematical approaches not being appropriate and requiring post-generation work. Goal programming defines a target for each criterion and their relative priorities @Burke:2004 by applying mathematical programming or by tackling metaheuristics within a multi-objective framework. The complexities from goal programming arise from that real world problems are difficult to solve without some optimisation from a planner.
 
